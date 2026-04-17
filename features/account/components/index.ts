@@ -1,0 +1,6 @@
+export { AccountOverview } from "./AccountOverview"
+export { ProfileDetails } from "./ProfileDetails"
+export { DeliveryDetails } from "./DeliveryDetails"
+export { QuickActions } from "./QuickActions"
+export { AccountNotes } from "./AccountNotes"
+export { ChangePasswordForm } from "./ChangePasswordForm"
