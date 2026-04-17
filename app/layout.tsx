@@ -1,12 +1,36 @@
-import { Geist, Geist_Mono, IBM_Plex_Sans, Manrope } from "next/font/google"
+import type { Metadata } from "next"
+import {
+  Cormorant_Garamond,
+  Geist_Mono,
+  Instrument_Sans,
+} from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { Providers } from "@/components/providers"
+import { cn } from "@/utils/cn"
 
-const manropeHeading = Manrope({subsets:['latin'],variable:'--font-heading'});
+export const metadata: Metadata = {
+  title: "Houris Designs | Made-to-Measure Fashion",
+  description:
+    "Houris Designs creates made-to-measure fashion with precision fit. Every garment is crafted specifically for you using our two-dimensional sizing system.",
+  icons: {
+    icon: "/icon.svg",
+  },
+}
 
-const ibmPlexSans = IBM_Plex_Sans({subsets:['latin'],variable:'--font-sans'})
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const editorialSerif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-editorial",
+  display: "swap",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -22,10 +46,17 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", ibmPlexSans.variable, manropeHeading.variable)}
+      className={cn(
+        "antialiased",
+        instrumentSans.variable,
+        editorialSerif.variable,
+        fontMono.variable
+      )}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="font-sans">
+        <Providers>
+          <ThemeProvider>{children}</ThemeProvider>
+        </Providers>
       </body>
     </html>
   )
