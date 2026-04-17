@@ -238,10 +238,10 @@ export function CheckoutForm({
             data-page-section
             className="surface-card relative overflow-hidden p-6 sm:p-8"
           >
-            <div
+            {/* <div
               aria-hidden="true"
               className="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-brand/14 via-brand/4 to-transparent"
-            />
+            /> */}
 
             <div className="relative">
               <p className="eyebrow-label text-brand">Shipping Details</p>
@@ -481,10 +481,10 @@ export function CheckoutForm({
             data-page-section
             className="surface-card relative overflow-hidden p-6 sm:p-7"
           >
-            <div
+            {/* <div
               aria-hidden="true"
               className="absolute inset-x-0 top-0 h-24 bg-gradient-to-br from-brand/12 via-brand/4 to-transparent"
-            />
+            /> */}
 
             <div className="relative">
               <p className="eyebrow-label text-brand">Order Review</p>

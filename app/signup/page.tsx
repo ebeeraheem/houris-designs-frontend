@@ -40,7 +40,7 @@ const signupBenefits = [
 const accountSetupNotes = [
   "Create one account to manage orders, addresses, and account security.",
   "Your first purchase flow becomes smoother once your profile is in place.",
-  "The live API already supports account, cart, checkout, and reset-password flows.",
+  "Everything you need is ready: manage your account, shop, checkout, and reset your password anytime.",
 ]
 
 export default function SignUpPage() {
@@ -48,10 +48,10 @@ export default function SignUpPage() {
     <>
       <SiteHeader />
       <main className="relative isolate overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <div
+        {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(circle_at_top,rgba(133,81,66,0.2),transparent_58%)]"
-        />
+        /> */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute top-28 right-[8%] -z-10 hidden h-56 w-56 rounded-full bg-brand/10 blur-3xl lg:block"

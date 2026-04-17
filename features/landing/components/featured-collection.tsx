@@ -102,19 +102,19 @@ export function FeaturedCollection() {
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/18 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  {/* <div className="absolute inset-0 bg-gradient-to-t from-foreground/18 via-transparent to-transparent" /> */}
+                  <div className="absolute right-4 bottom-4 left-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <span
                       className={`size-3 rounded-full border border-foreground/10 ${colourSwatches[product.colour] ?? "bg-muted"}`}
                     />
-                    <span className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-foreground/80">
+                    <span className="text-[0.68rem] font-medium tracking-[0.18em] text-foreground/80 uppercase">
                       {product.colour}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 space-y-1.5">
+              <div className="space-y-1.5 pt-4">
                 <p data-copy className="eyebrow-label text-brand">
                   {product.colour}
                 </p>

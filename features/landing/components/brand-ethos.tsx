@@ -88,13 +88,13 @@ export function BrandEthos() {
             data-ethos-copy
             className="mt-4 max-w-[26rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
           >
-            This is clothing as it should be: considered, precise, and
-            personal. No compromise on fit, no waste on excess.
+            This is clothing as it should be: considered, precise, and personal.
+            No compromise on fit, no waste on excess.
           </p>
           <div data-ethos-copy className="mt-8">
             <Link
               href="/about"
-              className="inline-flex h-12 items-center gap-1.5 rounded-[calc(var(--radius)+1px)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium uppercase tracking-[0.22em] backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
+              className="inline-flex h-12 items-center gap-1.5 rounded-[calc(var(--radius)+1px)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium tracking-[0.22em] uppercase backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
             >
               About Houris
             </Link>
@@ -111,7 +111,7 @@ export function BrandEthos() {
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent" />
+              {/* <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent" /> */}
             </div>
           </div>
         </div>
@@ -124,10 +124,7 @@ export function BrandEthos() {
           >
             Craftsmanship / Since 2024
           </span>
-          <span
-            data-ethos-copy
-            className="mt-0.5 h-28 w-px bg-foreground/14"
-          />
+          <span data-ethos-copy className="mt-0.5 h-28 w-px bg-foreground/14" />
         </div>
       </div>
     </section>

@@ -16,7 +16,7 @@ export function EditorialHero({
   description,
 }: EditorialHeroProps) {
   return (
-    <div className="relative min-h-[24rem] overflow-hidden rounded-[1.6rem] border border-border/70 bg-card shadow-lift">
+    <div className="relative h-full overflow-hidden rounded-[1.6rem] border border-border/70 bg-card shadow-lift">
       <Image
         src={imageSrc}
         alt={imageAlt}
@@ -25,7 +25,7 @@ export function EditorialHero({
         sizes="(min-width: 1280px) 32rem, (min-width: 1024px) 38vw, 100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#211814]/88 via-[#211814]/28 to-transparent" />
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-[#211814]/88 via-[#211814]/28 to-transparent" /> */}
 
       <div className="absolute top-5 left-5 rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[0.68rem] font-medium tracking-[0.2em] text-white/84 uppercase backdrop-blur-sm">
         {badge}

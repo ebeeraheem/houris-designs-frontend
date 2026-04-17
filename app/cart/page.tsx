@@ -14,10 +14,10 @@ export default function CartPage() {
     <>
       <SiteHeader />
       <main className="relative isolate overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <div
+        {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-112 bg-[radial-gradient(circle_at_top,rgba(133,81,66,0.2),transparent_58%)]"
-        />
+        /> */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute top-28 right-[8%] -z-10 hidden h-56 w-56 rounded-full bg-brand/10 blur-3xl lg:block"

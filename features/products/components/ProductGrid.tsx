@@ -32,7 +32,7 @@ export function ProductGrid({ products }: ProductGridProps) {
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/18 via-transparent to-transparent" />
+              {/* <div className="absolute inset-0 bg-gradient-to-t from-foreground/18 via-transparent to-transparent" /> */}
               <div className="absolute right-4 bottom-4 left-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <span
                   className={`size-3 rounded-full border border-foreground/10 ${colourSwatches[product.colour] ?? "bg-muted"}`}
