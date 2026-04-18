@@ -192,6 +192,22 @@
   }
 }
 
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body,
+  html.has-custom-cursor body * {
+    cursor: none !important;
+  }
+
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor select,
+  html.has-custom-cursor option,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: auto !important;
+  }
+}
+
 @layer components {
   .page-shell {
     @apply mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8;
