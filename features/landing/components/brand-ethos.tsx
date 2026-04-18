@@ -6,6 +6,8 @@ import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { TextRevealLine } from "@/components/text-reveal"
+import { MagneticButton } from "@/components/magnetic-button"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -67,14 +69,14 @@ export function BrandEthos() {
           <p data-ethos-copy className="eyebrow-label text-brand">
             Our Ethos
           </p>
-          <h2
-            data-ethos-copy
+          <TextRevealLine
             className="mt-4 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]"
+            delay={0.1}
+            stagger={0.08}
+            yOffset={30}
           >
-            Made to
-            <br />
-            your measure
-          </h2>
+            Made to your measure
+          </TextRevealLine>
           <p
             data-ethos-copy
             className="mt-6 max-w-[26rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
@@ -92,12 +94,14 @@ export function BrandEthos() {
             No compromise on fit, no waste on excess.
           </p>
           <div data-ethos-copy className="mt-8">
-            <Link
-              href="/about"
-              className="inline-flex h-12 items-center gap-1.5 rounded-[calc(var(--radius)+1px)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium tracking-[0.22em] uppercase backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
-            >
-              About Houris
-            </Link>
+            <MagneticButton className="magnetic inline-block" strength={0.15}>
+              <Link
+                href="/about"
+                className="inline-flex h-12 items-center gap-1.5 rounded-[calc(var(--radius)+1px)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium tracking-[0.22em] uppercase backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
+              >
+                About Houris
+              </Link>
+            </MagneticButton>
           </div>
         </div>
 

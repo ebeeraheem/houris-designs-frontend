@@ -8,6 +8,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 import { colourSwatches, demoProducts } from "@/features/products/demo-products"
+import { TextReveal } from "@/components/text-reveal"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -70,12 +71,14 @@ export function FeaturedCollection() {
             <p data-copy className="eyebrow-label text-brand">
               Current Series
             </p>
-            <h2
-              data-copy
+            <TextReveal
               className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]"
+              delay={0.1}
+              stagger={0.03}
+              yOffset={80}
             >
               The Collection
-            </h2>
+            </TextReveal>
           </div>
           <Link
             href="/collection"

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { TextRevealLine } from "@/components/text-reveal"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -68,36 +69,31 @@ export function SizingApproach() {
           <p data-size-copy className="eyebrow-label text-brand">
             Precision Fit
           </p>
-          <h2
-            data-size-copy
+          <TextRevealLine
             className="mt-4 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]"
+            delay={0.1}
+            stagger={0.08}
+            yOffset={30}
           >
-            Two dimensions,
-            <br />
-            one perfect fit
-          </h2>
+            Two dimensions, one perfect fit
+          </TextRevealLine>
           <p
             data-size-copy
             className="mt-6 text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
           >
-            Our sizing system uses two independent dimensions — length and
-            width — so you find the combination that matches your body. Choose
-            a length code (A–H) for your height, and a width code (6–24) for
-            your proportions. No guessing, no compromising.
+            Our sizing system uses two independent dimensions — length and width
+            — so you find the combination that matches your body. Choose a
+            length code (A–H) for your height, and a width code (6–24) for your
+            proportions. No guessing, no compromising.
           </p>
         </div>
 
-        <div
-          data-size-grid
-          className="mx-auto mt-12 max-w-[32rem] sm:mt-16"
-        >
+        <div data-size-grid className="mx-auto mt-12 max-w-[32rem] sm:mt-16">
           <div className="surface-card p-5 sm:p-8">
             <div className="mb-4 flex items-center gap-3">
               <span className="eyebrow-label text-brand">Length</span>
               <span className="h-px flex-1 bg-border" />
-              <span className="eyebrow-label text-foreground/50">
-                A – H
-              </span>
+              <span className="eyebrow-label text-foreground/50">A – H</span>
             </div>
             <div className="mb-6 grid grid-cols-8 gap-1.5">
               {lengthCodes.map((code) => (
@@ -113,9 +109,7 @@ export function SizingApproach() {
             <div className="mb-4 flex items-center gap-3">
               <span className="eyebrow-label text-brand">Width</span>
               <span className="h-px flex-1 bg-border" />
-              <span className="eyebrow-label text-foreground/50">
-                6 – 24
-              </span>
+              <span className="eyebrow-label text-foreground/50">6 – 24</span>
             </div>
             <div className="grid grid-cols-5 gap-1.5 sm:grid-cols-10">
               {widthCodes.map((code) => (
@@ -129,7 +123,7 @@ export function SizingApproach() {
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/50 pt-5">
-              <span className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="text-[0.68rem] font-medium tracking-[0.2em] text-muted-foreground uppercase">
                 e.g.
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-[0.72rem] font-semibold tracking-[0.08em] text-brand">
@@ -143,10 +137,7 @@ export function SizingApproach() {
         </div>
 
         <div data-size-copy className="mt-10 flex justify-center sm:mt-14">
-          <Link
-            href="/size-guide"
-            className="nav-link"
-          >
+          <Link href="/size-guide" className="nav-link">
             Full Size Guide
           </Link>
         </div>

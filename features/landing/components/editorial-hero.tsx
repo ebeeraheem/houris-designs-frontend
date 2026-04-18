@@ -7,6 +7,8 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 import { Button } from "@/components/ui/button"
+import { TextRevealLine } from "@/components/text-reveal"
+import { MagneticButton } from "@/components/magnetic-button"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -243,12 +245,14 @@ export function EditorialHero() {
                 <p data-copy className="eyebrow-label text-brand">
                   Series 01
                 </p>
-                <h1
-                  data-copy
+                <TextRevealLine
                   className="max-w-[18rem] font-heading text-[2rem] leading-[0.9] font-medium tracking-[-0.07em] text-foreground uppercase sm:max-w-[22rem] sm:text-[2.75rem] md:text-[3.1rem] lg:max-w-[24rem] lg:text-[clamp(3rem,5.2vw,4.2rem)]"
+                  delay={0.2}
+                  stagger={0.12}
+                  yOffset={40}
                 >
                   The linear collection
-                </h1>
+                </TextRevealLine>
                 <p
                   data-copy
                   className="max-w-[24rem] text-sm leading-6 text-muted-foreground sm:text-[0.92rem] sm:leading-7"
@@ -257,13 +261,18 @@ export function EditorialHero() {
                   architectural wardrobe. Refined, precise, effortless.
                 </p>
                 <div data-copy className="pt-0.5">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-foreground/70 bg-background/75 backdrop-blur-sm hover:border-brand hover:bg-accent"
+                  <MagneticButton
+                    className="magnetic inline-block"
+                    strength={0.15}
                   >
-                    Explore series 01
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="border-foreground/70 bg-background/75 backdrop-blur-sm hover:border-brand hover:bg-accent"
+                    >
+                      Explore series 01
+                    </Button>
+                  </MagneticButton>
                 </div>
               </div>
             </article>
