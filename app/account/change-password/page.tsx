@@ -1,6 +1,4 @@
-import Link from "next/link"
-import { RiArrowLeftLine } from "@remixicon/react"
-
+import { BackIconLink } from "@/components/ui/back-icon-link"
 import { PageReveal } from "@/components/page-reveal"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -18,7 +16,7 @@ export default function ChangePasswordPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative isolate overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <main className="relative isolate overflow-hidden py-6 sm:py-10 lg:py-14">
         {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-112 bg-[radial-gradient(circle_at_top,rgba(133,81,66,0.2),transparent_58%)]"
@@ -30,19 +28,18 @@ export default function ChangePasswordPage() {
 
         <div className="page-shell">
           <PageReveal>
-            <Link
-              data-page-intro
-              href="/account"
-              className="inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.18em] text-muted-foreground uppercase hover:text-foreground"
-            >
-              <RiArrowLeftLine className="size-4" />
-              Back to account
-            </Link>
+            <div className="flex items-start gap-4 sm:gap-5">
+              <BackIconLink
+                data-page-intro
+                href="/account"
+                label="Back to account"
+                className="mt-1 shrink-0"
+              />
 
-            <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] xl:gap-8">
+              <div className="min-w-0 flex-1 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] xl:gap-8">
               <section
                 data-page-intro
-                className="surface-card relative overflow-hidden p-6 sm:p-8 lg:p-10"
+                className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"
               >
                 <div
                   aria-hidden="true"
@@ -91,6 +88,7 @@ export default function ChangePasswordPage() {
                   />
                 </div>
               </aside>
+            </div>
             </div>
           </PageReveal>
         </div>
