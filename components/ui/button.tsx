@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/utils/cn"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-[calc(var(--radius)+1px)] border bg-clip-padding text-[0.68rem] font-medium uppercase tracking-[0.22em] whitespace-nowrap text-center transition-all duration-200 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-[var(--radius)] border bg-clip-padding text-[0.68rem] font-medium uppercase tracking-[0.22em] whitespace-nowrap text-center transition-all duration-200 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -23,15 +23,15 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-11 gap-1.5 px-5 in-data-[slot=button-group]:rounded-[calc(var(--radius)+1px)] has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-        xs: "h-7 gap-1 rounded-[calc(var(--radius))] px-2.5 text-[0.62rem] in-data-[slot=button-group]:rounded-[calc(var(--radius))] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-9 gap-1 rounded-[calc(var(--radius))] px-4 in-data-[slot=button-group]:rounded-[calc(var(--radius))] has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+          "h-11 gap-1.5 px-5 in-data-[slot=button-group]:rounded-[var(--radius)] has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        xs: "h-7 gap-1 rounded-[var(--radius)] px-2.5 text-[0.62rem] in-data-[slot=button-group]:rounded-[var(--radius)] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-9 gap-1 rounded-[var(--radius)] px-4 in-data-[slot=button-group]:rounded-[var(--radius)] has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         lg: "h-12 gap-1.5 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
         icon: "size-11",
         "icon-xs":
-          "size-7 rounded-[calc(var(--radius))] in-data-[slot=button-group]:rounded-[calc(var(--radius))] [&_svg:not([class*='size-'])]:size-3",
+          "size-7 rounded-[var(--radius)] in-data-[slot=button-group]:rounded-[var(--radius)] [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":
-          "size-9 rounded-[calc(var(--radius))] in-data-[slot=button-group]:rounded-[calc(var(--radius))]",
+          "size-9 rounded-[var(--radius)] in-data-[slot=button-group]:rounded-[var(--radius)]",
         "icon-lg": "size-12",
       },
     },
