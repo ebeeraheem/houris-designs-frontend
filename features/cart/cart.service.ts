@@ -7,18 +7,18 @@ export const cartService = {
     return cartRepository.get()
   },
 
-  addToCart: (payload: AddCartItemPayload): Promise<Cart> => {
+  addToCart: (payload: AddCartItemPayload): Promise<void> => {
     return cartRepository.addItem(payload)
   },
 
   updateCartItem: (
     itemId: string,
     payload: UpdateCartItemPayload
-  ): Promise<Cart> => {
+  ): Promise<void> => {
     return cartRepository.updateItem(itemId, payload)
   },
 
-  removeFromCart: (itemId: string): Promise<Cart> => {
+  removeFromCart: (itemId: string): Promise<void> => {
     return cartRepository.removeItem(itemId)
   },
 

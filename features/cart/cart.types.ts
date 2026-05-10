@@ -1,17 +1,19 @@
 export interface ApiCartItem {
-  id: string
+  id?: string | null
+  itemId?: string | null
+  cartItemId?: string | null
   productId: string
   productTitle: string
-  primaryImageUrl: string
-  unitPrice: number
+  primaryImageUrl: string | null
+  unitPrice: number | string
   swatchId?: string | null
   colourLabel?: string | null
   colour?: string | null
   sizeLengthCode?: string | null
-  sizeWidthCode?: number | null
+  sizeWidthCode?: number | string | null
   baseSize?: string | null
-  quantity: number
-  lineSubtotal: number
+  quantity: number | string
+  lineSubtotal: number | string
 }
 
 export interface ApiCartResponse {
@@ -26,7 +28,7 @@ export interface ApiCartResponse {
 }
 
 export interface CartItem {
-  id: string
+  id: string | null
   productId: string
   productTitle: string
   primaryImageUrl: string

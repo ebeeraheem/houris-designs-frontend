@@ -3,7 +3,7 @@ import type { AddCartItemPayload, UpdateCartItemPayload } from "./cart.schema"
 import {
   fetchCart,
   postCartItem,
-  patchCartItem,
+  putCartItem,
   destroyCartItem,
   destroyCart,
 } from "./cart.adapter"
@@ -11,9 +11,9 @@ import { toCart } from "./cart.transformer"
 
 export interface ICartRepository {
   get(): Promise<Cart>
-  addItem(payload: AddCartItemPayload): Promise<Cart>
-  updateItem(itemId: string, payload: UpdateCartItemPayload): Promise<Cart>
-  removeItem(itemId: string): Promise<Cart>
+  addItem(payload: AddCartItemPayload): Promise<void>
+  updateItem(itemId: string, payload: UpdateCartItemPayload): Promise<void>
+  removeItem(itemId: string): Promise<void>
   clear(): Promise<void>
 }
 
@@ -24,18 +24,15 @@ export const cartRepository: ICartRepository = {
   },
 
   addItem: async (payload) => {
-    const raw = await postCartItem(payload)
-    return toCart(raw)
+    await postCartItem(payload)
   },
 
   updateItem: async (itemId, payload) => {
-    const raw = await patchCartItem(itemId, payload)
-    return toCart(raw)
+    await putCartItem(itemId, payload)
   },
 
   removeItem: async (itemId) => {
-    const raw = await destroyCartItem(itemId)
-    return toCart(raw)
+    await destroyCartItem(itemId)
   },
 
   clear: async () => {

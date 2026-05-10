@@ -17,32 +17,19 @@ export const fetchCart = async (): Promise<ApiCartResponse> => {
 
 export const postCartItem = async (
   payload: AddCartItemPayload
-): Promise<ApiCartResponse> => {
-  const response = await apiClient.post<ApiCartResponse>(
-    ENDPOINTS.ADD_ITEM,
-    payload
-  )
-  return response.data
+): Promise<void> => {
+  await apiClient.post(ENDPOINTS.ADD_ITEM, payload)
 }
 
-export const patchCartItem = async (
+export const putCartItem = async (
   itemId: string,
   payload: UpdateCartItemPayload
-): Promise<ApiCartResponse> => {
-  const response = await apiClient.patch<ApiCartResponse>(
-    ENDPOINTS.UPDATE_ITEM(itemId),
-    payload
-  )
-  return response.data
+): Promise<void> => {
+  await apiClient.put(ENDPOINTS.UPDATE_ITEM(itemId), payload)
 }
 
-export const destroyCartItem = async (
-  itemId: string
-): Promise<ApiCartResponse> => {
-  const response = await apiClient.delete<ApiCartResponse>(
-    ENDPOINTS.REMOVE_ITEM(itemId)
-  )
-  return response.data
+export const destroyCartItem = async (itemId: string): Promise<void> => {
+  await apiClient.delete(ENDPOINTS.REMOVE_ITEM(itemId))
 }
 
 export const destroyCart = async (): Promise<void> => {
