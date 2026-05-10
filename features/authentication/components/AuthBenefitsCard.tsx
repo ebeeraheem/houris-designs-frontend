@@ -14,13 +14,13 @@ interface AuthBenefitsCardProps {
 
 export function AuthBenefitsCard({ title, benefits }: AuthBenefitsCardProps) {
   return (
-    <div className="mt-6 rounded-[1.25rem] border border-border/70 bg-secondary/55 p-4 sm:p-5">
+    <div className="mt-4 rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-3 sm:mt-6 sm:p-4">
       <p className="eyebrow-label text-brand">{title}</p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-3 sm:gap-3">
         {benefits.map(({ icon: Icon, title, description }) => (
           <div
             key={title}
-            className="rounded-[1rem] border border-border/70 bg-background/78 p-4"
+            className="rounded-[var(--radius)] border border-border/70 bg-background/78 p-3"
           >
             <Icon className="size-4 text-brand" />
             <p className="mt-3 text-[0.74rem] font-medium tracking-[0.14em] text-foreground uppercase">

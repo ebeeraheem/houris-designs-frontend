@@ -1,6 +1,16 @@
 "use client"
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { startTransition } from "react"
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+
 import { Button } from "@/components/ui/button"
+import { getAuthErrorMessage } from "../auth-error"
+import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { resetPasswordSchema, type ResetPasswordPayload } from "../auth.schema"
+import { useResetPassword } from "../usecases/useResetPassword"
 
 interface ResetPasswordFormProps {
   defaultEmail?: string
@@ -11,22 +21,72 @@ export function ResetPasswordForm({
   defaultEmail,
   defaultToken,
 }: ResetPasswordFormProps) {
+  const router = useRouter()
+  const resetPassword = useResetPassword()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResetPasswordPayload>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      email: defaultEmail ?? "",
+      token: defaultToken ?? "",
+      newPassword: "",
+    },
+  })
+
+  const handleFormSubmit = async (payload: ResetPasswordPayload) => {
+    try {
+      const response = await resetPassword.mutateAsync(payload)
+
+      if (response.status !== AUTH_SUCCESS_STATUS) {
+        toast.error("We couldn't reset your password. Please try again.")
+        return
+      }
+
+      toast.success(
+        "Password reset successful! You can now sign in with your new password."
+      )
+
+      startTransition(() => {
+        router.push("/signin")
+      })
+    } catch (error) {
+      toast.error(
+        getAuthErrorMessage(
+          error,
+          "We couldn't reset your password. Please try again."
+        )
+      )
+    }
+  }
+
   return (
-    <form className="space-y-5">
+    <form
+      noValidate
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="space-y-4 sm:space-y-5"
+    >
       <div>
         <label htmlFor="email" className="field-label mb-1.5 block">
           Email
         </label>
         <input
           id="email"
-          name="email"
+          {...register("email")}
           type="email"
           autoComplete="email"
-          required
-          defaultValue={defaultEmail ?? ""}
           className="field-input"
           placeholder="you@example.com"
+          disabled={resetPassword.isPending}
         />
+        {errors.email && (
+          <p className="mt-2 text-xs text-destructive">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -35,13 +95,17 @@ export function ResetPasswordForm({
         </label>
         <input
           id="token"
-          name="token"
+          {...register("token")}
           type="text"
-          required
-          defaultValue={defaultToken ?? ""}
           className="field-input"
           placeholder="Paste your reset token"
+          disabled={resetPassword.isPending}
         />
+        {errors.token && (
+          <p className="mt-2 text-xs text-destructive">
+            {errors.token.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -50,17 +114,26 @@ export function ResetPasswordForm({
         </label>
         <input
           id="newPassword"
-          name="newPassword"
+          {...register("newPassword")}
           type="password"
           autoComplete="new-password"
-          required
           className="field-input"
           placeholder="Create a new password"
+          disabled={resetPassword.isPending}
         />
+        {errors.newPassword && (
+          <p className="mt-2 text-xs text-destructive">
+            {errors.newPassword.message}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full">
-        Reset Password
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={resetPassword.isPending}
+      >
+        {resetPassword.isPending ? "Resetting..." : "Reset Password"}
       </Button>
     </form>
   )

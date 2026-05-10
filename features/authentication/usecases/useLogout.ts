@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authService } from "../auth.service"
-import { AUTH_QUERY_KEY } from "../auth.constants"
+import { ACCOUNT_QUERY_KEY } from "@/features/account/account.constants"
+import { clearAuthSession } from "./useAuthProfile"
 
 export function useLogout() {
   const queryClient = useQueryClient()
@@ -8,8 +9,8 @@ export function useLogout() {
   return useMutation({
     mutationFn: () => authService.logout(),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [AUTH_QUERY_KEY] })
-      await queryClient.removeQueries({ queryKey: [AUTH_QUERY_KEY] })
+      clearAuthSession(queryClient)
+      await queryClient.removeQueries({ queryKey: [ACCOUNT_QUERY_KEY] })
     },
   })
 }
