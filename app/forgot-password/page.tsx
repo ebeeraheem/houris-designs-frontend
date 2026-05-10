@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-svh px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <main className="min-h-svh px-3 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <PageReveal className="mx-auto max-w-[28rem]">
           <div data-page-intro className="mb-8 text-center">
             <p className="eyebrow-label text-brand">Reset Password</p>
