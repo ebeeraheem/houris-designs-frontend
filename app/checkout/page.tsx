@@ -1,53 +1,55 @@
-import Link from "next/link"
-import { RiArrowLeftLine } from "@remixicon/react"
+"use client"
 
+import toast from "react-hot-toast"
+
+import { EmptyCartIcon } from "@/components/icons"
+import { BackIconLink } from "@/components/ui/back-icon-link"
+import { EmptyState } from "@/components/ui/empty-state"
 import { PageReveal } from "@/components/page-reveal"
+import { Button } from "@/components/ui/button"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { EditorialHero } from "@/components/shared/EditorialHero"
+import { useGetAddress } from "@/features/account/usecases/useGetAddress"
+import { useGetCart } from "@/features/cart"
 import { CheckoutForm } from "@/features/orders/components/CheckoutForm"
-import { CheckoutHighlights } from "@/features/orders/components/CheckoutHighlights"
+import { useCheckout } from "@/features/orders/usecases/useCheckout"
 import { formatSizeCode } from "@/utils/size-codes"
 
-const MOCK_CART = {
-  total: 480,
-  items: [
-    {
-      id: "1",
-      productTitle: "The Structured Blazer",
-      colourLabel: "Charcoal",
-      sizeLengthCode: "B",
-      sizeWidthCode: 12,
-      quantity: 1,
-      lineSubtotal: 285,
-    },
-    {
-      id: "2",
-      productTitle: "Tailored Wide Trousers",
-      colourLabel: "Sand",
-      sizeLengthCode: "B",
-      sizeWidthCode: 12,
-      quantity: 1,
-      lineSubtotal: 195,
-    },
-  ],
-}
-
-const MOCK_SAVED_ADDRESS = {
-  recipientName: "Jane Doe",
-  addressLine1: "123 Fashion Avenue",
-  addressLine2: "Suite 456",
-  city: "Lagos",
-  stateRegion: "Lagos State",
-  country: "Nigeria",
-  postalCode: "100001",
-}
-
 export default function CheckoutPage() {
+  const {
+    data: cart,
+    isLoading: isCartLoading,
+    isError: hasCartError,
+    refetch: refetchCart,
+  } = useGetCart()
+  const { data: savedAddress } = useGetAddress()
+  const checkout = useCheckout()
+
+  const items = cart?.items ?? []
+  const total = cart?.total ?? 0
+  const totalPieces = items.reduce((sum, item) => sum + item.quantity, 0)
+
+  const handleCheckout = async (
+    payload: Parameters<typeof checkout.mutateAsync>[0]
+  ) => {
+    try {
+      const result = await checkout.mutateAsync(payload)
+
+      if (!result.paymentUrl) {
+        toast.error("Checkout started, but no payment link was returned.")
+        return
+      }
+
+      window.location.assign(result.paymentUrl)
+    } catch {
+      toast.error("We couldn't start checkout. Please try again.")
+    }
+  }
+
   return (
     <>
       <SiteHeader />
-      <main className="relative isolate overflow-hidden px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <main className="relative isolate overflow-hidden py-6 sm:py-10 lg:py-14">
         {/* <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] bg-[radial-gradient(circle_at_top,rgba(133,81,66,0.2),transparent_58%)]"
@@ -59,73 +61,112 @@ export default function CheckoutPage() {
 
         <div className="page-shell">
           <PageReveal>
-            <Link
-              data-page-intro
-              href="/cart"
-              className="inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.18em] text-muted-foreground uppercase hover:text-foreground"
-            >
-              <RiArrowLeftLine className="size-4" />
-              Back to cart
-            </Link>
+            <div className="flex items-start gap-4 sm:gap-5">
+              <BackIconLink
+                data-page-intro
+                href="/cart"
+                label="Back to cart"
+                className="mt-1 shrink-0"
+              />
 
-            <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] xl:gap-8">
               <section
                 data-page-intro
-                className="surface-card relative overflow-hidden p-6 sm:p-8 lg:p-10"
+                className="surface-card min-w-0 flex-1 p-5 sm:p-7 lg:p-8"
               >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-40 bg-gradient-to-br from-brand/16 via-brand/5 to-transparent"
-                />
-
-                <div className="relative">
-                  <p className="eyebrow-label text-brand">Checkout Atelier</p>
-                  <h1 className="mt-4 max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
-                    Finish the order with a calmer, more considered flow.
-                  </h1>
-                  <p className="mt-4 max-w-[38rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                    Review your delivery details, confirm the saved address if
-                    it works, and move into payment with the same editorial tone
-                    as the rest of the account experience.
-                  </p>
-
-                  <CheckoutHighlights
-                    itemsCount={MOCK_CART.items.length}
-                    city={MOCK_SAVED_ADDRESS.city}
-                    country={MOCK_SAVED_ADDRESS.country}
-                  />
+                <p className="eyebrow-label text-brand">Checkout</p>
+                <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3rem]">
+                  Review details and continue to payment.
+                </h1>
+                <p className="mt-4 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
+                  Confirm your shipping address, review the pieces in your cart,
+                  and move into the secure payment step.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <div className="status-pill border-brand/20 bg-brand/10 text-brand">
+                    {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready
+                  </div>
+                  <div className="status-pill border-border bg-background/80 text-foreground/78">
+                    Total {total > 0 ? total.toLocaleString() : 0}
+                  </div>
                 </div>
               </section>
+            </div>
 
-              <aside data-page-media>
-                <EditorialHero
-                  imageSrc="/images/editorial/yellow-look.jpg"
-                  imageAlt="Model in a vibrant yellow set, standing in warm sunlight."
-                  badge="Final Review"
-                  title="One more look,<br />then payment."
-                  description="This final step keeps your order summary and delivery details close before the secure payment handoff."
+            {isCartLoading ? (
+              <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.04fr)_minmax(20rem,0.96fr)] xl:gap-8">
+                <div className="surface-card p-6 sm:p-8">
+                  <div className="h-3 w-32 animate-pulse rounded-full bg-secondary/60" />
+                  <div className="mt-4 h-8 w-2/3 animate-pulse rounded-full bg-secondary/60" />
+                  <div className="mt-8 space-y-4">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <div
+                        key={`checkout-field-skeleton-${index}`}
+                        className="h-16 animate-pulse rounded-[var(--radius)] bg-secondary/60"
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="surface-card p-6">
+                  <div className="h-3 w-28 animate-pulse rounded-full bg-secondary/60" />
+                  <div className="mt-6 space-y-3">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div
+                        key={`checkout-summary-skeleton-${index}`}
+                        className="h-4 animate-pulse rounded-full bg-secondary/60"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : hasCartError ? (
+              <div className="mt-6 surface-card p-8 text-center">
+                <p className="text-muted-foreground">
+                  We couldn&apos;t load your cart for checkout.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-4"
+                  onClick={() => {
+                    void refetchCart()
+                  }}
+                >
+                  Try Again
+                </Button>
+              </div>
+            ) : items.length === 0 ? (
+              <div className="mt-6 surface-card p-8 text-center sm:p-10">
+                <EmptyState
+                  icon={<EmptyCartIcon className="size-7" aria-hidden="true" />}
+                  title="Your cart is empty"
+                  description="Add a few considered pieces before moving into the payment flow."
+                  actionHref="/collection"
+                  actionLabel="Continue Shopping"
                 />
-              </aside>
-            </div>
-
-            <div className="mt-6">
-              <CheckoutForm
-                cartTotal={MOCK_CART.total}
-                cartItemsCount={MOCK_CART.items.length}
-                cartItems={MOCK_CART.items.map((item) => ({
-                  id: item.id,
-                  productTitle: item.productTitle,
-                  colourLabel: item.colourLabel,
-                  sizeLabel: formatSizeCode(
-                    item.sizeLengthCode,
-                    item.sizeWidthCode
-                  ),
-                  quantity: item.quantity,
-                  lineSubtotal: item.lineSubtotal,
-                }))}
-                savedAddress={MOCK_SAVED_ADDRESS}
-              />
-            </div>
+              </div>
+            ) : (
+              <div className="mt-6">
+                <CheckoutForm
+                  cartTotal={total}
+                  cartItemsCount={totalPieces}
+                  cartItems={items.map((item) => ({
+                    id:
+                      item.id ??
+                      `${item.productId}-${item.colourLabel}-${item.sizeLengthCode ?? "none"}-${item.sizeWidthCode ?? "none"}`,
+                    productTitle: item.productTitle,
+                    colourLabel: item.colourLabel,
+                    sizeLabel: formatSizeCode(
+                      item.sizeLengthCode,
+                      item.sizeWidthCode
+                    ),
+                    quantity: item.quantity,
+                    lineSubtotal: item.lineSubtotal,
+                  }))}
+                  savedAddress={savedAddress ?? null}
+                  onSubmit={handleCheckout}
+                />
+              </div>
+            )}
           </PageReveal>
         </div>
       </main>
