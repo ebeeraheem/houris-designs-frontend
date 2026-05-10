@@ -1,6 +1,5 @@
 export interface ApiAuthResponse {
-  success: boolean
-  message: string
+  status: number
 }
 
 export interface ApiRegisterRequest {

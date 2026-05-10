@@ -2,6 +2,7 @@ import {
   postRegister,
   postLogin,
   postLogout,
+  postRefresh,
   postForgotPassword,
   postResetPassword,
 } from "./auth.adapter"
@@ -24,6 +25,10 @@ export const authService = {
 
   logout: (): Promise<ApiAuthResponse> => {
     return postLogout()
+  },
+
+  refresh: (): Promise<ApiAuthResponse> => {
+    return postRefresh()
   },
 
   forgotPassword: (

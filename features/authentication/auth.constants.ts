@@ -1,4 +1,5 @@
 export const AUTH_QUERY_KEY = "auth"
+export const AUTH_SUCCESS_STATUS = 200
 
 export const AUTH_ROUTES = {
   LOGIN: "/signin",
