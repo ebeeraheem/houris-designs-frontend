@@ -1,4 +1,8 @@
+"use client"
+
 import { RiShieldCheckLine, RiScissorsLine } from "@remixicon/react"
+
+import { useLogoutAction } from "@/features/authentication/usecases/useLogoutAction"
 import { Button } from "@/components/ui/button"
 
 const accountNotes = [
@@ -17,8 +21,10 @@ const accountNotes = [
 ]
 
 export function AccountNotes() {
+  const { handleLogout, isPending } = useLogoutAction()
+
   return (
-    <section className="surface-panel p-6 sm:p-7">
+    <section className="surface-panel p-4 sm:p-5">
       <p className="eyebrow-label text-brand">Account Notes</p>
       <div className="mt-5 space-y-4">
         {accountNotes.map(({ icon: Icon, title, description }) => (
@@ -42,8 +48,13 @@ export function AccountNotes() {
         <Button
           variant="outline"
           className="w-full border-destructive/20 text-destructive hover:bg-destructive/10"
+          type="button"
+          onClick={() => {
+            void handleLogout()
+          }}
+          disabled={isPending}
         >
-          Sign Out
+          {isPending ? "Signing Out..." : "Sign Out"}
         </Button>
       </div>
     </section>

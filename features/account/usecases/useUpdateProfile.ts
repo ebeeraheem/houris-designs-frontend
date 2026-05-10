@@ -9,7 +9,8 @@ export function useUpdateProfile() {
   return useMutation({
     mutationFn: (payload: UpdateProfilePayload) =>
       accountService.updateProfile(payload),
-    onSuccess: async () => {
+    onSuccess: async (profile) => {
+      queryClient.setQueryData([ACCOUNT_QUERY_KEY, "profile"], profile)
       await queryClient.invalidateQueries({
         queryKey: [ACCOUNT_QUERY_KEY, "profile"],
       })

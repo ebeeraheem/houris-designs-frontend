@@ -1,4 +1,5 @@
 import apiClient from "@/services/api/client"
+import type { ApiClientRequestConfig } from "@/services/api/client"
 import { extractApiData } from "@/services/api/extract-api-data"
 import type { ApiProfile, ApiShippingAddress } from "./account.types"
 import type {
@@ -16,11 +17,22 @@ const ENDPOINTS = {
   CHANGE_PASSWORD: "/api/account/password",
 } as const
 
-export const fetchProfile = async (): Promise<ApiProfile> => {
+export const fetchProfile = async (
+  config?: ApiClientRequestConfig
+): Promise<ApiProfile> => {
   const response = await apiClient.get<ApiProfile | { data: ApiProfile }>(
-    ENDPOINTS.PROFILE
+    ENDPOINTS.PROFILE,
+    config
   )
   return extractApiData(response.data)
+}
+
+const quietProfileConfig: ApiClientRequestConfig = {
+  skipAuthRedirect: true,
+}
+
+export const fetchProfileQuiet = async (): Promise<ApiProfile> => {
+  return fetchProfile(quietProfileConfig)
 }
 
 export const patchProfile = async (

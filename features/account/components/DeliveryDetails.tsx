@@ -1,20 +1,119 @@
-import { RiMapPinLine } from "@remixicon/react"
+"use client"
 
-interface Address {
+import { useState } from "react"
+import { RiMapPinLine } from "@remixicon/react"
+import toast from "react-hot-toast"
+
+import { EmptyAddressIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
+import { updateAddressSchema } from "../account.schema"
+import type { ShippingAddress } from "../account.types"
+import { useUpdateAddress } from "../usecases/useUpdateAddress"
+
+interface DeliveryDetailsProps {
+  address: ShippingAddress | null
+}
+
+interface AddressFormState {
   recipientName: string
   addressLine1: string
-  addressLine2?: string
+  addressLine2: string
   city: string
   stateRegion: string
   postalCode: string
   country: string
 }
 
-interface DeliveryDetailsProps {
-  address: Address | null
+type AddressErrors = Partial<Record<keyof AddressFormState, string>>
+
+function createAddressFormState(
+  address: ShippingAddress | null
+): AddressFormState {
+  return {
+    recipientName: address?.recipientName ?? "",
+    addressLine1: address?.addressLine1 ?? "",
+    addressLine2: address?.addressLine2 ?? "",
+    city: address?.city ?? "",
+    stateRegion: address?.stateRegion ?? "",
+    postalCode: address?.postalCode ?? "",
+    country: address?.country ?? "",
+  }
 }
 
 export function DeliveryDetails({ address }: DeliveryDetailsProps) {
+  const updateAddress = useUpdateAddress()
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [formState, setFormState] = useState(() => createAddressFormState(address))
+  const [errors, setErrors] = useState<AddressErrors>({})
+
+  const resetForm = () => {
+    setFormState(createAddressFormState(address))
+    setErrors({})
+  }
+
+  const startEditing = () => {
+    resetForm()
+    setIsEditing(true)
+  }
+
+  const stopEditing = () => {
+    resetForm()
+    setIsEditing(false)
+  }
+
+  const handleChange = (field: keyof AddressFormState, value: string) => {
+    setFormState((current) => ({
+      ...current,
+      [field]: value,
+    }))
+    setErrors((current) => ({
+      ...current,
+      [field]: undefined,
+    }))
+  }
+
+  const handleSave = async () => {
+    const payload = {
+      recipientName: formState.recipientName.trim(),
+      addressLine1: formState.addressLine1.trim(),
+      addressLine2: formState.addressLine2.trim() || undefined,
+      city: formState.city.trim(),
+      stateRegion: formState.stateRegion.trim(),
+      postalCode: formState.postalCode.trim(),
+      country: formState.country.trim(),
+    }
+
+    const parsed = updateAddressSchema.safeParse(payload)
+
+    if (!parsed.success) {
+      const nextErrors: AddressErrors = {}
+
+      for (const issue of parsed.error.issues) {
+        const field = issue.path[0]
+
+        if (typeof field === "string" && !(field in nextErrors)) {
+          nextErrors[field as keyof AddressFormState] = issue.message
+        }
+      }
+
+      setErrors(nextErrors)
+      return
+    }
+
+    try {
+      await updateAddress.mutateAsync(payload)
+      toast.success(address ? "Address updated." : "Address saved.")
+      setErrors({})
+      setIsEditing(false)
+    } catch {
+      toast.error("We couldn't save your address. Please try again.")
+    }
+  }
+
+  const isSubmitting = updateAddress.isPending
+
   return (
     <section className="surface-card p-6 sm:p-8">
       <div className="flex items-center justify-between gap-4">
@@ -24,14 +123,154 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
             Shipping address
           </h2>
         </div>
-        <button className="text-[0.72rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline">
-          Edit
+        <button
+          type="button"
+          className="text-[0.72rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline disabled:opacity-50"
+          onClick={isEditing ? stopEditing : startEditing}
+          disabled={isSubmitting}
+        >
+          {isEditing ? "Cancel" : address ? "Edit" : "Add"}
         </button>
       </div>
 
-      {address ? (
+      {isEditing ? (
+        <>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="field-label">Recipient Name</label>
+              <input
+                type="text"
+                value={formState.recipientName}
+                onChange={(event) =>
+                  handleChange("recipientName", event.target.value)
+                }
+                className="field-input mt-2"
+                placeholder="Jane Doe"
+              />
+              {errors.recipientName ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.recipientName}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <label className="field-label">Country</label>
+              <input
+                type="text"
+                value={formState.country}
+                onChange={(event) => handleChange("country", event.target.value)}
+                className="field-input mt-2"
+                placeholder="Nigeria"
+              />
+              {errors.country ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.country}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="field-label">Address Line 1</label>
+              <input
+                type="text"
+                value={formState.addressLine1}
+                onChange={(event) =>
+                  handleChange("addressLine1", event.target.value)
+                }
+                className="field-input mt-2"
+                placeholder="123 Fashion Avenue"
+              />
+              {errors.addressLine1 ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.addressLine1}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="field-label">Address Line 2</label>
+              <input
+                type="text"
+                value={formState.addressLine2}
+                onChange={(event) =>
+                  handleChange("addressLine2", event.target.value)
+                }
+                className="field-input mt-2"
+                placeholder="Apartment, suite, or landmark"
+              />
+            </div>
+
+            <div>
+              <label className="field-label">City</label>
+              <input
+                type="text"
+                value={formState.city}
+                onChange={(event) => handleChange("city", event.target.value)}
+                className="field-input mt-2"
+                placeholder="Lagos"
+              />
+              {errors.city ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.city}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <label className="field-label">State / Region</label>
+              <input
+                type="text"
+                value={formState.stateRegion}
+                onChange={(event) =>
+                  handleChange("stateRegion", event.target.value)
+                }
+                className="field-input mt-2"
+                placeholder="Lagos"
+              />
+              {errors.stateRegion ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.stateRegion}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <label className="field-label">Postal Code</label>
+              <input
+                type="text"
+                value={formState.postalCode}
+                onChange={(event) =>
+                  handleChange("postalCode", event.target.value)
+                }
+                className="field-input mt-2"
+                placeholder="100001"
+              />
+              {errors.postalCode ? (
+                <p className="mt-2 text-[0.76rem] text-destructive">
+                  {errors.postalCode}
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button type="button" onClick={() => void handleSave()} disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Save Address"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={stopEditing}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </div>
+        </>
+      ) : address ? (
         <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
-          <div className="rounded-[1.15rem] border border-border/70 bg-secondary/55 p-5">
+          <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
             <div className="flex items-center gap-2 text-brand">
               <RiMapPinLine className="size-4" />
               <p className="text-[0.72rem] font-medium tracking-[0.16em] uppercase">
@@ -43,12 +282,12 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
             </p>
             <p className="mt-3 text-[0.82rem] leading-7 text-muted-foreground">
               {address.addressLine1}
-              {address.addressLine2 && (
+              {address.addressLine2 ? (
                 <>
                   <br />
                   {address.addressLine2}
                 </>
-              )}
+              ) : null}
               <br />
               {address.city}, {address.stateRegion} {address.postalCode}
               <br />
@@ -56,15 +295,19 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
             </p>
           </div>
 
-          <div className="rounded-[1.15rem] border border-border/70 bg-background px-5 py-4 text-[0.78rem] leading-6 text-muted-foreground md:max-w-[14rem]">
+          <div className="rounded-[var(--radius)] border border-border/70 bg-background px-5 py-4 text-[0.78rem] leading-6 text-muted-foreground md:max-w-[14rem]">
             Delivery windows and order updates will follow the address saved
             here.
           </div>
         </div>
       ) : (
-        <p className="mt-6 text-[0.82rem] leading-6 text-muted-foreground">
-          No saved address yet.
-        </p>
+        <div className="mt-6 rounded-[var(--radius)] border border-dashed border-border/55 bg-secondary/35 p-6 sm:p-8">
+          <EmptyState
+            icon={<EmptyAddressIcon className="size-7" aria-hidden="true" />}
+            title="No saved address yet"
+            description="Add one here so checkout feels quicker and more seamless next time."
+          />
+        </div>
       )}
     </section>
   )

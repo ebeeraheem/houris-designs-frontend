@@ -22,9 +22,12 @@ const passwordPrinciples = [
 
 export function ChangePasswordForm() {
   return (
-    <form className="mt-8 space-y-5">
-      <div className="rounded-[1.25rem] border border-border/70 bg-background/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-5">
-        <label htmlFor="currentPassword" className="field-label mb-3 block">
+    <form className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
+      <div className="rounded-[var(--radius)] border border-border/70 bg-background/85 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-4">
+        <label
+          htmlFor="currentPassword"
+          className="field-label mb-2 block sm:mb-3"
+        >
           Current Password
         </label>
         <input
@@ -38,9 +41,12 @@ export function ChangePasswordForm() {
         />
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <div className="rounded-[1.25rem] border border-border/70 bg-background/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-5">
-          <label htmlFor="newPassword" className="field-label mb-3 block">
+      <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
+        <div className="rounded-[var(--radius)] border border-border/70 bg-background/85 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-4">
+          <label
+            htmlFor="newPassword"
+            className="field-label mb-2 block sm:mb-3"
+          >
             New Password
           </label>
           <input
@@ -54,8 +60,11 @@ export function ChangePasswordForm() {
           />
         </div>
 
-        <div className="rounded-[1.25rem] border border-border/70 bg-background/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-5">
-          <label htmlFor="confirmPassword" className="field-label mb-3 block">
+        <div className="rounded-[var(--radius)] border border-border/70 bg-background/85 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-4">
+          <label
+            htmlFor="confirmPassword"
+            className="field-label mb-2 block sm:mb-3"
+          >
             Confirm New Password
           </label>
           <input
@@ -70,7 +79,7 @@ export function ChangePasswordForm() {
         </div>
       </div>
 
-      <div className="rounded-[1.25rem] border border-border/70 bg-secondary/70 p-4 sm:p-5">
+      <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/70 p-3 sm:p-4">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 rounded-full bg-brand/12 p-2 text-brand">
             <RiShieldCheckLine className="size-4" />
@@ -84,11 +93,11 @@ export function ChangePasswordForm() {
           </div>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-3 sm:gap-3">
           {passwordPrinciples.map(({ title, description }) => (
             <div
               key={title}
-              className="rounded-[1rem] border border-border/70 bg-background/75 p-4"
+              className="rounded-[var(--radius)] border border-border/70 bg-background/75 p-3"
             >
               <p className="text-[0.74rem] font-medium tracking-[0.14em] text-foreground uppercase">
                 {title}
@@ -104,7 +113,7 @@ export function ChangePasswordForm() {
       <div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row">
         <Link
           href="/account"
-          className="inline-flex h-12 flex-1 shrink-0 items-center justify-center rounded-[calc(var(--radius)+1px)] border border-border bg-background px-6 text-center text-[0.68rem] font-medium tracking-[0.22em] whitespace-nowrap text-foreground uppercase transition-all duration-200 outline-none select-none hover:border-foreground/35 hover:bg-secondary focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
+          className="inline-flex h-12 flex-1 shrink-0 items-center justify-center rounded-[var(--radius)] border border-border bg-background px-6 text-center text-[0.68rem] font-medium tracking-[0.22em] whitespace-nowrap text-foreground uppercase transition-all duration-200 outline-none select-none hover:border-foreground/35 hover:bg-secondary focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
         >
           Cancel
         </Link>

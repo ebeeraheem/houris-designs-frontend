@@ -9,7 +9,8 @@ export function useUpdateAddress() {
   return useMutation({
     mutationFn: (payload: UpdateAddressPayload) =>
       accountService.updateAddress(payload),
-    onSuccess: async () => {
+    onSuccess: async (address) => {
+      queryClient.setQueryData([ACCOUNT_QUERY_KEY, "address"], address)
       await queryClient.invalidateQueries({
         queryKey: [ACCOUNT_QUERY_KEY, "address"],
       })

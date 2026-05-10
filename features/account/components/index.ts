@@ -1,4 +1,5 @@
 export { AccountOverview } from "./AccountOverview"
+export { AccountPageView } from "./AccountPageView"
 export { ProfileDetails } from "./ProfileDetails"
 export { DeliveryDetails } from "./DeliveryDetails"
 export { QuickActions } from "./QuickActions"
