@@ -1,142 +1,177 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
+import { useMemo, useRef, useState } from "react"
 import Image from "next/image"
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
 import {
-  RiArrowLeftLine,
-  RiTruckLine,
-  RiRefreshLine,
-  RiShieldCheckLine,
   RiCloseLine,
   RiRulerLine,
+  RiShieldCheckLine,
+  RiTruckLine,
 } from "@remixicon/react"
+import toast from "react-hot-toast"
+
+import { EmptyOptionsIcon } from "@/components/icons"
 import { PageReveal } from "@/components/page-reveal"
+import { BackIconLink } from "@/components/ui/back-icon-link"
 import { Button } from "@/components/ui/button"
-import {
-  type DemoProduct,
-  getRelatedDemoProducts,
-} from "@/features/products/demo-products"
+import { EmptyState } from "@/components/ui/empty-state"
+import { useAddCartItem } from "@/features/cart"
+import { PRODUCT_ROUTES, useGetProductById } from "@/features/products"
+import { SizeGuideContent, useGetSizeGuide } from "@/features/sizes"
+import { formatCurrency } from "@/utils/format-currency"
 import { formatSizeCode } from "@/utils/size-codes"
 
 interface ProductDetailClientProps {
-  product: DemoProduct
+  productId: string
 }
 
-const lengthCodes = [
-  { code: "A", fullLength: 52, fullSleeve: 20 },
-  { code: "B", fullLength: 54, fullSleeve: 21 },
-  { code: "C", fullLength: 56, fullSleeve: 22 },
-  { code: "D", fullLength: 58, fullSleeve: 23 },
-  { code: "E", fullLength: 60, fullSleeve: 24 },
-  { code: "F", fullLength: 62, fullSleeve: 24 },
-  { code: "G", fullLength: 64, fullSleeve: 25 },
-  { code: "H", fullLength: 66, fullSleeve: 26 },
-]
+gsap.registerPlugin(useGSAP)
 
-const widthCodes = [
-  {
-    code: 6,
-    bustMin: 31,
-    bustMax: 32,
-    waistMin: 24,
-    waistMax: 25,
-    hipsMin: 35,
-    hipsMax: 36,
-  },
-  {
-    code: 8,
-    bustMin: 32,
-    bustMax: 33,
-    waistMin: 26,
-    waistMax: 27,
-    hipsMin: 37,
-    hipsMax: 38,
-  },
-  {
-    code: 10,
-    bustMin: 34,
-    bustMax: 35,
-    waistMin: 28,
-    waistMax: 29,
-    hipsMin: 39,
-    hipsMax: 40,
-  },
-  {
-    code: 12,
-    bustMin: 35,
-    bustMax: 36,
-    waistMin: 30,
-    waistMax: 31,
-    hipsMin: 41,
-    hipsMax: 42,
-  },
-  {
-    code: 14,
-    bustMin: 36,
-    bustMax: 37,
-    waistMin: 32,
-    waistMax: 33,
-    hipsMin: 43,
-    hipsMax: 44,
-  },
-  {
-    code: 16,
-    bustMin: 37,
-    bustMax: 38,
-    waistMin: 34,
-    waistMax: 35,
-    hipsMin: 45,
-    hipsMax: 46,
-  },
-  {
-    code: 18,
-    bustMin: 39,
-    bustMax: 40,
-    waistMin: 36,
-    waistMax: 37,
-    hipsMin: 47,
-    hipsMax: 48,
-  },
-  {
-    code: 20,
-    bustMin: 40,
-    bustMax: 41,
-    waistMin: 38,
-    waistMax: 39,
-    hipsMin: 49,
-    hipsMax: 50,
-  },
-  {
-    code: 22,
-    bustMin: 42,
-    bustMax: 43,
-    waistMin: 40,
-    waistMax: 41,
-    hipsMin: 51,
-    hipsMax: 52,
-  },
-  {
-    code: 24,
-    bustMin: 44,
-    bustMax: 45,
-    waistMin: 42,
-    waistMax: 43,
-    hipsMin: 53,
-    hipsMax: 54,
-  },
-]
+const DETAIL_TILT_MAX_X = 10
+const DETAIL_TILT_MAX_Y = 12
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-export function ProductDetailClient({ product }: ProductDetailClientProps) {
-  const initialSwatch =
-    product.availableColours.find(
-      (colour) => colour.label === product.colour
-    ) ?? product.availableColours[0]
-  const [selectedSwatchId, setSelectedSwatchId] = useState(
-    initialSwatch?.id ?? ""
+function ProductDetailSkeleton() {
+  return (
+    <div data-page-section className="py-8 sm:py-12">
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-12">
+        <div className="lg:col-span-7">
+          <div className="grid gap-4 lg:grid-cols-[5rem_1fr]">
+            <div className="order-2 flex gap-2 lg:order-1 lg:flex-col">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={`detail-thumb-skeleton-${index}`}
+                  className="image-shell h-16 w-16 shrink-0 overflow-hidden rounded-[var(--radius)] bg-secondary/60 lg:h-14 lg:w-14"
+                />
+              ))}
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="image-shell relative aspect-[4/5] overflow-hidden rounded-[var(--radius)] bg-secondary/60" />
+            </div>
+          </div>
+        </div>
+
+        <section className="lg:col-span-5 lg:py-4">
+          <div className="space-y-6">
+            <div>
+              <div className="h-3 w-32 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+              <div className="mt-3 h-9 w-4/5 animate-pulse rounded-[var(--radius)] bg-secondary/60 sm:h-10" />
+              <div className="mt-2 h-9 w-3/5 animate-pulse rounded-[var(--radius)] bg-secondary/60 sm:h-10" />
+              <div className="mt-4 h-6 w-28 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+            </div>
+
+            <div className="border-t border-border/50 pt-6">
+              <div className="space-y-2">
+                <div className="h-4 w-full animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                <div className="h-4 w-[92%] animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                <div className="h-4 w-[78%] animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+              </div>
+            </div>
+
+            <div className="border-t border-border/50 pt-6">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="h-3 w-16 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                <div className="h-4 w-24 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div
+                    key={`colour-skeleton-${index}`}
+                    className="h-10 w-28 animate-pulse rounded-full bg-secondary/60"
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-6 border-t border-border/50 pt-6">
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="h-3 w-24 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                  <div className="h-4 w-20 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                </div>
+                <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <div
+                      key={`length-grid-skeleton-${index}`}
+                      className="h-11 animate-pulse rounded-[var(--radius)] border border-border bg-secondary/50"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="h-3 w-24 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                  <div className="h-4 w-16 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                </div>
+                <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+                  {Array.from({ length: 10 }).map((_, index) => (
+                    <div
+                      key={`width-grid-skeleton-${index}`}
+                      className="h-11 animate-pulse rounded-[var(--radius)] border border-border bg-secondary/50"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="h-3 w-24 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                    <div className="mt-3 h-5 w-20 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                  </div>
+                  <div className="w-32 space-y-2">
+                    <div className="h-3 w-full animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                    <div className="h-3 w-5/6 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-12 w-full animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+            </div>
+
+            <div className="grid gap-3 border-t border-border/50 pt-6">
+              {Array.from({ length: 2 }).map((_, index) => (
+                <div
+                  key={`service-note-skeleton-${index}`}
+                  className="flex items-start gap-3"
+                >
+                  <div className="mt-0.5 h-4 w-4 animate-pulse rounded-full bg-secondary/60" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-28 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                    <div className="h-4 w-36 animate-pulse rounded-[var(--radius)] bg-secondary/60" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   )
-  const [selectedColourLabel, setSelectedColourLabel] = useState(
-    initialSwatch?.label ?? product.colour
+}
+
+export function ProductDetailClient({ productId }: ProductDetailClientProps) {
+  const {
+    data: product,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetProductById(productId)
+  const {
+    data: sizeGuide,
+    isLoading: isSizeGuideLoading,
+    isError: hasSizeGuideError,
+    refetch: refetchSizeGuide,
+  } = useGetSizeGuide()
+  const addCartItem = useAddCartItem()
+  const [mainImage, setMainImage] = useState(0)
+  const [selectedColourLabel, setSelectedColourLabel] = useState<string | null>(
+    null
   )
   const [selectedLengthCode, setSelectedLengthCode] = useState<string | null>(
     null
@@ -144,167 +179,449 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedWidthCode, setSelectedWidthCode] = useState<number | null>(
     null
   )
-  const [mainImage, setMainImage] = useState(0)
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false)
+  const mediaTiltShellRef = useRef<HTMLDivElement>(null)
+  const mediaTiltCardRef = useRef<HTMLDivElement>(null)
+  const mediaImageLayerRef = useRef<HTMLDivElement>(null)
+  const mediaGlowRef = useRef<HTMLDivElement>(null)
+  const mediaTopBadgeRef = useRef<HTMLDivElement>(null)
+  const mediaBottomBadgeRef = useRef<HTMLDivElement>(null)
 
+  const images = useMemo(() => {
+    if (!product) {
+      return []
+    }
+
+    return [product.primaryImageUrl, ...product.galleryImageUrls]
+      .filter(Boolean)
+      .map((src, index) => ({
+        src,
+        alt:
+          index === 0
+            ? product.title
+            : `${product.title} gallery image ${index + 1}`,
+      }))
+  }, [product])
+
+  const selectedColour =
+    product?.availableColours.find(
+      (colour) => colour.label === selectedColourLabel
+    ) ??
+    product?.availableColours[0] ??
+    null
+  const hasValidSelectedSwatchId = Boolean(
+    selectedColour?.id && UUID_PATTERN.test(selectedColour.id)
+  )
+  const lengthCodes = sizeGuide?.lengths ?? []
+  const widthCodes = sizeGuide?.widths ?? []
+  const hasSizeOptions = lengthCodes.length > 0 && widthCodes.length > 0
   const selectedSize = formatSizeCode(selectedLengthCode, selectedWidthCode)
   const isSelectionComplete = Boolean(
-    selectedSwatchId && selectedLengthCode && selectedWidthCode
+    product &&
+    selectedColour &&
+    hasValidSelectedSwatchId &&
+    selectedLengthCode &&
+    selectedWidthCode &&
+    hasSizeOptions
   )
 
-  useEffect(() => {
-    if (isSizeGuideOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
+  useGSAP(
+    () => {
+      const shell = mediaTiltShellRef.current
+      const card = mediaTiltCardRef.current
+      const imageLayer = mediaImageLayerRef.current
+      const glow = mediaGlowRef.current
+      const topBadge = mediaTopBadgeRef.current
+      const bottomBadge = mediaBottomBadgeRef.current
+
+      if (!shell || !card || !imageLayer || !glow || !topBadge || !bottomBadge) {
+        return
+      }
+
+      const canTilt =
+        window.matchMedia("(pointer: fine)").matches &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+      gsap.set(card, {
+        clearProps: "transform",
+        transformPerspective: 1800,
+        transformStyle: "preserve-3d",
+        transformOrigin: "center center",
+      })
+      gsap.set(imageLayer, {
+        clearProps: "transform",
+        z: 24,
+        transformOrigin: "center center",
+      })
+      gsap.set(glow, {
+        clearProps: "transform",
+        xPercent: -50,
+        yPercent: -50,
+        opacity: 0,
+        z: 44,
+      })
+      gsap.set([topBadge, bottomBadge], {
+        clearProps: "transform",
+        z: 54,
+      })
+
+      if (!canTilt) {
+        return
+      }
+
+      const rotateXTo = gsap.quickTo(card, "rotationX", {
+        duration: 0.45,
+        ease: "power3.out",
+      })
+      const rotateYTo = gsap.quickTo(card, "rotationY", {
+        duration: 0.45,
+        ease: "power3.out",
+      })
+      const scaleTo = gsap.quickTo(card, "scale", {
+        duration: 0.45,
+        ease: "power3.out",
+      })
+      const imageScaleTo = gsap.quickTo(imageLayer, "scale", {
+        duration: 0.55,
+        ease: "power3.out",
+      })
+      const glowXTo = gsap.quickTo(glow, "x", {
+        duration: 0.45,
+        ease: "power3.out",
+      })
+      const glowYTo = gsap.quickTo(glow, "y", {
+        duration: 0.45,
+        ease: "power3.out",
+      })
+      const glowOpacityTo = gsap.quickTo(glow, "opacity", {
+        duration: 0.35,
+        ease: "power2.out",
+      })
+
+      const centerGlow = () => {
+        glowXTo(shell.clientWidth / 2)
+        glowYTo(shell.clientHeight / 2)
+      }
+
+      const handleEnter = () => {
+        scaleTo(1.015)
+        imageScaleTo(1.04)
+        glowOpacityTo(1)
+        centerGlow()
+      }
+
+      const handleMove = (event: MouseEvent) => {
+        const bounds = shell.getBoundingClientRect()
+        const progressX = (event.clientX - bounds.left) / bounds.width
+        const progressY = (event.clientY - bounds.top) / bounds.height
+
+        rotateYTo((progressX - 0.5) * DETAIL_TILT_MAX_Y)
+        rotateXTo((0.5 - progressY) * DETAIL_TILT_MAX_X)
+        glowXTo(event.clientX - bounds.left)
+        glowYTo(event.clientY - bounds.top)
+      }
+
+      const handleLeave = () => {
+        rotateXTo(0)
+        rotateYTo(0)
+        scaleTo(1)
+        imageScaleTo(1)
+        glowOpacityTo(0)
+        centerGlow()
+      }
+
+      centerGlow()
+      shell.addEventListener("mouseenter", handleEnter)
+      shell.addEventListener("mousemove", handleMove)
+      shell.addEventListener("mouseleave", handleLeave)
+
+      return () => {
+        shell.removeEventListener("mouseenter", handleEnter)
+        shell.removeEventListener("mousemove", handleMove)
+        shell.removeEventListener("mouseleave", handleLeave)
+      }
+    },
+    {
+      dependencies: [product?.id, mainImage],
+      revertOnUpdate: true,
     }
-    return () => {
-      document.body.style.overflow = "unset"
+  )
+
+  const handleAddToCart = async () => {
+    const swatchId = selectedColour?.id
+
+    if (
+      !product ||
+      !selectedColour ||
+      !swatchId ||
+      !hasValidSelectedSwatchId ||
+      !selectedLengthCode ||
+      !selectedWidthCode
+    ) {
+      toast.error(
+        hasValidSelectedSwatchId
+          ? "Choose a colour, length, and width before adding to cart."
+          : "This colour is missing a valid swatch ID from the API."
+      )
+      return
     }
-  }, [isSizeGuideOpen])
+
+    try {
+      await addCartItem.mutateAsync({
+        productId: product.id,
+        swatchId,
+        sizeLengthCode: selectedLengthCode,
+        sizeWidthCode: selectedWidthCode,
+        quantity: 1,
+      })
+      toast.success("Added to cart.")
+    } catch {
+      toast.error("We couldn't add this piece to cart. Please try again.")
+    }
+  }
 
   return (
     <main className="relative isolate min-h-svh overflow-hidden bg-background">
       <PageReveal className="page-shell">
         <div data-page-intro className="border-b border-border/50 py-4">
-          <Link
-            href="/collection"
-            className="inline-flex items-center gap-2 text-[0.72rem] font-medium tracking-[0.18em] text-muted-foreground uppercase transition-colors hover:text-foreground"
-          >
-            <RiArrowLeftLine className="size-4" />
-            Back to Collection
-          </Link>
+          <BackIconLink
+            href={PRODUCT_ROUTES.LIST}
+            label="Back to collection"
+          />
         </div>
 
-        <div data-page-section className="py-8 sm:py-12">
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-12">
-            <div data-page-media className="lg:col-span-7">
-              <div className="grid gap-4 lg:grid-cols-[5rem_1fr]">
-                <div className="order-2 flex gap-2 lg:order-1 lg:flex-col">
-                  {product.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setMainImage(index)}
-                      className={`image-shell h-16 w-16 shrink-0 overflow-hidden transition-all lg:h-14 lg:w-14 ${
-                        mainImage === index
-                          ? "ring-1 ring-brand"
-                          : "opacity-70 hover:opacity-100"
-                      }`}
-                    >
-                      <div className="relative h-full w-full">
-                        <Image
-                          src={image.src}
-                          alt={image.alt}
-                          fill
-                          sizes="64px"
-                          className="object-cover"
+        {isLoading && <ProductDetailSkeleton />}
+
+        {(isError || (!isLoading && !product)) && (
+          <div data-page-section className="py-8 sm:py-12">
+            <div className="surface-card p-6 sm:p-8">
+              <p className="eyebrow-label text-brand">Product Detail</p>
+              <h1 className="mt-3 font-heading text-[1.6rem] leading-none tracking-[-0.04em] uppercase">
+                Product not found.
+              </h1>
+              <p className="mt-3 max-w-[34rem] text-sm leading-7 text-muted-foreground">
+                We couldn&apos;t load this published product from the API.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-5"
+                onClick={() => {
+                  void refetch()
+                }}
+              >
+                Try Again
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {product && (
+          <div data-page-section className="py-8 sm:py-12">
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-x-12">
+              <div data-page-media className="lg:col-span-7">
+                <div className="grid gap-4 lg:grid-cols-[5rem_1fr]">
+                  <div className="order-2 flex gap-2 lg:order-1 lg:flex-col">
+                    {images.map((image, index) => (
+                      <button
+                        key={image.src}
+                        type="button"
+                        onClick={() => setMainImage(index)}
+                        className={`image-shell h-16 w-16 shrink-0 overflow-hidden transition-all lg:h-14 lg:w-14 ${
+                          mainImage === index
+                            ? "ring-1 ring-brand"
+                            : "opacity-70 hover:opacity-100"
+                        }`}
+                        aria-label={`View image ${index + 1}`}
+                      >
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={image.src}
+                            alt={image.alt}
+                            fill
+                            sizes="64px"
+                            unoptimized
+                            className="object-cover"
+                          />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="order-1 lg:order-2" style={{ perspective: "1800px" }}>
+                    <div ref={mediaTiltShellRef}>
+                      <div
+                        ref={mediaTiltCardRef}
+                        className="image-shell relative aspect-[4/5] overflow-hidden shadow-panel"
+                      >
+                        <div ref={mediaImageLayerRef} className="absolute inset-0">
+                          {images[mainImage] ? (
+                            <Image
+                              key={images[mainImage].src}
+                              src={images[mainImage].src}
+                              alt={images[mainImage].alt}
+                              fill
+                              sizes="(min-width: 1024px) 48vw, 100vw"
+                              unoptimized
+                              className="object-cover"
+                            />
+                          ) : (
+                            <Image
+                              src="/images/editorial/boutique-rack.jpg"
+                              alt={product.title}
+                              fill
+                              sizes="(min-width: 1024px) 48vw, 100vw"
+                              className="object-cover"
+                            />
+                          )}
+                        </div>
+                        <div
+                          ref={mediaGlowRef}
+                          aria-hidden="true"
+                          className="pointer-events-none absolute top-0 left-0 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.32)_0%,rgba(255,255,255,0.16)_28%,transparent_72%)] blur-2xl"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/14 via-transparent to-transparent" />
+                        <div ref={mediaTopBadgeRef} className="absolute top-4 left-4">
+                          <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
+                            {selectedColour?.label ?? "Houris Collection"}
+                          </span>
+                        </div>
+                        <div
+                          ref={mediaBottomBadgeRef}
+                          className="absolute bottom-4 left-4"
+                        >
+                          <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
+                            {images.length > 0
+                              ? `${mainImage + 1} / ${images.length}`
+                              : "1 / 1"}
+                          </span>
+                        </div>
                       </div>
-                    </button>
-                  ))}
-                </div>
-                <div className="order-1 lg:order-2">
-                  <div className="image-shell relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      key={product.images[mainImage].src}
-                      src={product.images[mainImage].src}
-                      alt={product.images[mainImage].alt}
-                      fill
-                      sizes="(min-width: 1024px) 48vw, 100vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/14 via-transparent to-transparent" />
-                    <div className="absolute top-4 left-4">
-                      <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
-                        {selectedColourLabel}
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 left-4">
-                      <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
-                        {mainImage + 1} / {product.images.length}
-                      </span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="lg:col-span-5 lg:py-4">
-              <div className="sticky top-24">
-                <p className="eyebrow-label text-brand">{product.category}</p>
-                <h1 className="mt-2 font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
-                  {product.title}
-                </h1>
-                <p className="mt-3 text-[1.1rem] font-medium tracking-[0.04em] text-foreground">
-                  ${product.price}
-                </p>
-
-                <div className="mt-6 space-y-4 border-t border-border/50 pt-6">
-                  <p className="text-sm leading-7 text-muted-foreground">
-                    {product.description}
+              <section className="lg:col-span-5 lg:py-4">
+                <div className="sticky top-24">
+                  <p className="eyebrow-label text-brand">Houris Collection</p>
+                  <h1 className="mt-2 font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
+                    {product.title}
+                  </h1>
+                  <p className="mt-3 text-[1.1rem] font-medium tracking-[0.04em] text-foreground">
+                    {formatCurrency(product.price)}
                   </p>
-                </div>
 
-                <div className="mt-6 space-y-6">
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
+                  {product.description && (
+                    <div className="mt-6 border-t border-border/50 pt-6">
+                      <p className="text-sm leading-7 text-muted-foreground">
+                        {product.description}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="mt-6 border-t border-border/50 pt-6">
+                    <div className="mb-3 flex items-center justify-between">
                       <p className="field-label">Colour</p>
                       <span className="text-[0.72rem] font-medium text-foreground">
-                        {selectedColourLabel}
+                        {selectedColour?.label ?? "Unavailable"}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                      {product.availableColours.length === 0 && (
+                        <div className="w-full rounded-[var(--radius)] border border-dashed border-border/55 bg-secondary/30 p-6">
+                          <EmptyState
+                            icon={<EmptyOptionsIcon className="size-7" aria-hidden="true" />}
+                            title="No colours available"
+                            description="This product was returned without any colour options yet."
+                          />
+                        </div>
+                      )}
                       {product.availableColours.map((colour) => (
                         <button
-                          key={colour.id}
-                          onClick={() => {
-                            setSelectedSwatchId(colour.id)
-                            setSelectedColourLabel(colour.label)
-                          }}
-                          className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.68rem] font-medium tracking-[0.14em] uppercase transition-all ${
-                            selectedSwatchId === colour.id
+                          key={colour.id ?? colour.label}
+                          type="button"
+                          onClick={() => setSelectedColourLabel(colour.label)}
+                          className={`inline-flex items-center gap-2 rounded-[var(--radius)] border px-4 py-2 text-[0.68rem] font-medium tracking-[0.14em] uppercase transition-all ${
+                            selectedColour?.label === colour.label
                               ? "border-brand bg-brand/10 text-brand"
                               : "border-border bg-background hover:border-brand/50"
                           }`}
                         >
-                          <span
-                            className={`size-3 rounded-full border border-foreground/10 ${colour.swatchClass}`}
-                          />
+                          <span className="relative size-4 overflow-hidden rounded-full border border-foreground/10 bg-secondary">
+                            {colour.swatchImageUrl && (
+                              <Image
+                                src={colour.swatchImageUrl}
+                                alt=""
+                                fill
+                                sizes="16px"
+                                unoptimized
+                                className="object-cover"
+                              />
+                            )}
+                          </span>
                           {colour.label}
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <p className="field-label">Length Code</p>
-                      <button
-                        onClick={() => setIsSizeGuideOpen(true)}
-                        className="inline-flex items-center gap-1 text-[0.72rem] font-medium text-brand hover:underline"
-                      >
-                        <RiRulerLine className="size-3.5" />
-                        Size Guide
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
-                      {lengthCodes.map((length) => (
+                  <div className="mt-6 space-y-6 border-t border-border/50 pt-6">
+                    <div>
+                      <div className="mb-2 flex items-center justify-between">
+                        <p className="field-label">Length Code</p>
                         <button
-                          key={length.code}
-                          onClick={() => setSelectedLengthCode(length.code)}
-                          className={`h-11 rounded-[calc(var(--radius))] border text-[0.72rem] font-semibold tracking-[0.08em] transition-all ${
-                            selectedLengthCode === length.code
-                              ? "border-brand bg-brand/10 text-brand"
-                              : "border-border bg-background text-foreground/70 hover:border-foreground/35"
-                          }`}
+                          type="button"
+                          onClick={() => setIsSizeGuideOpen(true)}
+                          className="inline-flex items-center gap-1 text-[0.72rem] font-medium text-brand hover:underline"
                         >
-                          {length.code}
+                          <RiRulerLine className="size-3.5" />
+                          Size Guide
                         </button>
-                      ))}
+                      </div>
+                      {hasSizeGuideError && (
+                        <div className="mb-3 rounded-[var(--radius)] border border-destructive/20 bg-destructive/8 p-3">
+                          <p className="text-[0.74rem] leading-6 text-destructive">
+                            We couldn&apos;t load the live size codes.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              void refetchSizeGuide()
+                            }}
+                            className="mt-2 text-[0.72rem] font-medium text-destructive hover:underline"
+                          >
+                            Try again
+                          </button>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
+                        {isSizeGuideLoading &&
+                          Array.from({ length: 8 }).map((_, index) => (
+                            <div
+                              key={`length-skeleton-${index}`}
+                              className="h-11 animate-pulse rounded-[var(--radius)] border border-border bg-secondary/50"
+                            />
+                          ))}
+                        {!isSizeGuideLoading &&
+                          lengthCodes.map((length) => (
+                            <button
+                              key={length.code}
+                              type="button"
+                              onClick={() => setSelectedLengthCode(length.code)}
+                              className={`h-11 rounded-[var(--radius)] border text-[0.72rem] font-semibold tracking-[0.08em] transition-all ${
+                                selectedLengthCode === length.code
+                                  ? "border-brand bg-brand/10 text-brand"
+                                  : "border-border bg-background text-foreground/70 hover:border-foreground/35"
+                              }`}
+                              disabled={!hasSizeOptions}
+                            >
+                              {length.code}
+                            </button>
+                          ))}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="pt-2">
                     <div>
                       <div className="mb-2 flex items-center justify-between">
                         <p className="field-label">Width Code</p>
@@ -313,23 +630,33 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                         </span>
                       </div>
                       <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
-                        {widthCodes.map((width) => (
-                          <button
-                            key={width.code}
-                            onClick={() => setSelectedWidthCode(width.code)}
-                            className={`h-11 rounded-[calc(var(--radius))] border text-[0.72rem] font-semibold tracking-[0.08em] transition-all ${
-                              selectedWidthCode === width.code
-                                ? "border-brand bg-brand/10 text-brand"
-                                : "border-border bg-background text-foreground/70 hover:border-foreground/35"
-                            }`}
-                          >
-                            {width.code}
-                          </button>
-                        ))}
+                        {isSizeGuideLoading &&
+                          Array.from({ length: 10 }).map((_, index) => (
+                            <div
+                              key={`width-skeleton-${index}`}
+                              className="h-11 animate-pulse rounded-[var(--radius)] border border-border bg-secondary/50"
+                            />
+                          ))}
+                        {!isSizeGuideLoading &&
+                          widthCodes.map((width) => (
+                            <button
+                              key={width.code}
+                              type="button"
+                              onClick={() => setSelectedWidthCode(width.code)}
+                              className={`h-11 rounded-[var(--radius)] border text-[0.72rem] font-semibold tracking-[0.08em] transition-all ${
+                                selectedWidthCode === width.code
+                                  ? "border-brand bg-brand/10 text-brand"
+                                  : "border-border bg-background text-foreground/70 hover:border-foreground/35"
+                              }`}
+                              disabled={!hasSizeOptions}
+                            >
+                              {width.code}
+                            </button>
+                          ))}
                       </div>
                     </div>
 
-                    <div className="mt-5 rounded-[calc(var(--radius)+2px)] border border-border/70 bg-secondary/55 p-4">
+                    <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-4">
                       <div className="flex items-center justify-between gap-4">
                         <div>
                           <p className="field-label">Selected Size</p>
@@ -338,125 +665,67 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                           </p>
                         </div>
                         <p className="max-w-[14rem] text-right text-[0.72rem] leading-5 text-muted-foreground">
-                          The API now expects separate length and width codes
-                          plus a swatch selection.
+                          Choose one length and one width code for this piece.
                         </p>
                       </div>
                     </div>
 
                     <Button
+                      type="button"
                       size="lg"
-                      className="mt-4 w-full"
-                      disabled={!isSelectionComplete}
+                      className="w-full"
+                      disabled={!isSelectionComplete || addCartItem.isPending}
+                      onClick={() => {
+                        void handleAddToCart()
+                      }}
                     >
-                      {isSelectionComplete
-                        ? "Add to Cart"
-                        : "Select Length and Width"}
+                      {addCartItem.isPending
+                        ? "Adding..."
+                        : isSizeGuideLoading
+                          ? "Loading Size Codes..."
+                          : isSelectionComplete
+                            ? "Add to Cart"
+                            : selectedColour && !hasValidSelectedSwatchId
+                              ? "Unavailable Swatch"
+                            : "Select Length and Width"}
                     </Button>
                     {!isSelectionComplete && (
-                      <p className="mt-2 text-center text-[0.68rem] text-muted-foreground">
-                        Choose a swatch, one length code, and one width code to
-                        continue
+                      <p className="text-center text-[0.68rem] text-muted-foreground">
+                        {selectedColour && !hasValidSelectedSwatchId
+                          ? "This selected colour cannot be added yet because the API did not return a valid swatch ID."
+                          : hasSizeGuideError
+                          ? "Reconnect to the size guide to choose length and width codes."
+                          : "Choose a colour, one length code, and one width code to continue."}
                       </p>
                     )}
                   </div>
-                </div>
 
-                <div className="mt-8 grid gap-3 border-t border-border/50 pt-6">
-                  <div className="flex items-start gap-3 text-[0.78rem]">
-                    <RiTruckLine className="mt-0.5 size-4 shrink-0 text-brand" />
-                    <div>
-                      <p className="font-medium">Made to Order</p>
-                      <p className="text-muted-foreground">
-                        Ships in 2-3 weeks
-                      </p>
+                  <div className="mt-8 grid gap-3 border-t border-border/50 pt-6">
+                    <div className="flex items-start gap-3 text-[0.78rem]">
+                      <RiTruckLine className="mt-0.5 size-4 shrink-0 text-brand" />
+                      <div>
+                        <p className="font-medium">Made to Order</p>
+                        <p className="text-muted-foreground">
+                          Ships in 2-3 weeks
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3 text-[0.78rem]">
-                    <RiRefreshLine className="mt-0.5 size-4 shrink-0 text-brand" />
-                    <div>
-                      <p className="font-medium">Free Returns</p>
-                      <p className="text-muted-foreground">
-                        30-day return policy
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 text-[0.78rem]">
-                    <RiShieldCheckLine className="mt-0.5 size-4 shrink-0 text-brand" />
-                    <div>
-                      <p className="font-medium">Secure Payment</p>
-                      <p className="text-muted-foreground">
-                        Encrypted transactions
-                      </p>
+                    <div className="flex items-start gap-3 text-[0.78rem]">
+                      <RiShieldCheckLine className="mt-0.5 size-4 shrink-0 text-brand" />
+                      <div>
+                        <p className="font-medium">Secure Payment</p>
+                        <p className="text-muted-foreground">
+                          Encrypted transactions
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-8 border-t border-border/50 pt-6">
-                  <p className="eyebrow-label mb-3 text-brand">Details</p>
-                  <dl className="grid grid-cols-2 gap-3 text-[0.78rem]">
-                    <div>
-                      <dt className="text-muted-foreground">Material</dt>
-                      <dd className="mt-0.5 font-medium">{product.material}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">Fit</dt>
-                      <dd className="mt-0.5 font-medium">{product.fit}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">Care</dt>
-                      <dd className="mt-0.5 font-medium">{product.care}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">Origin</dt>
-                      <dd className="mt-0.5 font-medium">{product.origin}</dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
+              </section>
             </div>
           </div>
-        </div>
+        )}
 
-        <div
-          data-page-section
-          className="border-t border-border/50 py-12 sm:py-16"
-        >
-          <p className="eyebrow-label mb-6 text-brand">You May Also Like</p>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {getRelatedDemoProducts(String(product.id)).map((item) => (
-              <Link
-                key={item.id}
-                href={`/collection/${item.id}`}
-                className="group"
-              >
-                <div className="image-shell aspect-[3/4] overflow-hidden">
-                  <div className="relative h-full w-full transition-transform duration-500 group-hover:scale-105">
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      sizes="(min-width: 1024px) 25vw, 50vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/14 via-transparent to-transparent" />
-                  </div>
-                </div>
-                <div className="mt-3">
-                  <p className="eyebrow-label text-brand">{item.colour}</p>
-                  <h3 className="mt-1 font-heading text-[0.95rem] font-medium tracking-[-0.02em]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-[0.78rem] font-medium text-muted-foreground">
-                    ${item.price}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Size Guide Modal */}
         {isSizeGuideOpen && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -464,8 +733,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           >
             <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
             <div
-              className="relative z-10 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[calc(var(--radius)+4px)] border border-border bg-background shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
+              className="relative z-10 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius)] border border-border bg-background shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
             >
               <div className="flex items-center justify-between border-b border-border px-6 py-4">
                 <div>
@@ -475,8 +744,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   </h2>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsSizeGuideOpen(false)}
-                  className="inline-flex items-center justify-center rounded-[calc(var(--radius))] p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  className="inline-flex items-center justify-center rounded-[var(--radius)] p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                   aria-label="Close size guide"
                 >
                   <RiCloseLine className="size-5" />
@@ -486,145 +756,39 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <div className="max-h-[calc(90vh-80px)] overflow-y-auto p-6">
                 <p className="mb-6 text-[0.85rem] leading-6 text-muted-foreground">
                   Our two-dimensional sizing system combines length and width
-                  codes for a precise fit. Choose one from each dimension — the
-                  result is your size (e.g., E16 = Length E + Width 16).
+                  codes for a precise fit. Choose one from each dimension: the
+                  result is your size.
                 </p>
-
-                <div className="grid gap-6 lg:grid-cols-2">
+                {isSizeGuideLoading && (
                   <div className="surface-card p-5">
-                    <div className="mb-4 flex items-center gap-2">
-                      <span className="eyebrow-label text-brand">Length</span>
-                      <span className="h-px flex-1 bg-border" />
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="border-b border-border">
-                            <th className="pr-3 pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Code
-                            </th>
-                            <th className="pr-3 pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Full Length
-                            </th>
-                            <th className="pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Full Sleeve
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {lengthCodes.map((row) => (
-                            <tr
-                              key={row.code}
-                              className="border-b border-border/50"
-                            >
-                              <td className="py-2.5 pr-3 text-[0.75rem] font-semibold tracking-[0.06em]">
-                                {row.code}
-                              </td>
-                              <td className="py-2.5 pr-3 text-[0.75rem] text-muted-foreground">
-                                {row.fullLength}&quot;
-                              </td>
-                              <td className="py-2.5 text-[0.75rem] text-muted-foreground">
-                                {row.fullSleeve}&quot;
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <p className="eyebrow-label text-brand">Precision Fit</p>
+                    <p className="mt-3 text-[0.82rem] leading-6 text-muted-foreground">
+                      Loading the live size guide...
+                    </p>
                   </div>
+                )}
 
+                {hasSizeGuideError && (
                   <div className="surface-card p-5">
-                    <div className="mb-4 flex items-center gap-2">
-                      <span className="eyebrow-label text-brand">Width</span>
-                      <span className="h-px flex-1 bg-border" />
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="border-b border-border">
-                            <th className="pr-2 pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Code
-                            </th>
-                            <th className="pr-2 pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Bust
-                            </th>
-                            <th className="pr-2 pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Waist
-                            </th>
-                            <th className="pb-2 text-[0.65rem] font-medium tracking-[0.16em] text-foreground/60 uppercase">
-                              Hips
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {widthCodes.map((row) => (
-                            <tr
-                              key={row.code}
-                              className="border-b border-border/50"
-                            >
-                              <td className="py-2 pr-2 text-[0.75rem] font-semibold tracking-[0.06em]">
-                                {row.code}
-                              </td>
-                              <td className="py-2 pr-2 text-[0.75rem] text-muted-foreground">
-                                {row.bustMin}-{row.bustMax}&quot;
-                              </td>
-                              <td className="py-2 pr-2 text-[0.75rem] text-muted-foreground">
-                                {row.waistMin}-{row.waistMax}&quot;
-                              </td>
-                              <td className="py-2 text-[0.75rem] text-muted-foreground">
-                                {row.hipsMin}-{row.hipsMax}&quot;
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <p className="eyebrow-label text-brand">Precision Fit</p>
+                    <p className="mt-3 text-[0.82rem] leading-6 text-muted-foreground">
+                      We couldn&apos;t load the live size guide. Try again to
+                      fetch the latest measurement codes.
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mt-4"
+                      onClick={() => {
+                        void refetchSizeGuide()
+                      }}
+                    >
+                      Try Again
+                    </Button>
                   </div>
-                </div>
+                )}
 
-                <div className="surface-card mt-6 p-5">
-                  <p className="eyebrow-label mb-4 text-brand">
-                    How to Measure
-                  </p>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div>
-                      <p className="font-heading text-[0.9rem] font-medium tracking-[-0.02em]">
-                        Full Length
-                      </p>
-                      <p className="mt-1 text-[0.75rem] leading-5 text-muted-foreground">
-                        Measure from the highest point of the shoulder to the
-                        desired hem length.
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-heading text-[0.9rem] font-medium tracking-[-0.02em]">
-                        Full Sleeve
-                      </p>
-                      <p className="mt-1 text-[0.75rem] leading-5 text-muted-foreground">
-                        Measure from the shoulder seam to the wrist bone with
-                        arm slightly bent.
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-heading text-[0.9rem] font-medium tracking-[-0.02em]">
-                        Bust
-                      </p>
-                      <p className="mt-1 text-[0.75rem] leading-5 text-muted-foreground">
-                        Measure around the fullest part of the bust, keeping the
-                        tape level.
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-heading text-[0.9rem] font-medium tracking-[-0.02em]">
-                        Waist / Hips
-                      </p>
-                      <p className="mt-1 text-[0.75rem] leading-5 text-muted-foreground">
-                        Measure at the natural waist and fullest part of the
-                        hips.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                {sizeGuide && <SizeGuideContent guide={sizeGuide} dense />}
               </div>
             </div>
           </div>
