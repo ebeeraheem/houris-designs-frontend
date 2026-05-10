@@ -38,7 +38,7 @@ export function CheckoutHighlights({
       {highlights.map(({ icon: Icon, label, value }) => (
         <div
           key={label}
-          className="rounded-[1.1rem] border border-border/70 bg-background/82 p-4"
+          className="rounded-[var(--radius)] border border-border/70 bg-background/82 p-4"
         >
           <div className="flex items-center gap-2 text-brand">
             <Icon className="size-4" />

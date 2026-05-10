@@ -1,88 +1,88 @@
-import { formatSizeCode } from "@/utils/size-codes"
+import Link from "next/link"
+import { RiArrowRightUpLine } from "@remixicon/react"
 
-interface OrderItem {
-  productTitle: string
-  colourLabel: string
-  sizeLengthCode: string
-  sizeWidthCode: number
-  quantity: number
-}
-
-interface Order {
-  id: string
-  status: string
-  total: number
-  createdAt: string
-  items: OrderItem[]
-}
+import { ORDER_ROUTES } from "../order.constants"
+import type { OrderHistoryItem } from "../order.types"
+import {
+  formatOrderDate,
+  getOrderStatusClasses,
+  getOrderStatusLabel,
+} from "../order.utils"
+import { formatCurrency } from "@/utils/format-currency"
 
 interface OrderListProps {
-  orders: Order[]
+  orders: OrderHistoryItem[]
 }
 
-const statusStyles: Record<string, string> = {
-  NEW: "border-brand/30 bg-brand/10 text-brand",
-  IN_PROGRESS: "border-warning/30 bg-warning/10 text-warning",
-  READY_FOR_DELIVERY: "border-info/30 bg-info/10 text-info",
-  SHIPPED: "border-info/30 bg-info/10 text-info",
-  DELIVERED: "border-success/30 bg-success/10 text-success",
+function formatProductSummary(productTitles: string[]) {
+  if (productTitles.length === 0) {
+    return "Order details available inside."
+  }
+
+  if (productTitles.length === 1) {
+    return productTitles[0]
+  }
+
+  if (productTitles.length === 2) {
+    return `${productTitles[0]} and ${productTitles[1]}`
+  }
+
+  return `${productTitles[0]}, ${productTitles[1]}, and ${productTitles.length - 2} more`
 }
 
 export function OrderList({ orders }: OrderListProps) {
   return (
     <div className="space-y-4">
       {orders.map((order) => (
-        <div key={order.id} className="surface-card p-6 sm:p-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <p className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
-                  Order #{order.id}
-                </p>
-                <span
-                  className={`inline-flex items-center rounded-full border px-3 py-1 text-[0.62rem] font-medium tracking-[0.14em] uppercase ${statusStyles[order.status]}`}
-                >
-                  {order.status}
-                </span>
-              </div>
-              <p className="mt-1 text-[0.72rem] text-muted-foreground">
-                Placed on {order.createdAt}
-              </p>
-            </div>
-            <div className="text-left sm:text-right">
-              <p className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
-                ${order.total}
-              </p>
-              <p className="text-[0.72rem] text-muted-foreground">
-                {order.items.length} items
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 border-t border-border/50 pt-6">
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              {order.items.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 text-[0.72rem]"
-                >
-                  <div className="image-shell h-10 w-10 shrink-0">
-                    <div className="h-full w-full bg-muted/60" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{item.productTitle}</p>
-                    <p className="text-muted-foreground">
-                      {item.colourLabel} /{" "}
-                      {formatSizeCode(item.sizeLengthCode, item.sizeWidthCode)}{" "}
-                      / Qty:
-                      {item.quantity}
-                    </p>
-                  </div>
+        <Link
+          key={order.id}
+          href={ORDER_ROUTES.DETAIL(order.id)}
+          className="group block"
+        >
+          <article className="surface-card p-4 transition-colors duration-200 group-hover:border-brand/35 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
+                    {order.orderReference}
+                  </p>
+                  <span
+                    className={`inline-flex items-center rounded-[var(--radius)] border px-3 py-1 text-[0.62rem] font-medium tracking-[0.14em] uppercase ${getOrderStatusClasses(order.status)}`}
+                  >
+                    {getOrderStatusLabel(order.status)}
+                  </span>
                 </div>
-              ))}
+                <p className="mt-1 text-[0.72rem] text-muted-foreground">
+                  Placed on {formatOrderDate(order.datePlaced)}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 sm:justify-end">
+                <div className="text-left sm:text-right">
+                  <p className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
+                    {formatCurrency(order.total)}
+                  </p>
+                  <p className="text-[0.72rem] text-muted-foreground">
+                    {order.productTitles.length} piece
+                    {order.productTitles.length === 1 ? "" : "s"}
+                  </p>
+                </div>
+                <div className="rounded-[var(--radius)] border border-border/70 p-2 text-brand transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  <RiArrowRightUpLine className="size-4" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="mt-6 border-t border-border/50 pt-6">
+              <p className="text-[0.72rem] font-medium tracking-[0.16em] text-brand uppercase">
+                Pieces
+              </p>
+              <p className="mt-3 max-w-[44rem] text-sm leading-7 text-muted-foreground">
+                {formatProductSummary(order.productTitles)}
+              </p>
+            </div>
+          </article>
+        </Link>
       ))}
     </div>
   )

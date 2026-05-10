@@ -4,16 +4,11 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  RiCheckLine,
-  RiCloseLine,
-  RiMapPin2Line,
-  RiSecurePaymentLine,
-  RiTruckLine,
-} from "@remixicon/react"
+import { RiCheckLine, RiCloseLine, RiMapPin2Line } from "@remixicon/react"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
+import { formatCurrency } from "@/utils/format-currency"
 
 const shippingAddressSchema = z.object({
   recipientName: z.string().min(1, "Recipient name is required"),
@@ -75,27 +70,6 @@ interface CheckoutFormProps {
   onSubmit?: (data: CheckoutPayload) => void
 }
 
-const deliveryNotes = [
-  "Saved account addresses can be reused or adjusted before the final payment step.",
-  "Shipping details stay aligned with the live API payload: recipient, street, city, state, country, and postal code.",
-  "Once payment succeeds, the order can move into the made-to-order tracking flow tied to your account.",
-]
-
-const paymentNotes = [
-  {
-    icon: RiSecurePaymentLine,
-    title: "Secure Handoff",
-    description:
-      "The next step should redirect into payment only after this review is complete.",
-  },
-  {
-    icon: RiTruckLine,
-    title: "Delivery Ready",
-    description:
-      "Your shipping details stay close to the order summary so the final review feels clear and calm.",
-  },
-]
-
 function mapSavedAddressToCheckout(
   saved: SavedAddress
 ): CheckoutPayload["shippingAddress"] {
@@ -145,8 +119,8 @@ export function CheckoutForm({
   const hasSavedAddress = !!savedAddress
   const totalPieces =
     cartItems.reduce((sum, item) => sum + item.quantity, 0) || cartItemsCount
-  const fieldCardClass =
-    "rounded-[1.25rem] border border-border/70 bg-background/85 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-5"
+  const fieldClass =
+    "rounded-[var(--radius)] border border-border/70 bg-background px-4 py-3 text-sm outline-none transition focus:border-brand/40"
 
   useEffect(() => {
     if (!successState) {
@@ -215,14 +189,16 @@ export function CheckoutForm({
 
     setIsSubmitting(true)
 
-    if (onSubmit) {
-      await onSubmit(payload)
-    } else {
-      console.log("Checkout payload:", payload)
-      setSuccessState(buildCheckoutSuccessState(payload, savedAddress))
+    try {
+      if (onSubmit) {
+        await onSubmit(payload)
+      } else {
+        console.log("Checkout payload:", payload)
+        setSuccessState(buildCheckoutSuccessState(payload, savedAddress))
+      }
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setIsSubmitting(false)
   }
 
   const displayAddress = useSaved && savedAddress ? savedAddress : null
@@ -231,374 +207,275 @@ export function CheckoutForm({
     <>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        className="grid gap-6 lg:grid-cols-[minmax(0,1.04fr)_minmax(20rem,0.96fr)] xl:gap-8"
+        className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
       >
-        <div className="grid gap-6">
-          <section
-            data-page-section
-            className="surface-card relative overflow-hidden p-6 sm:p-8"
-          >
-            {/* <div
-              aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-brand/14 via-brand/4 to-transparent"
-            /> */}
-
-            <div className="relative">
-              <p className="eyebrow-label text-brand">Shipping Details</p>
-              <h2 className="mt-3 font-heading text-[1.65rem] leading-none tracking-[-0.05em] sm:text-[1.9rem]">
-                Delivery address and final review.
+        <section data-page-section className="surface-card p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="eyebrow-label text-brand">Shipping</p>
+              <h2 className="mt-3 font-heading text-[1.45rem] leading-none tracking-[-0.04em] sm:text-[1.7rem]">
+                Delivery details
               </h2>
-              <p className="mt-3 max-w-[38rem] text-[0.85rem] leading-7 text-muted-foreground">
-                Confirm where the order should arrive, then move forward with a
-                cleaner payment handoff.
+              <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
+                {hasSavedAddress
+                  ? "Use the saved address on your account or enter a new one for this order."
+                  : "Enter the delivery address for this order."}
               </p>
-
-              {hasSavedAddress && (
-                <div className="mt-6 rounded-[1.3rem] border border-border/70 bg-secondary/70 p-4 sm:p-5">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="flex items-start gap-3">
-                      <div className="rounded-full bg-brand/12 p-2 text-brand">
-                        <RiMapPin2Line className="size-4" />
-                      </div>
-                      <div>
-                        <p className="text-[0.72rem] font-medium tracking-[0.18em] text-brand uppercase">
-                          Saved Address
-                        </p>
-                        <p className="mt-2 max-w-[28rem] text-[0.8rem] leading-6 text-muted-foreground">
-                          Use the address already on your account, or switch to
-                          a new delivery destination for this order.
-                        </p>
-                      </div>
-                    </div>
-
-                    <label
-                      htmlFor="use-saved-address"
-                      className="group inline-flex min-w-[16rem] cursor-pointer items-center justify-between gap-4 self-start rounded-[1.1rem] border border-border/70 bg-background/85 px-4 py-3 transition hover:border-brand/30 hover:bg-background"
-                    >
-                      <input
-                        id="use-saved-address"
-                        name="useSavedAddress"
-                        type="checkbox"
-                        checked={useSaved}
-                        onChange={(event) =>
-                          handleSavedAddressChange(event.target.checked)
-                        }
-                        className="peer sr-only"
-                      />
-                      <span className="min-w-0">
-                        <span className="block text-[0.68rem] font-medium tracking-[0.18em] text-foreground uppercase">
-                          Use saved address
-                        </span>
-                        <span className="mt-1 block text-[0.74rem] leading-5 text-muted-foreground">
-                          Toggle between your account profile and a new address.
-                        </span>
-                      </span>
-                      <span className="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full bg-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] transition peer-checked:bg-brand peer-focus-visible:ring-2 peer-focus-visible:ring-ring/40">
-                        <span className="absolute left-1 flex size-5 items-center justify-center rounded-full bg-white text-brand shadow-sm transition-transform duration-200 peer-checked:translate-x-5">
-                          <RiCheckLine className="size-3" />
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-
-                  {displayAddress && (
-                    <div className="mt-4 rounded-[1rem] border border-border/70 bg-background/78 p-4">
-                      <p className="font-heading text-[1rem] font-medium tracking-[-0.03em]">
-                        {displayAddress.recipientName}
-                      </p>
-                      <p className="mt-3 text-[0.8rem] leading-6 text-muted-foreground">
-                        {displayAddress.addressLine1}
-                        {displayAddress.addressLine2
-                          ? `, ${displayAddress.addressLine2}`
-                          : ""}
-                        <br />
-                        {displayAddress.city}, {displayAddress.stateRegion}{" "}
-                        {displayAddress.postalCode}
-                        <br />
-                        {displayAddress.country}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {(!useSaved || !hasSavedAddress) && (
-                <div className="mt-6 grid gap-5">
-                  <div className={fieldCardClass}>
-                    <label
-                      htmlFor="recipientName"
-                      className="field-label mb-3 block"
-                    >
-                      Recipient Name
-                    </label>
-                    <input
-                      id="recipientName"
-                      {...register("shippingAddress.recipientName")}
-                      className="field-input w-full bg-card"
-                      placeholder="Full name"
-                    />
-                    {errors.shippingAddress?.recipientName && (
-                      <p className="mt-2 text-xs text-destructive">
-                        {errors.shippingAddress.recipientName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className={fieldCardClass}>
-                    <label htmlFor="line1" className="field-label mb-3 block">
-                      Address Line 1
-                    </label>
-                    <input
-                      id="line1"
-                      {...register("shippingAddress.line1")}
-                      className="field-input w-full bg-card"
-                      placeholder="Street address"
-                    />
-                    {errors.shippingAddress?.line1 && (
-                      <p className="mt-2 text-xs text-destructive">
-                        {errors.shippingAddress.line1.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className={fieldCardClass}>
-                    <label htmlFor="line2" className="field-label mb-3 block">
-                      Address Line 2{" "}
-                      <span className="text-muted-foreground">(optional)</span>
-                    </label>
-                    <input
-                      id="line2"
-                      {...register("shippingAddress.line2")}
-                      className="field-input w-full bg-card"
-                      placeholder="Apartment, suite, unit, etc."
-                    />
-                  </div>
-
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <div className={fieldCardClass}>
-                      <label htmlFor="city" className="field-label mb-3 block">
-                        City
-                      </label>
-                      <input
-                        id="city"
-                        {...register("shippingAddress.city")}
-                        className="field-input w-full bg-card"
-                        placeholder="City"
-                      />
-                      {errors.shippingAddress?.city && (
-                        <p className="mt-2 text-xs text-destructive">
-                          {errors.shippingAddress.city.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className={fieldCardClass}>
-                      <label
-                        htmlFor="stateOrRegion"
-                        className="field-label mb-3 block"
-                      >
-                        State / Region
-                      </label>
-                      <input
-                        id="stateOrRegion"
-                        {...register("shippingAddress.stateOrRegion")}
-                        className="field-input w-full bg-card"
-                        placeholder="State or region"
-                      />
-                      {errors.shippingAddress?.stateOrRegion && (
-                        <p className="mt-2 text-xs text-destructive">
-                          {errors.shippingAddress.stateOrRegion.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <div className={fieldCardClass}>
-                      <label
-                        htmlFor="postalCode"
-                        className="field-label mb-3 block"
-                      >
-                        Postal Code
-                      </label>
-                      <input
-                        id="postalCode"
-                        {...register("shippingAddress.postalCode")}
-                        className="field-input w-full bg-card"
-                        placeholder="Postal code"
-                      />
-                      {errors.shippingAddress?.postalCode && (
-                        <p className="mt-2 text-xs text-destructive">
-                          {errors.shippingAddress.postalCode.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className={fieldCardClass}>
-                      <label
-                        htmlFor="country"
-                        className="field-label mb-3 block"
-                      >
-                        Country
-                      </label>
-                      <input
-                        id="country"
-                        {...register("shippingAddress.country")}
-                        className="field-input w-full bg-card"
-                        placeholder="Country"
-                      />
-                      {errors.shippingAddress?.country && (
-                        <p className="mt-2 text-xs text-destructive">
-                          {errors.shippingAddress.country.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
-          </section>
 
-          <section data-page-section className="surface-panel p-6 sm:p-7">
-            <p className="eyebrow-label text-brand">Delivery Notes</p>
-            <div className="mt-4 space-y-4">
-              {deliveryNotes.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <div className="mt-0.5 rounded-full bg-brand/12 p-1.5 text-brand">
-                    <RiCheckLine className="size-3.5" />
-                  </div>
-                  <p className="text-[0.82rem] leading-6 text-muted-foreground">
-                    {item}
-                  </p>
+            {hasSavedAddress ? (
+              <label
+                htmlFor="use-saved-address"
+                className="inline-flex cursor-pointer items-center gap-3 rounded-[var(--radius)] border border-border/70 bg-background px-4 py-2.5 text-[0.72rem] font-medium tracking-[0.14em] uppercase"
+              >
+                <input
+                  id="use-saved-address"
+                  name="useSavedAddress"
+                  type="checkbox"
+                  checked={useSaved}
+                  onChange={(event) =>
+                    handleSavedAddressChange(event.target.checked)
+                  }
+                  className="size-4 accent-[var(--color-brand)]"
+                />
+                Use saved address
+              </label>
+            ) : null}
+          </div>
+
+          {displayAddress ? (
+            <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-secondary/50 p-4">
+              <div className="flex items-start gap-3">
+                <div className="rounded-[var(--radius)] bg-brand/12 p-2 text-brand">
+                  <RiMapPin2Line className="size-4" />
                 </div>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <aside className="grid content-start gap-6 self-start lg:sticky lg:top-24">
-          <section
-            data-page-section
-            className="surface-card relative overflow-hidden p-6 sm:p-7"
-          >
-            {/* <div
-              aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-24 bg-gradient-to-br from-brand/12 via-brand/4 to-transparent"
-            /> */}
-
-            <div className="relative">
-              <p className="eyebrow-label text-brand">Order Review</p>
-              <div className="mt-3 flex items-end justify-between gap-4">
                 <div>
-                  <h2 className="font-heading text-[1.5rem] leading-none tracking-[-0.05em]">
-                    Summary
-                  </h2>
-                  <p className="mt-2 text-[0.8rem] leading-6 text-muted-foreground">
-                    {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready for
-                    payment.
+                  <p className="text-[0.72rem] font-medium tracking-[0.16em] text-brand uppercase">
+                    Saved Address
                   </p>
-                </div>
-                <div className="rounded-full border border-border/70 bg-background/80 px-3 py-1.5 text-[0.68rem] font-medium tracking-[0.16em] text-brand uppercase">
-                  ${cartTotal.toFixed(2)}
+                  <p className="mt-2 font-heading text-[1rem] font-medium tracking-[-0.03em]">
+                    {displayAddress.recipientName}
+                  </p>
+                  <p className="mt-2 text-[0.8rem] leading-6 text-muted-foreground">
+                    {displayAddress.addressLine1}
+                    {displayAddress.addressLine2
+                      ? `, ${displayAddress.addressLine2}`
+                      : ""}
+                    <br />
+                    {displayAddress.city}, {displayAddress.stateRegion}{" "}
+                    {displayAddress.postalCode}
+                    <br />
+                    {displayAddress.country}
+                  </p>
                 </div>
               </div>
-
-              <div className="mt-5 space-y-3">
-                {cartItems.length > 0 ? (
-                  cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="rounded-[1rem] border border-border/70 bg-secondary/55 p-4"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          {item.colourLabel && (
-                            <p className="eyebrow-label text-brand">
-                              {item.colourLabel}
-                            </p>
-                          )}
-                          <p className="mt-1 font-heading text-[1rem] font-medium tracking-[-0.03em]">
-                            {item.productTitle}
-                          </p>
-                          <p className="mt-2 text-[0.76rem] leading-6 text-muted-foreground">
-                            Qty {item.quantity}
-                            {item.sizeLabel ? ` • Size ${item.sizeLabel}` : ""}
-                          </p>
-                        </div>
-                        {typeof item.lineSubtotal === "number" && (
-                          <p className="text-[0.82rem] font-medium">
-                            ${item.lineSubtotal.toFixed(2)}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="rounded-[1rem] border border-border/70 bg-secondary/55 p-4">
-                    <p className="text-[0.8rem] leading-6 text-muted-foreground">
-                      Your summary will appear here once items are present in
-                      the cart.
-                    </p>
-                  </div>
+            </div>
+          ) : (
+            <div className="mt-6 grid gap-4">
+              <div>
+                <label
+                  htmlFor="recipientName"
+                  className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                >
+                  Recipient Name
+                </label>
+                <input
+                  id="recipientName"
+                  {...register("shippingAddress.recipientName")}
+                  className={fieldClass}
+                  placeholder="Full name"
+                />
+                {errors.shippingAddress?.recipientName && (
+                  <p className="mt-2 text-xs text-destructive">
+                    {errors.shippingAddress.recipientName.message}
+                  </p>
                 )}
               </div>
 
-              <div className="mt-5 space-y-3 border-t border-border/70 pt-5">
-                <div className="flex items-center justify-between text-[0.8rem]">
-                  <span className="text-muted-foreground">Items</span>
-                  <span>{cartItemsCount}</span>
+              <div>
+                <label
+                  htmlFor="line1"
+                  className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                >
+                  Address Line 1
+                </label>
+                <input
+                  id="line1"
+                  {...register("shippingAddress.line1")}
+                  className={fieldClass}
+                  placeholder="Street address"
+                />
+                {errors.shippingAddress?.line1 && (
+                  <p className="mt-2 text-xs text-destructive">
+                    {errors.shippingAddress.line1.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="line2"
+                  className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                >
+                  Address Line 2
+                </label>
+                <input
+                  id="line2"
+                  {...register("shippingAddress.line2")}
+                  className={fieldClass}
+                  placeholder="Apartment, suite, unit, etc. (optional)"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="city"
+                    className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                  >
+                    City
+                  </label>
+                  <input
+                    id="city"
+                    {...register("shippingAddress.city")}
+                    className={fieldClass}
+                    placeholder="City"
+                  />
+                  {errors.shippingAddress?.city && (
+                    <p className="mt-2 text-xs text-destructive">
+                      {errors.shippingAddress.city.message}
+                    </p>
+                  )}
                 </div>
-                <div className="flex items-center justify-between text-[0.8rem]">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>Calculated after handoff</span>
+
+                <div>
+                  <label
+                    htmlFor="stateOrRegion"
+                    className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                  >
+                    State / Region
+                  </label>
+                  <input
+                    id="stateOrRegion"
+                    {...register("shippingAddress.stateOrRegion")}
+                    className={fieldClass}
+                    placeholder="State or region"
+                  />
+                  {errors.shippingAddress?.stateOrRegion && (
+                    <p className="mt-2 text-xs text-destructive">
+                      {errors.shippingAddress.stateOrRegion.message}
+                    </p>
+                  )}
                 </div>
-                <div className="flex items-center justify-between pt-1">
-                  <span className="font-heading text-[1rem] font-medium tracking-[-0.03em]">
-                    Total
-                  </span>
-                  <span className="font-heading text-[1.2rem] font-medium tracking-[-0.04em]">
-                    ${cartTotal.toFixed(2)}
-                  </span>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="postalCode"
+                    className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                  >
+                    Postal Code
+                  </label>
+                  <input
+                    id="postalCode"
+                    {...register("shippingAddress.postalCode")}
+                    className={fieldClass}
+                    placeholder="Postal code"
+                  />
+                  {errors.shippingAddress?.postalCode && (
+                    <p className="mt-2 text-xs text-destructive">
+                      {errors.shippingAddress.postalCode.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="country"
+                    className="mb-2 block text-[0.72rem] font-medium tracking-[0.14em] text-foreground uppercase"
+                  >
+                    Country
+                  </label>
+                  <input
+                    id="country"
+                    {...register("shippingAddress.country")}
+                    className={fieldClass}
+                    placeholder="Country"
+                  />
+                  {errors.shippingAddress?.country && (
+                    <p className="mt-2 text-xs text-destructive">
+                      {errors.shippingAddress.country.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
-          </section>
+          )}
+        </section>
 
-          <section data-page-section className="surface-panel p-6 sm:p-7">
-            <p className="eyebrow-label text-brand">Payment Handoff</p>
-            <div className="mt-4 space-y-4">
-              {paymentNotes.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="flex items-start gap-3">
-                  <div className="rounded-full bg-brand/12 p-2 text-brand">
-                    <Icon className="size-4" />
-                  </div>
-                  <div>
-                    <p className="text-[0.72rem] font-medium tracking-[0.16em] text-foreground uppercase">
-                      {title}
-                    </p>
-                    <p className="mt-2 text-[0.8rem] leading-6 text-muted-foreground">
-                      {description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+        <aside
+          data-page-section
+          className="surface-card h-fit p-5 sm:p-6 lg:sticky lg:top-24"
+        >
+          <p className="eyebrow-label text-brand">Order Summary</p>
+          <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
+            {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready for
+            payment.
+          </p>
+
+          <div className="mt-5 space-y-3">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-[var(--radius)] border border-border/70 bg-secondary/45 p-4"
+              >
+                <p className="font-heading text-[0.98rem] font-medium tracking-[-0.03em]">
+                  {item.productTitle}
+                </p>
+                <p className="mt-2 text-[0.76rem] leading-6 text-muted-foreground">
+                  Qty {item.quantity}
+                  {item.colourLabel ? ` • ${item.colourLabel}` : ""}
+                  {item.sizeLabel ? ` • Size ${item.sizeLabel}` : ""}
+                </p>
+                {typeof item.lineSubtotal === "number" ? (
+                  <p className="mt-2 text-[0.8rem] font-medium">
+                    {formatCurrency(item.lineSubtotal)}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 space-y-3 border-t border-border/60 pt-5 text-[0.82rem]">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Items</span>
+              <span>{cartItemsCount}</span>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Shipping</span>
+              <span>Calculated at payment</span>
+            </div>
+            <div className="flex items-center justify-between font-heading text-[1rem] font-medium tracking-[-0.03em]">
+              <span>Total</span>
+              <span>{formatCurrency(cartTotal)}</span>
+            </div>
+          </div>
 
-            <Button
-              type="submit"
-              size="lg"
-              className="mt-6 w-full"
-              disabled={isSubmitting || cartItemsCount === 0}
-            >
-              {isSubmitting ? "Processing..." : "Proceed to Payment"}
-            </Button>
+          <Button
+            type="submit"
+            size="lg"
+            className="mt-6 w-full"
+            disabled={isSubmitting || cartItemsCount === 0}
+          >
+            {isSubmitting ? "Processing..." : "Proceed to Payment"}
+          </Button>
 
-            <p className="mt-3 text-center text-[0.74rem] leading-6 text-muted-foreground">
-              {cartItemsCount === 0
-                ? "Add pieces to your cart before continuing."
-                : "You’ll move into the payment step after this final review."}
-            </p>
-          </section>
+          <p className="mt-3 text-center text-[0.74rem] leading-6 text-muted-foreground">
+            {cartItemsCount === 0
+              ? "Add pieces to your cart before continuing."
+              : "You’ll be redirected to the secure payment step next."}
+          </p>
         </aside>
       </form>
 
@@ -610,7 +487,7 @@ export function CheckoutForm({
           <div className="absolute inset-0 bg-background/80 backdrop-blur-md" />
 
           <div
-            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[1.6rem] border border-border/70 bg-background shadow-[0_32px_90px_rgba(25,18,14,0.22)]"
+            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[var(--radius)] border border-border/70 bg-background shadow-[0_32px_90px_rgba(25,18,14,0.22)]"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -626,14 +503,14 @@ export function CheckoutForm({
                 <button
                   type="button"
                   onClick={() => setSuccessState(null)}
-                  className="absolute top-4 right-4 inline-flex items-center justify-center rounded-full border border-border/70 bg-background/85 p-2 text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
+                  className="absolute top-4 right-4 inline-flex items-center justify-center rounded-[var(--radius)] border border-border/70 bg-background/85 p-2 text-muted-foreground transition hover:border-foreground/20 hover:text-foreground"
                   aria-label="Close checkout success modal"
                 >
                   <RiCloseLine className="size-4" />
                 </button>
 
                 <div className="relative">
-                  <div className="inline-flex rounded-full bg-brand/12 p-3 text-brand">
+                  <div className="inline-flex rounded-[var(--radius)] bg-brand/12 p-3 text-brand">
                     <RiCheckLine className="size-5" />
                   </div>
 
@@ -654,7 +531,7 @@ export function CheckoutForm({
                   </p>
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1.1rem] border border-border/70 bg-secondary/55 p-4">
+                    <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-4">
                       <p className="eyebrow-label text-brand">Recipient</p>
                       <p className="mt-3 font-heading text-[1.05rem] font-medium tracking-[-0.03em]">
                         {successState.recipientName}
@@ -664,10 +541,10 @@ export function CheckoutForm({
                       </p>
                     </div>
 
-                    <div className="rounded-[1.1rem] border border-border/70 bg-secondary/55 p-4">
+                    <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-4">
                       <p className="eyebrow-label text-brand">Order Total</p>
                       <p className="mt-3 font-heading text-[1.35rem] font-medium tracking-[-0.04em]">
-                        ${cartTotal.toFixed(2)}
+                        {formatCurrency(cartTotal)}
                       </p>
                       <p className="mt-2 text-[0.78rem] leading-6 text-muted-foreground">
                         {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready
@@ -687,7 +564,7 @@ export function CheckoutForm({
                     </Button>
                     <Link
                       href="/collection"
-                      className="inline-flex h-12 flex-1 items-center justify-center rounded-[calc(var(--radius)+1px)] border border-border bg-background px-6 text-center text-[0.68rem] font-medium tracking-[0.22em] text-foreground uppercase transition-all duration-200 hover:border-foreground/35 hover:bg-secondary"
+                      className="inline-flex h-12 flex-1 items-center justify-center rounded-[var(--radius)] border border-border bg-background px-6 text-center text-[0.68rem] font-medium tracking-[0.22em] text-foreground uppercase transition-all duration-200 hover:border-foreground/35 hover:bg-secondary"
                     >
                       Continue Shopping
                     </Link>
@@ -699,7 +576,7 @@ export function CheckoutForm({
                 <p className="eyebrow-label text-brand">What This Means</p>
                 <div className="mt-5 space-y-4">
                   <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-brand/12 p-1.5 text-brand">
+                    <div className="rounded-[var(--radius)] bg-brand/12 p-1.5 text-brand">
                       <RiCheckLine className="size-3.5" />
                     </div>
                     <p className="text-[0.82rem] leading-6 text-muted-foreground">
@@ -709,7 +586,7 @@ export function CheckoutForm({
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-brand/12 p-1.5 text-brand">
+                    <div className="rounded-[var(--radius)] bg-brand/12 p-1.5 text-brand">
                       <RiCheckLine className="size-3.5" />
                     </div>
                     <p className="text-[0.82rem] leading-6 text-muted-foreground">
@@ -719,7 +596,7 @@ export function CheckoutForm({
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-brand/12 p-1.5 text-brand">
+                    <div className="rounded-[var(--radius)] bg-brand/12 p-1.5 text-brand">
                       <RiCheckLine className="size-3.5" />
                     </div>
                     <p className="text-[0.82rem] leading-6 text-muted-foreground">
