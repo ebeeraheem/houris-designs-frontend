@@ -6,6 +6,7 @@ import { useState } from "react"
 import { SmoothScroll } from "./smooth-scroll"
 import { PageTransition } from "./page-transition"
 import { CustomCursor } from "./custom-cursor"
+import { SiteToaster } from "./ui/site-toaster"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -25,6 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <PageTransition>
           {children}
           <CustomCursor />
+          <SiteToaster />
         </PageTransition>
       </SmoothScroll>
     </QueryClientProvider>
