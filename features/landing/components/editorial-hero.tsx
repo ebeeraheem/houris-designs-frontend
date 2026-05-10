@@ -1,331 +1,155 @@
 "use client"
 
-import { useRef } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
-import { TextRevealLine } from "@/components/text-reveal"
-import { MagneticButton } from "@/components/magnetic-button"
-
-gsap.registerPlugin(useGSAP, ScrollTrigger)
-
-const collageImages = [
+const slides = [
   {
-    src: "/images/editorial/blue-coat.jpg",
-    alt: "Model in a powder blue tailored coat standing in front of dramatic architecture.",
-    className: "lg:col-span-5 lg:row-span-2 lg:pt-4",
-    imageClassName:
-      "h-[16rem] sm:h-[22rem] md:h-[26rem] lg:h-[min(52vh,32rem)]",
-    motion: { x: 20, y: 16, rotate: -1.4 },
+    image: "/images/HeroImages/IMG_8270.jpeg",
+    eyebrow: "Series 01 — Archival Material",
+    title: "The linear\ncollection",
+    description:
+      "Custom-fitted silhouettes engineered for the modern architectural wardrobe. Refined, precise, effortless.",
   },
   {
-    src: "/images/editorial/yellow-look.jpg",
-    alt: "Woman in a vibrant yellow fashion set posing in sunlight.",
-    className:
-      "lg:col-start-9 lg:col-span-3 lg:row-start-1 lg:mt-20 lg:self-start",
-    imageClassName:
-      "h-[11rem] sm:h-[14rem] md:h-[16rem] lg:h-[min(24vh,18rem)]",
-    motion: { x: 16, y: 12, rotate: 1.8 },
+    image: "/images/HeroImages/IMG_8283.jpeg",
+    eyebrow: "Crafted Excellence",
+    title: "Precision\nin every stitch",
+    description:
+      "Meticulously crafted garments that blend timeless design with contemporary sensibility.",
   },
   {
-    src: "/images/editorial/boutique-rack.jpg",
-    alt: "Curated rack of premium garments in a softly lit studio.",
-    className:
-      "sm:max-w-[80%] lg:col-start-6 lg:col-span-4 lg:row-start-2 lg:mt-8 lg:max-w-none lg:self-end",
-    imageClassName:
-      "h-[11rem] sm:h-[15rem] md:h-[18rem] lg:h-[min(34vh,22rem)]",
-    motion: { x: 18, y: -14, rotate: -1.2 },
+    image: "/images/HeroImages/IMG_8310.jpeg",
+    eyebrow: "Modern Minimalism",
+    title: "Elevated\nessentials",
+    description:
+      "Thoughtfully designed pieces that transcend trends and define your personal style.",
+  },
+  {
+    image: "/images/HeroImages/IMG_8322.jpeg",
+    eyebrow: "Sustainable Luxury",
+    title: "Conscious\ncraftsmanship",
+    description:
+      "Premium materials sourced responsibly, created to last beyond seasons.",
+  },
+  {
+    image: "/images/HeroImages/IMG_8333.jpeg",
+    eyebrow: "Timeless Design",
+    title: "Refined\naesthetics",
+    description:
+      "Where architectural precision meets effortless sophistication.",
   },
 ]
 
 export function EditorialHero() {
-  const root = useRef<HTMLElement>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
-  useGSAP(
-    () => {
-      const shell = root.current
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 5000)
 
-      if (!shell) {
-        return
-      }
+    return () => clearInterval(timer)
+  }, [])
 
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches
-
-      if (reduceMotion) {
-        gsap.set("[data-reveal]", {
-          clipPath: "inset(0% 0% 0% 0%)",
-        })
-        gsap.set("[data-media]", { scale: 1 })
-        return
-      }
-
-      const cards = gsap.utils.toArray<HTMLElement>("[data-card]", shell)
-      const media = gsap.utils.toArray<HTMLElement>("[data-media]", shell)
-      const pointerFine = window.matchMedia("(pointer: fine)").matches
-
-      gsap.set("[data-reveal]", {
-        clipPath: "inset(0% 0% 100% 0%)",
-      })
-      gsap.set(media, { scale: 1.16 })
-
-      const intro = gsap.timeline({
-        defaults: { ease: "power3.out" },
-      })
-
-      intro
-        .from("[data-header]", {
-          y: -10,
-          duration: 0.45,
-        })
-        .to(
-          "[data-reveal]",
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.15,
-            stagger: 0.14,
-            ease: "power4.out",
-          },
-          "-=0.1"
-        )
-        .to(
-          media,
-          {
-            scale: 1,
-            duration: 1.75,
-            stagger: 0.1,
-            ease: "power3.out",
-          },
-          "<"
-        )
-        .from(
-          "[data-copy]",
-          {
-            y: 34,
-            autoAlpha: 0,
-            duration: 0.82,
-            stagger: 0.1,
-          },
-          "-=1"
-        )
-        .from(
-          "[data-vertical]",
-          {
-            y: 24,
-            autoAlpha: 0,
-            duration: 0.8,
-          },
-          "-=0.95"
-        )
-        .from(
-          "[data-caption-line]",
-          {
-            scaleY: 0,
-            transformOrigin: "center top",
-            duration: 1,
-          },
-          "-=0.8"
-        )
-
-      cards.forEach((card, index) => {
-        const { rotate, y } = collageImages[index].motion
-
-        gsap.to(card, {
-          y,
-          rotation: rotate,
-          duration: 4.8 + index,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        })
-      })
-
-      media.forEach((layer, index) => {
-        gsap.to(layer, {
-          yPercent: index === 0 ? -6 : index === 1 ? -10 : -4,
-          ease: "none",
-          scrollTrigger: {
-            trigger: shell,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1.1,
-          },
-        })
-      })
-
-      if (!pointerFine) {
-        return
-      }
-
-      const motionSetters = cards.map((card, index) => ({
-        xTo: gsap.quickTo(card, "x", {
-          duration: 0.8,
-          ease: "power3.out",
-        }),
-        baseX: collageImages[index].motion.x,
-      }))
-
-      const onPointerMove = (event: PointerEvent) => {
-        const bounds = shell.getBoundingClientRect()
-        const normalizedX = (event.clientX - bounds.left) / bounds.width - 0.5
-
-        motionSetters.forEach((setters, index) => {
-          const amplitude = index === 0 ? 10 : 14
-
-          setters.xTo(normalizedX * amplitude + setters.baseX * 0.2)
-        })
-      }
-
-      const onPointerLeave = () => {
-        motionSetters.forEach((setters) => {
-          setters.xTo(setters.baseX * 0.2)
-        })
-      }
-
-      shell.addEventListener("pointermove", onPointerMove)
-      shell.addEventListener("pointerleave", onPointerLeave)
-
-      return () => {
-        shell.removeEventListener("pointermove", onPointerMove)
-        shell.removeEventListener("pointerleave", onPointerLeave)
-      }
-    },
-    { scope: root }
-  )
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index)
+  }
 
   return (
-    <main ref={root} className="min-h-svh">
-      <section className="px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-        <div className="relative pb-6 sm:pb-8 lg:min-h-[calc(100svh-5rem)] lg:pb-8">
+    <main className="min-h-svh">
+      <section className="relative h-[calc(100svh-4rem)] overflow-hidden">
+        {slides.map((slide, index) => (
           <div
-            id="collection"
-            className="relative z-10 grid gap-4 sm:gap-5 lg:grid-cols-12 lg:grid-rows-[minmax(14rem,auto)_auto] lg:gap-x-8 lg:gap-y-4"
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
           >
-            <div className="hidden lg:col-span-1 lg:col-start-9 lg:row-start-1 lg:flex lg:justify-center lg:self-end">
-              <div className="flex items-start gap-4">
-                <span
-                  data-vertical
-                  style={{ writingMode: "vertical-rl" }}
-                  className="eyebrow-label text-foreground/78"
-                >
-                  Archival Material / 2024
-                </span>
-                <span
-                  data-caption-line
-                  className="mt-0.5 h-36 w-px bg-foreground/14"
-                />
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+            <div className="absolute inset-0 flex items-end">
+              <div className="w-full px-6 pb-16 sm:px-12 sm:pb-20 lg:px-16 lg:pb-24">
+                <div className="mx-auto max-w-7xl">
+                  <div className="max-w-3xl space-y-4 sm:space-y-5 lg:space-y-6">
+                    <p className="eyebrow-label text-white/90">
+                      {slide.eyebrow}
+                    </p>
+                    <h1 className="font-heading text-[2.8rem] leading-[0.88] font-medium tracking-[-0.07em] text-white uppercase sm:text-[4rem] lg:text-[clamp(4rem,6vw,5.5rem)]">
+                      {slide.title.split("\n").map((line, i) => (
+                        <span key={i}>
+                          {line}
+                          {i < slide.title.split("\n").length - 1 && <br />}
+                        </span>
+                      ))}
+                    </h1>
+                    <p className="max-w-[32rem] text-[0.95rem] leading-7 text-white/90 sm:text-base">
+                      {slide.description}
+                    </p>
+                    <Link
+                      href="/collection"
+                      className="group/link inline-flex items-center gap-3 text-[0.7rem] font-medium tracking-[0.22em] text-white uppercase transition-colors duration-200 hover:text-brand"
+                    >
+                      Explore collection
+                      <span className="inline-flex size-8 items-center justify-center rounded-[var(--radius)] border border-white/30 transition-all duration-200 group-hover/link:border-brand group-hover/link:bg-brand group-hover/link:text-brand-foreground">
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          className="translate-x-px transition-transform duration-200 group-hover/link:translate-x-0.5"
+                        >
+                          <path
+                            d="M4 2L8 6L4 10"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <article
-              className={`${collageImages[0].className} relative`}
-              data-card
-            >
-              <div data-reveal className="image-shell">
-                <div
-                  data-media
-                  className={`relative ${collageImages[0].imageClassName}`}
-                >
-                  <Image
-                    src={collageImages[0].src}
-                    alt={collageImages[0].alt}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 42vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="max-w-[24rem] space-y-3 pt-4 sm:space-y-4 sm:pt-5 lg:max-w-[28rem]">
-                <p data-copy className="eyebrow-label text-brand">
-                  Series 01
-                </p>
-                <TextRevealLine
-                  className="max-w-[18rem] font-heading text-[2rem] leading-[0.9] font-medium tracking-[-0.07em] text-foreground uppercase sm:max-w-[22rem] sm:text-[2.75rem] md:text-[3.1rem] lg:max-w-[24rem] lg:text-[clamp(3rem,5.2vw,4.2rem)]"
-                  delay={0.2}
-                  stagger={0.12}
-                  yOffset={40}
-                >
-                  The linear collection
-                </TextRevealLine>
-                <p
-                  data-copy
-                  className="max-w-[24rem] text-sm leading-6 text-muted-foreground sm:text-[0.92rem] sm:leading-7"
-                >
-                  Custom-fitted silhouettes engineered for the modern
-                  architectural wardrobe. Refined, precise, effortless.
-                </p>
-                <div data-copy className="pt-0.5">
-                  <MagneticButton
-                    className="magnetic inline-block"
-                    strength={0.15}
-                  >
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="border-foreground/70 bg-background/75 backdrop-blur-sm hover:border-brand hover:bg-accent"
-                    >
-                      Explore series 01
-                    </Button>
-                  </MagneticButton>
-                </div>
-              </div>
-            </article>
-
-            <article
-              className={`${collageImages[1].className} relative`}
-              data-card
-            >
-              <div data-reveal className="image-shell">
-                <div
-                  data-media
-                  className={`relative ${collageImages[1].imageClassName}`}
-                >
-                  <Image
-                    src={collageImages[1].src}
-                    alt={collageImages[1].alt}
-                    fill
-                    sizes="(min-width: 1024px) 22vw, 50vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </article>
-
-            <article
-              className={`${collageImages[2].className} relative`}
-              data-card
-            >
-              <div data-reveal className="image-shell">
-                <div
-                  data-media
-                  className={`relative ${collageImages[2].imageClassName}`}
-                >
-                  <Image
-                    src={collageImages[2].src}
-                    alt={collageImages[2].alt}
-                    fill
-                    sizes="(min-width: 1024px) 30vw, 80vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </article>
           </div>
+        ))}
 
-          <div className="relative z-10 mt-8 flex items-end justify-between gap-6 border-t border-transparent pt-2 text-[0.68rem] font-medium tracking-[0.26em] text-foreground/50 uppercase sm:mt-10">
-            <span data-copy>Studio-coded with GSAP motion</span>
-            <span data-copy className="hidden sm:inline">
-              Oxblood accent mapped to logo tone
-            </span>
-          </div>
+        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-8">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? "w-8 bg-white"
+                  : "w-1.5 bg-white/40 hover:bg-white/60"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </section>
+
+      <div className="border-t border-foreground/8 px-6 py-4 sm:px-12 lg:px-16">
+        <div className="mx-auto flex max-w-7xl items-end justify-between gap-6 text-[0.68rem] font-medium tracking-[0.26em] text-foreground/40 uppercase">
+          <span>Complimentary shipping worldwide</span>
+          <span className="hidden sm:inline">
+            Sustainably made in limited runs
+          </span>
+        </div>
+      </div>
     </main>
   )
 }

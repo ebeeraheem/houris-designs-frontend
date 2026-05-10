@@ -47,13 +47,16 @@ export function StorySection() {
   })
 
   return (
-    <section ref={storyRef} className="px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <section
+      ref={storyRef}
+      className="px-3 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="story-image relative aspect-[4/5] overflow-hidden lg:aspect-auto lg:h-[700px]">
             <Image
-              src="/images/editorial/yellow-look.jpg"
-              alt="Houris Designs craftsmanship"
+              src="/images/HeroImages/IMG_8333.jpeg"
+              alt="Houris Designs statement dress with sculptural movement"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 50vw, 100vw"

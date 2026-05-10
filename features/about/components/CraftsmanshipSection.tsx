@@ -64,13 +64,16 @@ export function CraftsmanshipSection() {
   })
 
   return (
-    <section ref={craftRef} className="px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <section
+      ref={craftRef}
+      className="px-3 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-6">
           <div className="craft-image-1 relative aspect-[3/4] overflow-hidden lg:col-span-5 lg:aspect-auto lg:h-[550px]">
             <Image
-              src="/images/editorial/blue-coat.jpg"
-              alt="Blue coat detail"
+              src="/images/HeroImages/IMG_8270.jpeg"
+              alt="Houris Designs pink statement dress in an architectural courtyard"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 40vw, 100vw"
@@ -116,8 +119,8 @@ export function CraftsmanshipSection() {
           </div>
           <div className="craft-image-2 relative aspect-[3/4] overflow-hidden lg:col-span-3 lg:aspect-auto lg:h-[550px]">
             <Image
-              src="/images/editorial/boutique-rack.jpg"
-              alt="Boutique collection"
+              src="/images/HeroImages/IMG_8322.jpeg"
+              alt="Houris Designs dress captured in motion"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 25vw, 100vw"

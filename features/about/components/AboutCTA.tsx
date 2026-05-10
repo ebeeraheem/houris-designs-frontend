@@ -4,7 +4,7 @@ import { cn } from "@/utils/cn"
 
 export function AboutCTA() {
   return (
-    <section className="px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <section className="px-3 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-4xl text-center">
         <p className="eyebrow-label mb-4 text-brand">Begin Your Journey</p>
         <h2 className="font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.04em] uppercase sm:text-[2.4rem] lg:text-[3rem]">

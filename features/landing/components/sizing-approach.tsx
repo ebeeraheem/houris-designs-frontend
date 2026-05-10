@@ -62,7 +62,7 @@ export function SizingApproach() {
   return (
     <section
       ref={root}
-      className="border-t border-border/50 bg-surface/50 px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
+      className="border-t border-border/50 bg-surface/50 px-3 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
     >
       <div className="mx-auto max-w-[96rem]">
         <div className="mx-auto max-w-[42rem] text-center">
@@ -99,7 +99,7 @@ export function SizingApproach() {
               {lengthCodes.map((code) => (
                 <div
                   key={code}
-                  className="flex h-10 items-center justify-center rounded-[calc(var(--radius))] border border-border bg-background text-[0.72rem] font-semibold tracking-[0.08em] text-foreground/70"
+                  className="flex h-10 items-center justify-center rounded-[var(--radius)] border border-border bg-background text-[0.72rem] font-semibold tracking-[0.08em] text-foreground/70"
                 >
                   {code}
                 </div>
@@ -115,7 +115,7 @@ export function SizingApproach() {
               {widthCodes.map((code) => (
                 <div
                   key={code}
-                  className="flex h-10 items-center justify-center rounded-[calc(var(--radius))] border border-border bg-background text-[0.72rem] font-semibold tracking-[0.08em] text-foreground/70"
+                  className="flex h-10 items-center justify-center rounded-[var(--radius)] border border-border bg-background text-[0.72rem] font-semibold tracking-[0.08em] text-foreground/70"
                 >
                   {code}
                 </div>

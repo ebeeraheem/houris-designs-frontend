@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 
 const footerNavigation = {
   collection: [
@@ -21,7 +22,7 @@ const footerNavigation = {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/50 px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <footer className="border-t border-border/50 px-3 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <div className="mx-auto max-w-384">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-8">
           <div className="lg:col-span-4">
@@ -29,7 +30,13 @@ export function SiteFooter() {
               href="/"
               className="inline-flex items-center gap-2 text-[0.78rem] font-semibold tracking-[0.26em] uppercase"
             >
-              <span className="size-1.5 rounded-full bg-brand" />
+              <Image
+                src="/favicon-32x32.png"
+                alt="Houris Designs Logo"
+                width={16}
+                height={16}
+                className="size-4"
+              />
               Houris design
             </Link>
             <p className="mt-4 max-w-[20rem] text-sm leading-7 text-muted-foreground">
@@ -87,7 +94,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-border/40 pt-6 sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-border/40 pt-5 sm:mt-14 sm:flex-row sm:items-center sm:pt-6">
           <p className="text-[0.68rem] tracking-[0.14em] text-foreground/40">
             &copy; {new Date().getFullYear()} Houris Designs. All rights
             reserved.

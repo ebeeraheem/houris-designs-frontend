@@ -39,7 +39,7 @@ export function StatsSection() {
   return (
     <section
       ref={statsRef}
-      className="border-y border-border bg-secondary/30 px-4 py-20 sm:px-6 sm:py-24 lg:px-8"
+      className="border-y border-border bg-secondary/30 px-3 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24"
     >
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">

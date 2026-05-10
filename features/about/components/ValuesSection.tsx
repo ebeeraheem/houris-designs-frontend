@@ -63,7 +63,10 @@ export function ValuesSection() {
   })
 
   return (
-    <section ref={valuesRef} className="px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <section
+      ref={valuesRef}
+      className="px-3 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32"
+    >
       <div className="mx-auto max-w-6xl">
         <div className="mb-16 text-center">
           <p className="eyebrow-label mb-4 text-brand">What We Stand For</p>

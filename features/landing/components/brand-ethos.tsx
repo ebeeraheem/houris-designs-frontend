@@ -62,7 +62,7 @@ export function BrandEthos() {
   return (
     <section
       ref={root}
-      className="border-t border-border/50 px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
+      className="border-t border-border/50 px-3 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
     >
       <div className="mx-auto grid max-w-[96rem] gap-10 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-0">
         <div className="lg:col-span-5 lg:py-8">
@@ -97,7 +97,7 @@ export function BrandEthos() {
             <MagneticButton className="magnetic inline-block" strength={0.15}>
               <Link
                 href="/about"
-                className="inline-flex h-12 items-center gap-1.5 rounded-[calc(var(--radius)+1px)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium tracking-[0.22em] uppercase backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
+                className="inline-flex h-12 items-center gap-1.5 rounded-[var(--radius)] border border-foreground/70 bg-background/75 px-6 text-[0.68rem] font-medium tracking-[0.22em] uppercase backdrop-blur-sm transition-all duration-200 hover:border-brand hover:bg-accent"
               >
                 About Houris
               </Link>
