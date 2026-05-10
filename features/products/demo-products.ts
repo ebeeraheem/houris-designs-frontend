@@ -5,8 +5,6 @@ export type DemoProduct = {
   colour: string
   image: string
   alt: string
-  featuredClassName: string
-  featuredImageClassName: string
   category: string
   description: string
   material: string
@@ -26,8 +24,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Charcoal",
     image: "/images/products/structured-blazer.jpg",
     alt: "Woman wearing a sharply tailored charcoal blazer.",
-    featuredClassName: "lg:col-span-5",
-    featuredImageClassName: "h-[26rem] sm:h-[30rem] lg:h-[34rem]",
     category: "Tailoring",
     description:
       "A precision-cut blazer with architectural shoulders and a nipped waist. Crafted from Italian wool with a soft hand feel. Fully lined, single-button closure.",
@@ -63,8 +59,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Oxblood",
     image: "/images/products/draped-midi-dress.jpg",
     alt: "Woman wearing a soft draped midi dress for an editorial fashion shoot.",
-    featuredClassName: "lg:col-span-3",
-    featuredImageClassName: "h-[20rem] sm:h-[24rem] lg:h-[26rem]",
     category: "Dresses",
     description:
       "Fluid silk crepe dress with bias-cut draping and a subtle cowl neckline. Falls to midi length with a gentle A-line silhouette.",
@@ -98,8 +92,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Sand",
     image: "/images/products/tailored-trousers.jpg",
     alt: "Woman styled in tailored wide trousers and a refined neutral look.",
-    featuredClassName: "lg:col-span-4",
-    featuredImageClassName: "h-[22rem] sm:h-[26rem] lg:h-[30rem]",
     category: "Trousers",
     description:
       "High-waisted trousers with a wide, flowing leg. Pressed pleats maintain structure through the day. Side pockets, zip closure.",
@@ -134,8 +126,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Ivory",
     image: "/images/products/essential-shirt.jpg",
     alt: "Woman wearing an essential ivory shirt with a clean minimalist silhouette.",
-    featuredClassName: "lg:col-span-4",
-    featuredImageClassName: "h-[22rem] sm:h-[26rem] lg:h-[30rem]",
     category: "Shirts",
     description:
       "Crisp cotton poplin shirt with a relaxed fit. Point collar, concealed button placket, and curved hem. The foundation piece.",
@@ -175,8 +165,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Navy",
     image: "/images/editorial/blue-coat.jpg",
     alt: "Model in a structured wrap coat standing in an architectural setting.",
-    featuredClassName: "lg:col-span-5",
-    featuredImageClassName: "h-[26rem] sm:h-[30rem] lg:h-[34rem]",
     category: "Outerwear",
     description:
       "Double-faced wool wrap coat with a self-tie belt. Unlined for a lighter weight that still delivers warmth. Midi length.",
@@ -211,8 +199,6 @@ export const demoProducts: DemoProduct[] = [
     colour: "Olive",
     image: "/images/products/cropped-jacket.jpg",
     alt: "Model in a cropped jacket styled for a contemporary fashion portrait.",
-    featuredClassName: "lg:col-span-3",
-    featuredImageClassName: "h-[20rem] sm:h-[24rem] lg:h-[26rem]",
     category: "Outerwear",
     description:
       "Boxy cropped jacket in washed cotton canvas. Patch pockets, snap closure, and a standing collar. Relaxed, utilitarian feel.",

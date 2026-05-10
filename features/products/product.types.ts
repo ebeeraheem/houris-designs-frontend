@@ -1,5 +1,6 @@
 export interface ApiProductColour {
-  id: string
+  id?: string | null
+  swatchId?: string | null
   label: string
   swatchImageUrl: string | null
 }
@@ -9,12 +10,13 @@ export interface ApiProduct {
   title: string
   price: number
   description: string | null
-  availableColours: ApiProductColour[]
-  primaryImageUrl: string
+  availableColours?: ApiProductColour[]
+  colours?: ApiProductColour[]
+  primaryImageUrl: string | null
   galleryImageUrls: string[]
-  isEnabled: boolean
-  createdAt: string
-  updatedAt: string
+  isEnabled?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ApiProductListItem {
@@ -38,7 +40,7 @@ export interface ApiProductListResponse {
 }
 
 export interface ProductColour {
-  id: string
+  id: string | null
   label: string
   swatchImageUrl: string | null
 }
@@ -51,9 +53,9 @@ export interface Product {
   availableColours: ProductColour[]
   primaryImageUrl: string
   galleryImageUrls: string[]
-  isEnabled: boolean
-  createdAt: string
-  updatedAt: string
+  isEnabled: boolean | null
+  createdAt: string | null
+  updatedAt: string | null
 }
 
 export interface ProductListItem {
