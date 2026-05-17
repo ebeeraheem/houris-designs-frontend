@@ -1,10 +1,17 @@
-import type { CheckoutResult } from "./checkout.types"
+import type {
+  CheckoutResult,
+  CheckoutVerificationResult,
+} from "./checkout.types"
 import type { CheckoutPayload } from "./checkout.schema"
-import { postCheckout } from "./checkout.adapter"
-import { toCheckoutResult } from "./checkout.transformer"
+import { getCheckoutVerification, postCheckout } from "./checkout.adapter"
+import {
+  toCheckoutResult,
+  toCheckoutVerificationResult,
+} from "./checkout.transformer"
 
 export interface ICheckoutRepository {
   create(payload: CheckoutPayload): Promise<CheckoutResult>
+  verify(reference: string): Promise<CheckoutVerificationResult>
 }
 
 export const checkoutRepository: ICheckoutRepository = {
@@ -24,5 +31,10 @@ export const checkoutRepository: ICheckoutRepository = {
         : null,
     })
     return toCheckoutResult(raw)
+  },
+
+  verify: async (reference) => {
+    const raw = await getCheckoutVerification(reference)
+    return toCheckoutVerificationResult(raw)
   },
 }

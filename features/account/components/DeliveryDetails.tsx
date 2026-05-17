@@ -7,13 +7,9 @@ import toast from "react-hot-toast"
 import { EmptyAddressIcon } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { CHECKOUT_STORAGE_KEYS } from "@/features/orders/checkout.constants"
 import { updateAddressSchema } from "../account.schema"
 import type { ShippingAddress } from "../account.types"
-import { useUpdateAddress } from "../usecases/useUpdateAddress"
-
-interface DeliveryDetailsProps {
-  address: ShippingAddress | null
-}
 
 interface AddressFormState {
   recipientName: string
@@ -26,6 +22,26 @@ interface AddressFormState {
 }
 
 type AddressErrors = Partial<Record<keyof AddressFormState, string>>
+
+function getAddressFromStorage(): ShippingAddress | null {
+  if (typeof window === "undefined") {
+    return null
+  }
+
+  try {
+    const raw = window.localStorage.getItem(
+      CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS
+    )
+
+    if (!raw) {
+      return null
+    }
+
+    return JSON.parse(raw) as ShippingAddress
+  } catch {
+    return null
+  }
+}
 
 function createAddressFormState(
   address: ShippingAddress | null
@@ -41,15 +57,15 @@ function createAddressFormState(
   }
 }
 
-export function DeliveryDetails({ address }: DeliveryDetailsProps) {
-  const updateAddress = useUpdateAddress()
-
+export function DeliveryDetails() {
+  const [storedAddress, setStoredAddress] = useState(() => getAddressFromStorage())
   const [isEditing, setIsEditing] = useState(false)
-  const [formState, setFormState] = useState(() => createAddressFormState(address))
+  const [formState, setFormState] = useState(() => createAddressFormState(storedAddress))
   const [errors, setErrors] = useState<AddressErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const resetForm = () => {
-    setFormState(createAddressFormState(address))
+    setFormState(createAddressFormState(storedAddress))
     setErrors({})
   }
 
@@ -102,17 +118,36 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
       return
     }
 
+    setIsSubmitting(true)
+
     try {
-      await updateAddress.mutateAsync(payload)
-      toast.success(address ? "Address updated." : "Address saved.")
+      const addressToSave: ShippingAddress = {
+        recipientName: payload.recipientName,
+        addressLine1: payload.addressLine1,
+        addressLine2: payload.addressLine2 ?? null,
+        city: payload.city,
+        stateRegion: payload.stateRegion,
+        postalCode: payload.postalCode,
+        country: payload.country,
+      }
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS,
+          JSON.stringify(addressToSave)
+        )
+      }
+
+      setStoredAddress(addressToSave)
+      toast.success(storedAddress ? "Address updated." : "Address saved.")
       setErrors({})
       setIsEditing(false)
     } catch {
       toast.error("We couldn't save your address. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
-
-  const isSubmitting = updateAddress.isPending
 
   return (
     <section className="surface-card p-6 sm:p-8">
@@ -129,7 +164,7 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
           onClick={isEditing ? stopEditing : startEditing}
           disabled={isSubmitting}
         >
-          {isEditing ? "Cancel" : address ? "Edit" : "Add"}
+          {isEditing ? "Cancel" : storedAddress ? "Edit" : "Add"}
         </button>
       </div>
 
@@ -268,7 +303,7 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
             </Button>
           </div>
         </>
-      ) : address ? (
+      ) : storedAddress ? (
         <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
           <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
             <div className="flex items-center gap-2 text-brand">
@@ -278,20 +313,20 @@ export function DeliveryDetails({ address }: DeliveryDetailsProps) {
               </p>
             </div>
             <p className="mt-4 font-heading text-[1.05rem] font-medium tracking-[-0.03em]">
-              {address.recipientName}
+              {storedAddress.recipientName}
             </p>
             <p className="mt-3 text-[0.82rem] leading-7 text-muted-foreground">
-              {address.addressLine1}
-              {address.addressLine2 ? (
+              {storedAddress.addressLine1}
+              {storedAddress.addressLine2 ? (
                 <>
                   <br />
-                  {address.addressLine2}
+                  {storedAddress.addressLine2}
                 </>
               ) : null}
               <br />
-              {address.city}, {address.stateRegion} {address.postalCode}
+              {storedAddress.city}, {storedAddress.stateRegion} {storedAddress.postalCode}
               <br />
-              {address.country}
+              {storedAddress.country}
             </p>
           </div>
 

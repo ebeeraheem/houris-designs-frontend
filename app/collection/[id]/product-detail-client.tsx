@@ -508,7 +508,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                   <h1 className="mt-2 font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
                     {product.title}
                   </h1>
-                  <p className="mt-3 text-[1.1rem] font-medium tracking-[0.04em] text-foreground">
+                  <p className="mt-4 font-heading text-[1.45rem] font-medium tracking-[-0.05em] text-foreground sm:text-[1.6rem]">
                     {formatCurrency(product.price)}
                   </p>
 

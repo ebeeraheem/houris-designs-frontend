@@ -2,7 +2,6 @@
 
 import { PageReveal } from "@/components/page-reveal"
 import { Button } from "@/components/ui/button"
-import { useGetAddress } from "../usecases/useGetAddress"
 import { useGetProfile } from "../usecases/useGetProfile"
 import { AccountNotes } from "./AccountNotes"
 import { AccountOverview } from "./AccountOverview"
@@ -10,8 +9,11 @@ import { DeliveryDetails } from "./DeliveryDetails"
 import { ProfileDetails } from "./ProfileDetails"
 import { QuickActions } from "./QuickActions"
 
-function getInitials(fullName: string) {
-  const parts = fullName.trim().split(/\s+/).filter(Boolean)
+function getInitials(fullName?: string | null) {
+  const parts = (typeof fullName === "string" ? fullName : "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
 
   if (parts.length === 0) {
     return "HD"
@@ -123,7 +125,6 @@ function ErrorCard({
 
 export function AccountPageView() {
   const profileQuery = useGetProfile()
-  const addressQuery = useGetAddress()
 
   const snapshot = getAccountSnapshot()
   const profile = profileQuery.data
@@ -185,18 +186,7 @@ export function AccountPageView() {
               />
             )}
 
-            {addressQuery.isLoading && addressQuery.data === undefined ? (
-              <SectionSkeleton />
-            ) : addressQuery.isError && addressQuery.data === undefined ? (
-              <ErrorCard
-                message="We couldn't load your saved address."
-                onRetry={() => {
-                  void addressQuery.refetch()
-                }}
-              />
-            ) : (
-              <DeliveryDetails address={addressQuery.data ?? null} />
-            )}
+            <DeliveryDetails />
           </div>
 
           <aside className="grid content-start gap-6 self-start">

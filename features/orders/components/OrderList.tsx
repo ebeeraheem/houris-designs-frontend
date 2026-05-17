@@ -59,7 +59,7 @@ export function OrderList({ orders }: OrderListProps) {
 
               <div className="flex items-center justify-between gap-4 sm:justify-end">
                 <div className="text-left sm:text-right">
-                  <p className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
+                  <p className="font-heading text-[1.22rem] font-medium tracking-[-0.05em] sm:text-[1.35rem]">
                     {formatCurrency(order.total)}
                   </p>
                   <p className="text-[0.72rem] text-muted-foreground">

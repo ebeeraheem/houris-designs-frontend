@@ -29,6 +29,8 @@ export function normalizeOrderStatus(value?: string | null): OrderStatus {
   switch (normalized) {
     case "pendingpayment":
       return "PENDING_PAYMENT"
+    case "paymentfailed":
+      return "PAYMENT_FAILED"
     case "new":
       return "NEW"
     case "inprogress":

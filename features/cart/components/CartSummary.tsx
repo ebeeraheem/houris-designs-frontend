@@ -27,18 +27,20 @@ export function CartSummary({
         </div>
         <div className="flex justify-between text-[0.78rem]">
           <span className="text-muted-foreground">Subtotal</span>
-          <span>{formatCurrency(total)}</span>
+          <span className="font-heading text-[0.96rem] tracking-[-0.04em] text-foreground">
+            {formatCurrency(total)}
+          </span>
         </div>
         <div className="flex justify-between text-[0.78rem]">
           <span className="text-muted-foreground">Shipping</span>
           <span>Calculated at checkout</span>
         </div>
       </div>
-      <div className="mt-4 flex justify-between">
-        <span className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
+      <div className="mt-4 flex items-end justify-between gap-4">
+        <span className="font-heading text-[1.05rem] font-medium tracking-[-0.03em]">
           Total
         </span>
-        <span className="font-heading text-[1rem] font-medium tracking-[-0.02em]">
+        <span className="font-heading text-[1.35rem] font-medium tracking-[-0.05em] sm:text-[1.5rem]">
           {formatCurrency(total)}
         </span>
       </div>

@@ -97,7 +97,7 @@ export function CartItem({
               <RiDeleteBinLine className="size-4" />
               Remove
             </button>
-            <p className="text-[0.82rem] font-medium">
+            <p className="font-heading text-[1rem] font-medium tracking-[-0.04em] sm:text-[1.08rem]">
               {formatCurrency(lineSubtotal)}
             </p>
           </div>

@@ -2,6 +2,7 @@ import type { OrderStatus } from "./order.types"
 
 const orderStatusLabels: Record<OrderStatus, string> = {
   PENDING_PAYMENT: "Pending Payment",
+  PAYMENT_FAILED: "Payment Failed",
   NEW: "New",
   IN_PROGRESS: "In Progress",
   READY_FOR_DELIVERY: "Ready for Delivery",
@@ -13,6 +14,7 @@ const orderStatusLabels: Record<OrderStatus, string> = {
 
 const orderStatusClasses: Record<OrderStatus, string> = {
   PENDING_PAYMENT: "border-amber-500/25 bg-amber-500/10 text-amber-700",
+  PAYMENT_FAILED: "border-destructive/25 bg-destructive/10 text-destructive",
   NEW: "border-brand/30 bg-brand/10 text-brand",
   IN_PROGRESS: "border-warning/30 bg-warning/10 text-warning",
   READY_FOR_DELIVERY: "border-info/30 bg-info/10 text-info",

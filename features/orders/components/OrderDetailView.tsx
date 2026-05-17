@@ -24,6 +24,7 @@ function OrderDetailSkeleton() {
   return (
     <div className="space-y-6">
       <div className="surface-card p-6 sm:p-8">
+        <div className="mb-6 h-8 w-28 animate-pulse rounded-full bg-secondary/60" />
         <div className="h-4 w-32 animate-pulse rounded-full bg-secondary/60" />
         <div className="mt-4 h-10 w-3/5 animate-pulse rounded-full bg-secondary/60" />
         <div className="mt-6 flex flex-wrap gap-3">
@@ -77,52 +78,46 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
 
   if (isError || !order) {
     return (
-      <div className="space-y-6">
+      <div className="surface-card p-6 sm:p-8">
         <BackIconLink
           href="/account/orders"
           label="Back to orders"
+          className="mb-6"
         />
-
-        <div className="surface-card p-8 text-center">
-          <p className="text-muted-foreground">
-            We couldn&apos;t load this order right now.
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4"
-            onClick={() => {
-              void refetch()
-            }}
-          >
-            Try Again
-          </Button>
-        </div>
+        <p className="text-muted-foreground">
+          We couldn&apos;t load this order right now.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-4"
+          onClick={() => {
+            void refetch()
+          }}
+        >
+          Try Again
+        </Button>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start gap-4 sm:gap-5">
+      <section data-page-intro className="surface-card p-6 sm:p-8">
         <BackIconLink
-          data-page-intro
           href="/account/orders"
           label="Back to orders"
-          className="mt-1 shrink-0"
+          className="mb-6"
         />
 
-        <section
-          data-page-intro
-          className="surface-card min-w-0 flex-1 p-6 sm:p-8"
-        >
         <p className="eyebrow-label text-brand">Order Detail</p>
+
         <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem]">
               {order.orderReference}
             </h1>
-            <p className="mt-4 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
+            <p className="mt-3 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
               Placed on {formatOrderDate(order.datePlaced)} with{" "}
               {order.items.length} piece{order.items.length === 1 ? "" : "s"} in
               this order.
@@ -137,8 +132,11 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <div className="status-pill border-brand/20 bg-brand/10 text-brand">
-            Total {formatCurrency(order.total)}
+          <div className="status-pill gap-2 border-brand/20 bg-brand/10 text-brand">
+            <span>Total</span>
+            <span className="font-heading text-[1.02rem] tracking-[-0.05em] normal-case sm:text-[1.1rem]">
+              {formatCurrency(order.total)}
+            </span>
           </div>
           <div className="status-pill border-border bg-background/80 text-foreground/78">
             {order.items.length} line item{order.items.length === 1 ? "" : "s"}
@@ -147,8 +145,7 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
             Updated {formatOrderDate(order.updatedAt ?? order.datePlaced)}
           </div>
         </div>
-        </section>
-      </div>
+      </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] xl:gap-8">
         <section data-page-section className="surface-card p-6 sm:p-8">
@@ -183,10 +180,10 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
                       </p>
                     </div>
                     <div className="text-left sm:text-right">
-                      <p className="font-heading text-[1rem] font-medium tracking-[-0.03em]">
+                      <p className="font-heading text-[1.18rem] font-medium tracking-[-0.05em] sm:text-[1.28rem]">
                         {formatCurrency(item.lineSubtotal)}
                       </p>
-                      <p className="mt-1 text-[0.78rem] text-muted-foreground">
+                      <p className="mt-1 text-[0.9rem] text-muted-foreground">
                         {formatCurrency(item.unitPrice)} each
                       </p>
                     </div>

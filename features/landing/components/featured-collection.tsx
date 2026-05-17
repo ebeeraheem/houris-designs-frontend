@@ -159,7 +159,7 @@ export function FeaturedCollection() {
                     </h3>
                     <p
                       data-copy
-                      className="text-[0.82rem] font-medium tracking-[0.04em] text-muted-foreground"
+                      className="font-heading text-[1rem] font-medium tracking-[-0.04em] text-foreground/82 sm:text-[1.08rem]"
                     >
                       {formatCurrency(product.price)}
                     </p>
