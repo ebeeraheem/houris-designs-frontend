@@ -12,7 +12,7 @@ export function AuthCheckList({ title, items }: AuthCheckListProps) {
       <div className="mt-4 space-y-4">
         {items.map((item) => (
           <div key={item} className="flex items-start gap-3">
-            <div className="mt-0.5 rounded-[var(--radius)] bg-brand/12 p-1.5 text-brand">
+            <div className="mt-0.5 rounded-(--radius) bg-brand/12 p-1.5 text-brand">
               <RiCheckLine className="size-3.5" />
             </div>
             <p className="text-[0.82rem] leading-6 text-muted-foreground">
