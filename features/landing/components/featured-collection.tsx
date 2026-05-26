@@ -96,7 +96,7 @@ export function FeaturedCollection() {
           <Link
             href="/collection"
             data-copy
-            className="nav-link hidden sm:inline"
+            className="hidden h-12 items-center rounded-[var(--radius)] bg-foreground px-6 text-[0.68rem] font-semibold tracking-[0.22em] text-background uppercase transition hover:bg-brand sm:inline-flex"
           >
             View All
           </Link>
@@ -179,7 +179,11 @@ export function FeaturedCollection() {
         ) : null}
 
         <div className="mt-10 flex justify-center sm:mt-14 sm:hidden">
-          <Link href={PRODUCT_ROUTES.LIST} data-copy className="nav-link">
+          <Link
+            href={PRODUCT_ROUTES.LIST}
+            data-copy
+            className="inline-flex h-12 items-center rounded-[var(--radius)] bg-foreground px-6 text-[0.68rem] font-semibold tracking-[0.22em] text-background uppercase transition hover:bg-brand"
+          >
             View All
           </Link>
         </div>

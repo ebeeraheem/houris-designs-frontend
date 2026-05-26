@@ -119,17 +119,6 @@ export function BrandEthos() {
             </div>
           </div>
         </div>
-
-        <div className="flex items-start gap-4 lg:col-span-1 lg:col-start-6 lg:row-start-1 lg:flex lg:justify-center lg:self-end">
-          <span
-            data-ethos-copy
-            style={{ writingMode: "vertical-rl" }}
-            className="eyebrow-label text-foreground/50"
-          >
-            Craftsmanship / Since 2024
-          </span>
-          <span data-ethos-copy className="mt-0.5 h-28 w-px bg-foreground/14" />
-        </div>
       </div>
     </section>
   )

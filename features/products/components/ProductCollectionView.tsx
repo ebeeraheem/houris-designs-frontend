@@ -388,6 +388,8 @@ export function ProductCollectionView() {
       <div className="min-w-0 flex flex-col gap-6">
         {mobileFiltersBar}
 
+        <ProductGrid products={data.data} />
+
         <div className="surface-panel p-5 sm:p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -439,8 +441,6 @@ export function ProductCollectionView() {
             </div>
           </div>
         </div>
-
-        <ProductGrid products={data.data} />
       </div>
     </div>
   )

@@ -7,11 +7,6 @@ const footerNavigation = {
     { label: "Size Guide", href: "/size-guide" },
     { label: "New Arrivals", href: "/collection?sort=newest" },
   ],
-  account: [
-    { label: "My Account", href: "/account" },
-    { label: "Order History", href: "/account/orders" },
-    { label: "Cart", href: "/cart" },
-  ],
   company: [
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
@@ -49,22 +44,6 @@ export function SiteFooter() {
             <h3 className="eyebrow-label text-foreground/60">Collection</h3>
             <ul className="mt-4 space-y-2.5">
               {footerNavigation.collection.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-[0.78rem] tracking-[0.04em] text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="lg:col-span-2">
-            <h3 className="eyebrow-label text-foreground/60">Account</h3>
-            <ul className="mt-4 space-y-2.5">
-              {footerNavigation.account.map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
