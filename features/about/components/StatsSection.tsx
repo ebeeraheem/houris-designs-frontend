@@ -8,10 +8,10 @@ import { useGSAP } from "@gsap/react"
 gsap.registerPlugin(ScrollTrigger)
 
 const stats = [
+  { value: "2018", label: "Founded in Kano" },
+  { value: "2", label: "Fit Dimensions" },
   { value: "100%", label: "Made to Order" },
-  { value: "36", label: "Size Combinations" },
-  { value: "0%", label: "Excess Inventory" },
-  { value: "3", label: "Countries of Origin" },
+  { value: "Global", label: "Shipping Reach" },
 ]
 
 export function StatsSection() {

@@ -1,0 +1,1 @@
+export { ContactPageView } from "./ContactPageView"

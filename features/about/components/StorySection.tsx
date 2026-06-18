@@ -55,36 +55,36 @@ export function StorySection() {
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="story-image relative aspect-[4/5] overflow-hidden lg:aspect-auto lg:h-[700px]">
             <Image
-              src="/images/HeroImages/IMG_8333.jpeg"
-              alt="Houris Designs statement dress with sculptural movement"
+              src="/images/about/emirs-palace-kano-city.jpg"
+              alt="Gateway of the Emir's Palace in Kano, reflecting the heritage behind Houris Designs"
               fill
               className="object-cover"
               sizes="(min-width: 1024px) 50vw, 100vw"
             />
           </div>
           <div className="story-content flex flex-col justify-center">
-            <p className="eyebrow-label mb-4 text-brand">Our Philosophy</p>
+            <p className="eyebrow-label mb-4 text-brand">Our Story</p>
             <h2 className="font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.04em] uppercase sm:text-[2.2rem] lg:text-[2.6rem]">
-              Clothing Should Be Made for the Individual
+              Rooted in Kano, Made for the Beautiful People
             </h2>
             <div className="mt-8 space-y-5 text-[0.95rem] leading-7 text-muted-foreground">
               <p>
-                Houris Designs was founded on a simple belief: clothing should
-                be made for the individual, not the masses. In an era of fast
-                fashion and disposable garments, we chose a different path — one
-                of intention, precision, and lasting quality.
+                Founded in May 2018 by Creative Director Salma Suleiman
+                Mohammed, Houris Designs is a contemporary fashion house shaped
+                by the cultural richness of Kano and a belief in clothing as a
+                form of self-expression.
               </p>
               <p>
-                Every piece in our collection is crafted only after you order
-                it. This made-to-measure approach eliminates waste and ensures a
-                fit that feels uniquely yours. No excess inventory. No
-                compromises.
+                Salma is a self-taught designer with years of hands-on
+                experience in fashion. Her work reflects authenticity,
+                precision, and a commitment to helping women feel confident,
+                respected, and beautifully themselves.
               </p>
               <p>
-                Our two-dimensional sizing system — combining length and width
-                codes — represents our commitment to precision. We believe that
-                when your clothes fit properly, you move through the world with
-                greater confidence and ease.
+                Guided by the slogan &quot;The Beautiful People,&quot; our
+                collections move gracefully between bold and modest design,
+                giving every woman room to choose the style that honors her
+                identity.
               </p>
             </div>
           </div>

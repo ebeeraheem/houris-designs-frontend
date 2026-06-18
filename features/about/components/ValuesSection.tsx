@@ -5,38 +5,38 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import {
-  RiScissorsLine,
-  RiRulerLine,
   RiLeafLine,
-  RiTimeLine,
+  RiRulerLine,
+  RiScissorsLine,
+  RiSparklingLine,
 } from "@remixicon/react"
 
 gsap.registerPlugin(ScrollTrigger)
 
 const values = [
   {
-    icon: RiScissorsLine,
-    title: "Made to Order",
-    description:
-      "Every garment is crafted specifically for you after your order is placed. No mass production, no excess inventory.",
-  },
-  {
-    icon: RiRulerLine,
-    title: "Precision Fit",
-    description:
-      "Our two-dimensional sizing system combines length and width codes to find your exact proportions.",
-  },
-  {
     icon: RiLeafLine,
     title: "Sustainable",
     description:
-      "By producing only what is ordered, we eliminate waste and reduce our environmental footprint.",
+      "We create only after an order is placed, reducing unnecessary waste while protecting quality and intention.",
   },
   {
-    icon: RiTimeLine,
-    title: "Timeless Design",
+    icon: RiRulerLine,
+    title: "Inclusive",
     description:
-      "Architectural silhouettes that transcend seasonal trends and remain relevant for years to come.",
+      "Our length-and-width sizing system helps more women choose a fit that respects their actual proportions.",
+  },
+  {
+    icon: RiSparklingLine,
+    title: "Powerful",
+    description:
+      "Inspired by strong women, we design pieces that help the wearer move with confidence and presence.",
+  },
+  {
+    icon: RiScissorsLine,
+    title: "Made With Purpose",
+    description:
+      "Every garment is produced for feel-good moments, with careful attention to comfort, detail, and meaning.",
   },
 ]
 

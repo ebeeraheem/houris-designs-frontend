@@ -81,39 +81,43 @@ export function CraftsmanshipSection() {
           </div>
           <div className="craft-content flex flex-col justify-center lg:col-span-4 lg:px-6">
             <p className="eyebrow-label mb-4 text-brand">
-              Crafted With Intention
+              Craftsmanship & Innovation
             </p>
             <h2 className="font-heading text-[1.5rem] leading-[0.95] font-medium tracking-[-0.04em] uppercase sm:text-[1.8rem]">
-              The Art of Made-to-Measure
+              Designed for Fit, Made With Purpose
             </h2>
             <div className="mt-6 space-y-4 text-[0.9rem] leading-7 text-muted-foreground">
               <p>
-                Each garment begins its journey in our partner ateliers across
-                Italy, France, and Portugal — regions renowned for their
-                generations of textile expertise.
+                Every Houris Designs piece begins with a choice: the woman, the
+                style, the colour, and the size combination that feels true to
+                her. We produce strictly on demand, so each order is treated
+                with focus from payment through completion.
               </p>
               <p>
-                Our master tailors combine traditional techniques with modern
-                precision, ensuring every seam, every drape, every detail meets
-                our exacting standards.
+                Our signature two-dimensional sizing system combines length and
+                width codes to help customers find a fit without unnecessary
+                compromise. It is a practical innovation built around real
+                bodies and real confidence.
               </p>
               <p>
-                From the initial cut to the final press, your garment receives
-                the attention it deserves. This is slow fashion at its finest.
+                The result is fashion that balances cultural elegance with
+                modern expression: bold when it wants to be, modest when it
+                needs to be, and always made to help the wearer feel at home in
+                herself.
               </p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                Italy
+                Length Codes
               </div>
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                France
+                Width Codes
               </div>
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                Portugal
+                Made to Order
               </div>
             </div>
           </div>

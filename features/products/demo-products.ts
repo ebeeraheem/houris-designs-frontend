@@ -26,11 +26,11 @@ export const demoProducts: DemoProduct[] = [
     alt: "Woman wearing a sharply tailored charcoal blazer.",
     category: "Tailoring",
     description:
-      "A precision-cut blazer with architectural shoulders and a nipped waist. Crafted from Italian wool with a soft hand feel. Fully lined, single-button closure.",
-    material: "Italian Wool",
+      "A precision-cut blazer with architectural shoulders and a nipped waist. Crafted from refined wool with a soft hand feel. Fully lined, single-button closure.",
+    material: "Refined Wool",
     fit: "Structured",
     care: "Dry Clean Only",
-    origin: "Made in Italy",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/products/structured-blazer.jpg",
@@ -65,7 +65,7 @@ export const demoProducts: DemoProduct[] = [
     material: "Silk Crepe",
     fit: "Relaxed",
     care: "Dry Clean Only",
-    origin: "Made in France",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/products/draped-midi-dress.jpg",
@@ -98,7 +98,7 @@ export const demoProducts: DemoProduct[] = [
     material: "Wool Blend",
     fit: "Wide Leg",
     care: "Dry Clean Only",
-    origin: "Made in Portugal",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/products/tailored-trousers.jpg",
@@ -132,7 +132,7 @@ export const demoProducts: DemoProduct[] = [
     material: "Cotton Poplin",
     fit: "Relaxed",
     care: "Machine Wash Cold",
-    origin: "Made in Portugal",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/products/essential-shirt.jpg",
@@ -171,7 +171,7 @@ export const demoProducts: DemoProduct[] = [
     material: "Double-Faced Wool",
     fit: "Wrap",
     care: "Dry Clean Only",
-    origin: "Made in Italy",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/editorial/blue-coat.jpg",
@@ -205,7 +205,7 @@ export const demoProducts: DemoProduct[] = [
     material: "Cotton Canvas",
     fit: "Boxy",
     care: "Machine Wash Cold",
-    origin: "Made in USA",
+    origin: "Made to Order",
     images: [
       {
         src: "/images/products/cropped-jacket.jpg",
