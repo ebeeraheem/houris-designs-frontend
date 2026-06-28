@@ -14,7 +14,11 @@ import { AUTH_SUCCESS_STATUS } from "../auth.constants"
 import { loginSchema, type LoginPayload } from "../auth.schema"
 import { useLogin } from "../usecases/useLogin"
 
-export function SignInForm() {
+interface SignInFormProps {
+  returnUrl?: string
+}
+
+export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
   const router = useRouter()
   const login = useLogin()
 
@@ -39,10 +43,10 @@ export function SignInForm() {
         return
       }
 
-      toast.success("Sign-in successful. Redirecting to the collection.")
+      toast.success("Sign-in successful.")
 
       startTransition(() => {
-        router.replace(PRODUCT_ROUTES.LIST)
+        router.replace(returnUrl ?? PRODUCT_ROUTES.LIST)
       })
     } catch (error) {
       toast.error(

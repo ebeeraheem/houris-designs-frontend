@@ -1,8 +1,5 @@
 import Link from "next/link"
-import {
-  RiMapPinLine,
-  RiShoppingBag3Line,
-} from "@remixicon/react"
+import { RiMapPinLine, RiShoppingBag3Line } from "@remixicon/react"
 
 import { BackIconLink } from "@/components/ui/back-icon-link"
 import { PageReveal } from "@/components/page-reveal"
@@ -15,6 +12,13 @@ import {
   AuthBenefitsCard,
   AuthCheckList,
 } from "@/features/authentication/components"
+import { getSafeReturnUrl } from "@/features/authentication/returnUrl"
+
+interface SignInPageProps {
+  searchParams: Promise<{
+    returnUrl?: string | string[]
+  }>
+}
 
 const returningBenefits = [
   {
@@ -37,10 +41,15 @@ const accountAccess = [
   "Return to checkout with the same premium flow and protected session.",
 ]
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: Readonly<SignInPageProps>) {
+  const { returnUrl } = await searchParams
+  const safeReturnUrl = getSafeReturnUrl(returnUrl) ?? undefined
+
   return (
     <>
-      <AuthenticatedCollectionRedirect />
+      <AuthenticatedCollectionRedirect returnUrl={safeReturnUrl} />
       <SiteHeader />
       <main className="relative isolate overflow-hidden py-6 sm:py-10 lg:py-14">
         {/* <div
@@ -62,7 +71,7 @@ export default function SignInPage() {
                 className="mt-1 shrink-0"
               />
 
-              <div className="min-w-0 flex-1 grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] xl:gap-8">
+              <div className="grid min-w-0 flex-1 gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] xl:gap-8">
                 <section
                   data-page-intro
                   className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"
@@ -85,7 +94,7 @@ export default function SignInPage() {
                       experience.
                     </p>
 
-                    <SignInForm />
+                    <SignInForm returnUrl={safeReturnUrl} />
 
                     <p className="mt-4 text-center text-[0.78rem] text-muted-foreground sm:mt-6">
                       Don&apos;t have an account?{" "}

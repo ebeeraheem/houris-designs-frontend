@@ -6,7 +6,13 @@ import { useEffect } from "react"
 import { PRODUCT_ROUTES } from "@/features/products"
 import { useAuthSession } from "../usecases/useAuthProfile"
 
-export function AuthenticatedCollectionRedirect() {
+interface AuthenticatedCollectionRedirectProps {
+  returnUrl?: string
+}
+
+export function AuthenticatedCollectionRedirect({
+  returnUrl,
+}: AuthenticatedCollectionRedirectProps) {
   const router = useRouter()
   const { data: session } = useAuthSession()
 
@@ -15,8 +21,8 @@ export function AuthenticatedCollectionRedirect() {
       return
     }
 
-    router.replace(PRODUCT_ROUTES.LIST)
-  }, [router, session?.isAuthenticated])
+    router.replace(returnUrl ?? PRODUCT_ROUTES.LIST)
+  }, [router, returnUrl, session?.isAuthenticated])
 
   return null
 }
