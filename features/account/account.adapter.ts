@@ -55,9 +55,13 @@ export const postChangeEmail = async (
 }
 
 export const getConfirmEmailChange = async (code: string): Promise<void> => {
-  await apiClient.get(ENDPOINTS.CONFIRM_EMAIL, {
+  // The confirm endpoint is anonymous and the customer clicking the email link
+  // may be signed out, so never let a 401 trip the refresh/redirect interceptor.
+  const config: ApiClientRequestConfig = {
     params: { code },
-  })
+    skipAuthRedirect: true,
+  }
+  await apiClient.get(ENDPOINTS.CONFIRM_EMAIL, config)
 }
 
 export const fetchAddress = async (): Promise<ApiShippingAddress | null> => {
