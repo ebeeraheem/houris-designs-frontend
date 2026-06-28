@@ -25,58 +25,20 @@ function getInitials(fullName?: string | null) {
     .join("")
 }
 
-function getAccountSnapshot() {
-  return {
-    orderCount: "12",
-    memberSince: "2023",
-    fitProfile: "B12",
-    lastDelivery: "Your last made-to-order delivery arrived on March 28, 2026.",
-    preferredFinish:
-      "Tailored silhouettes with structured, clean finishing details.",
-  }
-}
-
 function OverviewSkeleton() {
   return (
-    <>
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <div
-            key={`account-overview-stat-skeleton-${index}`}
-            className="rounded-[var(--radius)] border border-border/70 bg-background/82 p-4"
-          >
-            <div className="h-3 w-24 animate-pulse rounded-full bg-secondary/60" />
-            <div className="mt-3 h-8 w-16 animate-pulse rounded-full bg-secondary/60" />
+    <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-secondary/65 p-5 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4">
+          <div className="h-15 w-15 animate-pulse rounded-full bg-secondary/60" />
+          <div className="space-y-3">
+            <div className="h-5 w-36 animate-pulse rounded-full bg-secondary/60" />
+            <div className="h-4 w-48 animate-pulse rounded-full bg-secondary/60" />
           </div>
-        ))}
-      </div>
-
-      <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-secondary/65 p-5 sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="h-15 w-15 animate-pulse rounded-full bg-secondary/60" />
-            <div className="space-y-3">
-              <div className="h-5 w-36 animate-pulse rounded-full bg-secondary/60" />
-              <div className="h-4 w-48 animate-pulse rounded-full bg-secondary/60" />
-            </div>
-          </div>
-          <div className="h-8 w-32 animate-pulse rounded-full bg-secondary/60" />
         </div>
-
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          {Array.from({ length: 2 }).map((_, index) => (
-            <div
-              key={`account-overview-panel-skeleton-${index}`}
-              className="rounded-[var(--radius)] border border-border/70 bg-background/80 p-4"
-            >
-              <div className="h-4 w-24 animate-pulse rounded-full bg-secondary/60" />
-              <div className="mt-3 h-4 w-full animate-pulse rounded-full bg-secondary/60" />
-              <div className="mt-2 h-4 w-5/6 animate-pulse rounded-full bg-secondary/60" />
-            </div>
-          ))}
-        </div>
+        <div className="h-8 w-32 animate-pulse rounded-full bg-secondary/60" />
       </div>
-    </>
+    </div>
   )
 }
 
@@ -104,10 +66,10 @@ function SectionSkeleton() {
 function ErrorCard({
   message,
   onRetry,
-}: {
+}: Readonly<{
   message: string
   onRetry: () => void
-}) {
+}>) {
   return (
     <section className="surface-card p-6 sm:p-8">
       <p className="text-sm leading-7 text-muted-foreground">{message}</p>
@@ -126,7 +88,6 @@ function ErrorCard({
 export function AccountPageView() {
   const profileQuery = useGetProfile()
 
-  const snapshot = getAccountSnapshot()
   const profile = profileQuery.data
     ? {
         ...profileQuery.data,
@@ -148,15 +109,15 @@ export function AccountPageView() {
                 A more personal account overview.
               </h1>
               <p className="mt-4 max-w-[36rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                Keep your profile, delivery details, and made-to-order
-                activity in one refined place designed to feel as considered
-                as the pieces you shop.
+                Keep your profile, delivery details, and made-to-order activity
+                in one refined place designed to feel as considered as the
+                pieces you shop.
               </p>
 
               {profileQuery.isLoading && !profile ? (
                 <OverviewSkeleton />
               ) : profile ? (
-                <AccountOverview profile={profile} snapshot={snapshot} />
+                <AccountOverview profile={profile} />
               ) : (
                 <div className="mt-6">
                   <ErrorCard
