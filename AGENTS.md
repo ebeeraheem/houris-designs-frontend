@@ -110,7 +110,7 @@ npm run typecheck
 NEXT_PUBLIC_API_BASE_URL=https://api-staging.hourisdesigns.com
 ```
 
-- `services/api/base-url.ts` falls back to the same staging API URL if `NEXT_PUBLIC_API_BASE_URL` is unset.
+- `services/api/base-url.ts` requires `NEXT_PUBLIC_API_BASE_URL`; it throws (fails fast) if the variable is unset. There is no staging fallback.
 - The shared Axios client uses `withCredentials: true`, a 15-second timeout, automatic refresh on 401 through `/api/auth/refresh`, and redirects to `/signin` when refresh fails unless skipped by request config.
 - Authentication docs describe HTTP-only cookie-based access and refresh tokens. Do not expose token values to client-side code or store them in local storage.
 - Do not commit secrets. Only `NEXT_PUBLIC_*` values are intended to be readable by browser code.
