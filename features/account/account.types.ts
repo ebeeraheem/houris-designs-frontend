@@ -6,10 +6,20 @@ export interface ApiProfile {
 
 export interface ApiShippingAddress {
   recipientName: string
-  addressLine1: string
-  addressLine2: string | null
+  line1: string
+  line2: string | null
   city: string
-  stateRegion: string
+  stateOrRegion: string
+  country: string
+  postalCode: string
+}
+
+export interface ApiUpdateAddressRequest {
+  recipientName: string
+  line1: string
+  line2: string | null
+  city: string
+  stateOrRegion: string
   country: string
   postalCode: string
 }

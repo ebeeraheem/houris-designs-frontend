@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import toast from "react-hot-toast"
 
@@ -11,6 +11,8 @@ import { PageReveal } from "@/components/page-reveal"
 import { Button } from "@/components/ui/button"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { useGetAddress } from "@/features/account/usecases/useGetAddress"
+import { useAuthSession } from "@/features/authentication/usecases/useAuthProfile"
 import { useGetCart } from "@/features/cart"
 import {
   CHECKOUT_ROUTES,
@@ -20,34 +22,6 @@ import { getCheckoutErrorMessage } from "@/features/orders/checkout.error"
 import { CheckoutForm } from "@/features/orders/components/CheckoutForm"
 import { useCheckout } from "@/features/orders/usecases/useCheckout"
 import { formatSizeCode } from "@/utils/size-codes"
-
-function getSavedAddressFromStorage() {
-  if (typeof window === "undefined") {
-    return null
-  }
-
-  try {
-    const raw = window.localStorage.getItem(
-      CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS
-    )
-
-    if (!raw) {
-      return null
-    }
-
-    return JSON.parse(raw) as {
-      recipientName: string
-      addressLine1: string
-      addressLine2: string | null
-      city: string
-      stateRegion: string
-      country: string
-      postalCode: string
-    }
-  } catch {
-    return null
-  }
-}
 
 export function CheckoutPageContent() {
   const router = useRouter()
@@ -60,12 +34,26 @@ export function CheckoutPageContent() {
     isError: hasCartError,
     refetch: refetchCart,
   } = useGetCart({ enabled: !returnedReference })
-  const savedAddress = useMemo(() => getSavedAddressFromStorage(), [])
+  const { data: session, isLoading: isAuthLoading } = useAuthSession()
+  const isAuthenticated = session?.isAuthenticated ?? false
+  const addressQuery = useGetAddress({
+    enabled: isAuthenticated && !returnedReference,
+  })
+  const savedAddress = addressQuery.data
   const checkout = useCheckout()
 
   const items = cart?.items ?? []
   const total = cart?.total ?? 0
   const totalPieces = items.reduce((sum, item) => sum + item.quantity, 0)
+
+  // CheckoutForm seeds its "use saved address" toggle and form defaults from the
+  // savedAddress prop at mount, so it must not mount until that value is known.
+  // Wait through the auth-resolving window, then (if signed in) until the address
+  // query settles to a result (success — including a 404→null — or error).
+  const isResolvingSavedAddress =
+    !returnedReference &&
+    (isAuthLoading ||
+      (isAuthenticated && !addressQuery.isSuccess && !addressQuery.isError))
 
   useEffect(() => {
     if (!returnedReference) {
@@ -150,7 +138,7 @@ export function CheckoutPageContent() {
                       moving you into the verification screen now.
                     </p>
                   </div>
-                ) : isCartLoading ? (
+                ) : isCartLoading || isResolvingSavedAddress ? (
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] xl:grid-cols-[minmax(0,1fr)_26rem] xl:gap-8">
                     <div className="space-y-6">
                       <div className="surface-card p-6 sm:p-8">

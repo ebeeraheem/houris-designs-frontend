@@ -52,8 +52,18 @@ export const accountRepository: IAccountRepository = {
   },
 
   updateAddress: async (payload) => {
-    const raw = await putAddress(payload)
-    return toShippingAddress(raw)
+    // PUT is an upsert that returns 204 No Content, so the backend persisted
+    // exactly what we sent — build the domain address from the payload.
+    await putAddress(payload)
+    return {
+      recipientName: payload.recipientName,
+      addressLine1: payload.addressLine1,
+      addressLine2: payload.addressLine2 ?? null,
+      city: payload.city,
+      stateRegion: payload.stateRegion,
+      country: payload.country,
+      postalCode: payload.postalCode,
+    }
   },
 
   changePassword: async (payload) => {

@@ -7,8 +7,10 @@ import toast from "react-hot-toast"
 import { EmptyAddressIcon } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
-import { CHECKOUT_STORAGE_KEYS } from "@/features/orders/checkout.constants"
+import { useAuthSession } from "@/features/authentication/usecases/useAuthProfile"
 import { updateAddressSchema } from "../account.schema"
+import { useGetAddress } from "../usecases/useGetAddress"
+import { useUpdateAddress } from "../usecases/useUpdateAddress"
 import type { ShippingAddress } from "../account.types"
 
 interface AddressFormState {
@@ -22,26 +24,6 @@ interface AddressFormState {
 }
 
 type AddressErrors = Partial<Record<keyof AddressFormState, string>>
-
-function getAddressFromStorage(): ShippingAddress | null {
-  if (typeof window === "undefined") {
-    return null
-  }
-
-  try {
-    const raw = window.localStorage.getItem(
-      CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS
-    )
-
-    if (!raw) {
-      return null
-    }
-
-    return JSON.parse(raw) as ShippingAddress
-  } catch {
-    return null
-  }
-}
 
 function createAddressFormState(
   address: ShippingAddress | null
@@ -58,12 +40,29 @@ function createAddressFormState(
 }
 
 export function DeliveryDetails() {
-  const [storedAddress, setStoredAddress] = useState(() => getAddressFromStorage())
-  const [isEditing, setIsEditing] = useState(false)
-  const [formState, setFormState] = useState(() => createAddressFormState(storedAddress))
-  const [errors, setErrors] = useState<AddressErrors>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { data: session } = useAuthSession()
+  const isAuthenticated = session?.isAuthenticated ?? false
 
+  const {
+    data: address,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetAddress({ enabled: isAuthenticated })
+
+  const updateAddress = useUpdateAddress()
+
+  const storedAddress = address ?? null
+  const isSubmitting = updateAddress.isPending
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [formState, setFormState] = useState<AddressFormState>(() =>
+    createAddressFormState(null)
+  )
+  const [errors, setErrors] = useState<AddressErrors>({})
+
+  // The form is only shown while editing, and startEditing() seeds it from the
+  // freshly-loaded address, so no effect-based syncing is needed here.
   const resetForm = () => {
     setFormState(createAddressFormState(storedAddress))
     setErrors({})
@@ -118,34 +117,13 @@ export function DeliveryDetails() {
       return
     }
 
-    setIsSubmitting(true)
-
     try {
-      const addressToSave: ShippingAddress = {
-        recipientName: payload.recipientName,
-        addressLine1: payload.addressLine1,
-        addressLine2: payload.addressLine2 ?? null,
-        city: payload.city,
-        stateRegion: payload.stateRegion,
-        postalCode: payload.postalCode,
-        country: payload.country,
-      }
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(
-          CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS,
-          JSON.stringify(addressToSave)
-        )
-      }
-
-      setStoredAddress(addressToSave)
+      await updateAddress.mutateAsync(parsed.data)
       toast.success(storedAddress ? "Address updated." : "Address saved.")
       setErrors({})
       setIsEditing(false)
     } catch {
       toast.error("We couldn't save your address. Please try again.")
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
@@ -158,14 +136,16 @@ export function DeliveryDetails() {
             Shipping address
           </h2>
         </div>
-        <button
-          type="button"
-          className="text-[0.72rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline disabled:opacity-50"
-          onClick={isEditing ? stopEditing : startEditing}
-          disabled={isSubmitting}
-        >
-          {isEditing ? "Cancel" : storedAddress ? "Edit" : "Add"}
-        </button>
+        {!isLoading && !isError ? (
+          <button
+            type="button"
+            className="text-[0.72rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline disabled:opacity-50"
+            onClick={isEditing ? stopEditing : startEditing}
+            disabled={isSubmitting}
+          >
+            {isEditing ? "Cancel" : storedAddress ? "Edit" : "Add"}
+          </button>
+        ) : null}
       </div>
 
       {isEditing ? (
@@ -290,7 +270,11 @@ export function DeliveryDetails() {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button type="button" onClick={() => void handleSave()} disabled={isSubmitting}>
+            <Button
+              type="button"
+              onClick={() => void handleSave()}
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Saving..." : "Save Address"}
             </Button>
             <Button
@@ -303,6 +287,24 @@ export function DeliveryDetails() {
             </Button>
           </div>
         </>
+      ) : isLoading ? (
+        <AddressSkeleton />
+      ) : isError ? (
+        <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-secondary/40 p-6">
+          <p className="text-sm leading-7 text-muted-foreground">
+            We couldn&apos;t load your shipping address right now.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4"
+            onClick={() => {
+              void refetch()
+            }}
+          >
+            Try Again
+          </Button>
+        </div>
       ) : storedAddress ? (
         <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
           <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
@@ -324,7 +326,8 @@ export function DeliveryDetails() {
                 </>
               ) : null}
               <br />
-              {storedAddress.city}, {storedAddress.stateRegion} {storedAddress.postalCode}
+              {storedAddress.city}, {storedAddress.stateRegion}{" "}
+              {storedAddress.postalCode}
               <br />
               {storedAddress.country}
             </p>
@@ -345,5 +348,22 @@ export function DeliveryDetails() {
         </div>
       )}
     </section>
+  )
+}
+
+function AddressSkeleton() {
+  return (
+    <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+      <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
+        <div className="h-3 w-28 animate-pulse rounded-full bg-secondary/70" />
+        <div className="mt-4 h-5 w-40 animate-pulse rounded-full bg-secondary/70" />
+        <div className="mt-4 space-y-2">
+          <div className="h-3 w-full max-w-[18rem] animate-pulse rounded-full bg-secondary/70" />
+          <div className="h-3 w-2/3 animate-pulse rounded-full bg-secondary/70" />
+          <div className="h-3 w-1/2 animate-pulse rounded-full bg-secondary/70" />
+        </div>
+      </div>
+      <div className="hidden h-24 w-full animate-pulse rounded-[var(--radius)] bg-secondary/50 md:block md:max-w-[14rem]" />
+    </div>
   )
 }

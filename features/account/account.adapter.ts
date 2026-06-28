@@ -1,3 +1,5 @@
+import { isAxiosError } from "axios"
+
 import apiClient from "@/services/api/client"
 import type { ApiClientRequestConfig } from "@/services/api/client"
 import { extractApiData } from "@/services/api/extract-api-data"
@@ -8,6 +10,7 @@ import type {
   UpdateAddressPayload,
   ChangePasswordPayload,
 } from "./account.schema"
+import { toUpdateAddressRequest } from "./account.transformer"
 
 const ENDPOINTS = {
   PROFILE: "/api/account/profile",
@@ -58,19 +61,26 @@ export const getConfirmEmailChange = async (code: string): Promise<void> => {
 }
 
 export const fetchAddress = async (): Promise<ApiShippingAddress | null> => {
-  const response = await apiClient.get<
-    ApiShippingAddress | null | { data: ApiShippingAddress | null }
-  >(ENDPOINTS.ADDRESS)
-  return extractApiData(response.data)
+  try {
+    const response = await apiClient.get<
+      ApiShippingAddress | null | { data: ApiShippingAddress | null }
+    >(ENDPOINTS.ADDRESS)
+    return extractApiData(response.data)
+  } catch (error) {
+    // The backend returns 404 when the customer has no saved address yet;
+    // treat that as "no address" rather than an error.
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return null
+    }
+    throw error
+  }
 }
 
 export const putAddress = async (
   payload: UpdateAddressPayload
-): Promise<ApiShippingAddress> => {
-  const response = await apiClient.put<
-    ApiShippingAddress | { data: ApiShippingAddress }
-  >(ENDPOINTS.ADDRESS, payload)
-  return extractApiData(response.data)
+): Promise<void> => {
+  // The backend responds with 204 No Content, so there is no body to read.
+  await apiClient.put(ENDPOINTS.ADDRESS, toUpdateAddressRequest(payload))
 }
 
 export const putChangePassword = async (

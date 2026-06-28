@@ -4,21 +4,18 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { RiMapPin2Line } from "@remixicon/react"
+import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
+import { useUpdateAddress } from "@/features/account/usecases/useUpdateAddress"
+import type { UpdateAddressPayload } from "@/features/account/account.schema"
+import type { ShippingAddress } from "@/features/account/account.types"
 import { formatCurrency } from "@/utils/format-currency"
-import { CHECKOUT_STORAGE_KEYS } from "../checkout.constants"
-import { checkoutSchema, type CheckoutPayload } from "../checkout.schema"
-
-interface SavedAddress {
-  recipientName: string
-  addressLine1: string
-  addressLine2: string | null
-  city: string
-  stateRegion: string
-  country: string
-  postalCode: string
-}
+import {
+  checkoutSchema,
+  type CheckoutPayload,
+  type ShippingAddressPayload,
+} from "../checkout.schema"
 
 interface CheckoutLineItem {
   id: string
@@ -33,12 +30,12 @@ interface CheckoutFormProps {
   cartTotal: number
   cartItemsCount: number
   cartItems?: CheckoutLineItem[]
-  savedAddress?: SavedAddress | null
+  savedAddress?: ShippingAddress | null
   onSubmit: (data: CheckoutPayload) => Promise<void>
 }
 
 function mapSavedAddressToCheckout(
-  saved: SavedAddress
+  saved: ShippingAddress
 ): CheckoutPayload["shippingAddress"] {
   return {
     recipientName: saved.recipientName,
@@ -51,6 +48,20 @@ function mapSavedAddressToCheckout(
   }
 }
 
+function mapCheckoutToAddressPayload(
+  address: ShippingAddressPayload
+): UpdateAddressPayload {
+  return {
+    recipientName: address.recipientName,
+    addressLine1: address.line1,
+    addressLine2: address.line2 ?? undefined,
+    city: address.city,
+    stateRegion: address.stateOrRegion,
+    country: address.country,
+    postalCode: address.postalCode,
+  }
+}
+
 export function CheckoutForm({
   cartTotal,
   cartItemsCount,
@@ -59,7 +70,10 @@ export function CheckoutForm({
   onSubmit,
 }: CheckoutFormProps) {
   const [useSaved, setUseSaved] = useState(!!savedAddress)
+  const [saveAsDefault, setSaveAsDefault] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const updateAddress = useUpdateAddress()
 
   const hasSavedAddress = !!savedAddress
   const totalPieces =
@@ -111,24 +125,23 @@ export function CheckoutForm({
       shippingAddress: useSaved && savedAddress ? null : data.shippingAddress,
     }
 
-    if (!useSaved && data.shippingAddress && typeof window !== "undefined") {
-      window.localStorage.setItem(
-        CHECKOUT_STORAGE_KEYS.SAVED_SHIPPING_ADDRESS,
-        JSON.stringify({
-          recipientName: data.shippingAddress.recipientName,
-          addressLine1: data.shippingAddress.line1,
-          addressLine2: data.shippingAddress.line2,
-          city: data.shippingAddress.city,
-          stateRegion: data.shippingAddress.stateOrRegion,
-          country: data.shippingAddress.country,
-          postalCode: data.shippingAddress.postalCode,
-        })
-      )
-    }
-
     setIsSubmitting(true)
 
     try {
+      // If the customer entered a new address and opted in, persist it to their
+      // account as the default. A failure here is non-fatal to the order.
+      if (!useSaved && saveAsDefault && data.shippingAddress) {
+        try {
+          await updateAddress.mutateAsync(
+            mapCheckoutToAddressPayload(data.shippingAddress)
+          )
+        } catch {
+          toast.error(
+            "We couldn't save this as your default address, but we'll still use it for this order."
+          )
+        }
+      }
+
       await onSubmit(payload)
     } finally {
       setIsSubmitting(false)
@@ -370,6 +383,21 @@ export function CheckoutForm({
                     )}
                   </div>
                 </div>
+
+                <label
+                  htmlFor="save-as-default-address"
+                  className="flex cursor-pointer items-center gap-3 rounded-[var(--radius)] border border-border/70 bg-background px-4 py-3 text-[0.82rem] leading-6 text-muted-foreground"
+                >
+                  <input
+                    id="save-as-default-address"
+                    name="saveAsDefault"
+                    type="checkbox"
+                    checked={saveAsDefault}
+                    onChange={(event) => setSaveAsDefault(event.target.checked)}
+                    className="size-4 accent-[var(--color-brand)]"
+                  />
+                  Save this as my default delivery address
+                </label>
               </div>
             )}
           </section>
