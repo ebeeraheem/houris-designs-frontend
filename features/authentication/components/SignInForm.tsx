@@ -1,7 +1,6 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { RiCheckLine } from "@remixicon/react"
 import { useRouter } from "next/navigation"
 import { startTransition } from "react"
 import { useForm } from "react-hook-form"
@@ -101,38 +100,13 @@ export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
         )}
       </div>
 
-      <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/70 p-3 sm:p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <label
-            htmlFor="remember-me"
-            className="group inline-flex cursor-pointer items-center gap-3 rounded-[var(--radius)] border border-border/70 bg-background/80 px-3 py-2.5 transition hover:border-brand/30 hover:bg-background"
-          >
-            <input
-              id="remember-me"
-              name="rememberMe"
-              type="checkbox"
-              className="peer sr-only"
-              disabled={login.isPending}
-            />
-            <span className="flex size-5 items-center justify-center rounded-full border border-border bg-background shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition peer-checked:border-brand peer-checked:bg-brand peer-focus-visible:ring-2 peer-focus-visible:ring-brand/30 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background">
-              <RiCheckLine className="size-3 text-white opacity-0 transition peer-checked:opacity-100" />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[0.68rem] font-medium tracking-[0.18em] text-foreground uppercase">
-                Keep me signed in
-              </span>
-              <span className="block text-[0.74rem] leading-5 text-muted-foreground">
-                Save this device for a faster return.
-              </span>
-            </span>
-          </label>
-          <a
-            href="/forgot-password"
-            className="text-[0.74rem] font-medium text-brand hover:underline"
-          >
-            Forgot password?
-          </a>
-        </div>
+      <div className="flex justify-end">
+        <a
+          href="/forgot-password"
+          className="text-[0.74rem] font-medium text-brand hover:underline"
+        >
+          Forgot password?
+        </a>
       </div>
 
       <Button

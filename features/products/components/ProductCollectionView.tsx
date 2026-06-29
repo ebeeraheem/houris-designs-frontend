@@ -23,6 +23,13 @@ import {
 } from "@/components/ui/sheet"
 import { cn } from "@/utils/cn"
 import { PRODUCTS_PER_PAGE } from "../product.constants"
+import {
+  DEFAULT_PRODUCT_SORT,
+  PRODUCT_SORT_OPTIONS,
+  parseProductSort,
+  toApiSortBy,
+  type ProductSortValue,
+} from "../product.sort"
 import { useGetProducts } from "../usecases/useGetProducts"
 import {
   ProductCollectionFilters,
@@ -195,12 +202,17 @@ function getAppliedFilterCount(filters: ProductCollectionFiltersState) {
 function buildCollectionHref(
   pathname: string,
   page: number,
-  filters: ProductCollectionFiltersState
+  filters: ProductCollectionFiltersState,
+  sort: ProductSortValue
 ) {
   const params = new URLSearchParams()
 
   if (page > 1) {
     params.set("page", String(page))
+  }
+
+  if (sort !== DEFAULT_PRODUCT_SORT) {
+    params.set("sort", sort)
   }
 
   if (filters.pageSize !== PRODUCTS_PER_PAGE) {
@@ -232,7 +244,8 @@ export function ProductCollectionView() {
 
   const page = getPageFromSearchParams(searchParams)
   const filters = getFiltersFromSearchParams(searchParams)
-  const filtersKey = `${filters.search ?? ""}:${filters.minPrice ?? ""}:${filters.maxPrice ?? ""}:${filters.pageSize}`
+  const sort = parseProductSort(searchParams.get("sort"))
+  const filtersKey = `${filters.search ?? ""}:${filters.minPrice ?? ""}:${filters.maxPrice ?? ""}:${filters.pageSize}:${sort}`
   const activeFilterCount = getAppliedFilterCount(filters)
   const activeFilterLabel =
     activeFilterCount === 0 ? "All pieces" : `${activeFilterCount} active`
@@ -243,16 +256,51 @@ export function ProductCollectionView() {
     search: filters.search,
     minPrice: filters.minPrice,
     maxPrice: filters.maxPrice,
+    sortBy: toApiSortBy(sort),
   })
 
   const updateCollectionRoute = (
     nextFilters: ProductCollectionFiltersState,
-    nextPage = 1
+    nextPage = 1,
+    nextSort: ProductSortValue = sort
   ) => {
-    router.replace(buildCollectionHref(pathname, nextPage, nextFilters), {
-      scroll: false,
-    })
+    router.replace(
+      buildCollectionHref(pathname, nextPage, nextFilters, nextSort),
+      {
+        scroll: false,
+      }
+    )
   }
+
+  const handleSortChange = (nextSort: ProductSortValue) => {
+    updateCollectionRoute(filters, 1, nextSort)
+  }
+
+  const sortControl = (
+    <div className="flex items-center justify-end gap-2">
+      <label
+        htmlFor="product-sort"
+        className="text-[0.72rem] font-medium tracking-[0.14em] text-muted-foreground uppercase"
+      >
+        Sort
+      </label>
+      <select
+        id="product-sort"
+        value={sort}
+        onChange={(event) =>
+          handleSortChange(event.target.value as ProductSortValue)
+        }
+        disabled={isFetching}
+        className="h-9 rounded-[var(--radius)] border border-border/80 bg-background px-3 text-[0.82rem] text-foreground outline-none transition focus:border-brand/45 disabled:opacity-60"
+      >
+        {PRODUCT_SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
 
   const renderFilters = (
     keySuffix: string,
@@ -387,6 +435,8 @@ export function ProductCollectionView() {
 
       <div className="min-w-0 flex flex-col gap-6">
         {mobileFiltersBar}
+
+        {sortControl}
 
         <ProductGrid products={data.data} />
 

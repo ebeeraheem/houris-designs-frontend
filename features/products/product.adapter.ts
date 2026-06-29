@@ -5,6 +5,7 @@ import type {
   CreateProductPayload,
   UpdateProductPayload,
 } from "./product.schema"
+import type { ProductSortByApi } from "./product.sort"
 
 const ENDPOINTS = {
   LIST: "/api/products",
@@ -21,7 +22,7 @@ export interface GetProductsParams {
   minPrice?: number
   maxPrice?: number
   colourSwatchId?: string
-  sortBy?: number
+  sortBy?: ProductSortByApi
 }
 
 export const fetchProducts = async (

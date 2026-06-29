@@ -19,6 +19,7 @@ import {
   CHECKOUT_STORAGE_KEYS,
 } from "@/features/orders/checkout.constants"
 import { getCheckoutErrorMessage } from "@/features/orders/checkout.error"
+import { isAllowedPaymentUrl } from "@/features/orders/checkout.payment-url"
 import { CheckoutForm } from "@/features/orders/components/CheckoutForm"
 import { useCheckout } from "@/features/orders/usecases/useCheckout"
 import { formatSizeCode } from "@/utils/size-codes"
@@ -82,6 +83,18 @@ export function CheckoutPageContent() {
           )
         }
         toast.error("Checkout started, but no payment link was returned.")
+        return
+      }
+
+      if (!isAllowedPaymentUrl(result.paymentUrl)) {
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem(
+            CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE
+          )
+        }
+        toast.error(
+          "We couldn't start a secure payment session. Please try again."
+        )
         return
       }
 
