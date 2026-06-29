@@ -2,20 +2,22 @@
 
 const isProduction = process.env.NODE_ENV === "production"
 
-// Derive the API origin so it can be allowlisted in connect-src / img-src.
-function getApiOrigin() {
-  const raw = process.env.NEXT_PUBLIC_API_BASE_URL
-  if (!raw) {
+// Derive an allowlistable origin from an env-configured base URL.
+function getOrigin(rawUrl) {
+  if (!rawUrl) {
     return ""
   }
   try {
-    return new URL(raw).origin
+    return new URL(rawUrl).origin
   } catch {
     return ""
   }
 }
 
-const apiOrigin = getApiOrigin()
+const apiOrigin = getOrigin(process.env.NEXT_PUBLIC_API_BASE_URL)
+// Product/swatch/gallery images are served from an external bucket/CDN (e.g.
+// Cloudflare R2), a different origin than the API, so it needs its own entry.
+const imageOrigin = getOrigin(process.env.NEXT_PUBLIC_IMAGE_BASE_URL)
 
 const scriptSrc = ["'self'", "'unsafe-inline'"]
 const connectSrc = ["'self'", apiOrigin].filter(Boolean)
@@ -30,7 +32,7 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src ${scriptSrc.join(" ")}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src ${["'self'", "data:", "blob:", apiOrigin].filter(Boolean).join(" ")}`,
+  `img-src ${["'self'", "data:", "blob:", apiOrigin, imageOrigin].filter(Boolean).join(" ")}`,
   "font-src 'self'",
   `connect-src ${connectSrc.join(" ")}`,
   "frame-ancestors 'none'",
