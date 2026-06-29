@@ -152,8 +152,11 @@ export function DeliveryDetails() {
         <>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div>
-              <label className="field-label">Recipient Name</label>
+              <label htmlFor="recipientName" className="field-label">
+                Recipient Name
+              </label>
               <input
+                id="recipientName"
                 type="text"
                 value={formState.recipientName}
                 onChange={(event) =>
@@ -170,8 +173,11 @@ export function DeliveryDetails() {
             </div>
 
             <div>
-              <label className="field-label">Country</label>
+              <label htmlFor="country" className="field-label">
+                Country
+              </label>
               <input
+                id="country"
                 type="text"
                 value={formState.country}
                 onChange={(event) => handleChange("country", event.target.value)}
@@ -186,8 +192,11 @@ export function DeliveryDetails() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="field-label">Address Line 1</label>
+              <label htmlFor="addressLine1" className="field-label">
+                Address Line 1
+              </label>
               <input
+                id="addressLine1"
                 type="text"
                 value={formState.addressLine1}
                 onChange={(event) =>
@@ -204,8 +213,11 @@ export function DeliveryDetails() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="field-label">Address Line 2</label>
+              <label htmlFor="addressLine2" className="field-label">
+                Address Line 2
+              </label>
               <input
+                id="addressLine2"
                 type="text"
                 value={formState.addressLine2}
                 onChange={(event) =>
@@ -217,8 +229,11 @@ export function DeliveryDetails() {
             </div>
 
             <div>
-              <label className="field-label">City</label>
+              <label htmlFor="city" className="field-label">
+                City
+              </label>
               <input
+                id="city"
                 type="text"
                 value={formState.city}
                 onChange={(event) => handleChange("city", event.target.value)}
@@ -233,8 +248,11 @@ export function DeliveryDetails() {
             </div>
 
             <div>
-              <label className="field-label">State / Region</label>
+              <label htmlFor="stateRegion" className="field-label">
+                State / Region
+              </label>
               <input
+                id="stateRegion"
                 type="text"
                 value={formState.stateRegion}
                 onChange={(event) =>
@@ -251,8 +269,11 @@ export function DeliveryDetails() {
             </div>
 
             <div>
-              <label className="field-label">Postal Code</label>
+              <label htmlFor="postalCode" className="field-label">
+                Postal Code
+              </label>
               <input
+                id="postalCode"
                 type="text"
                 value={formState.postalCode}
                 onChange={(event) =>

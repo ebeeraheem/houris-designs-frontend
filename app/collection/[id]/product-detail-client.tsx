@@ -16,6 +16,16 @@ import { EmptyOptionsIcon } from "@/components/icons"
 import { PageReveal } from "@/components/page-reveal"
 import { BackIconLink } from "@/components/ui/back-icon-link"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { EmptyState } from "@/components/ui/empty-state"
 import { useAddCartItem } from "@/features/cart"
 import { PRODUCT_ROUTES, useGetProductById } from "@/features/products"
@@ -723,34 +733,23 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
           </div>
         )}
 
-        {isSizeGuideOpen && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={() => setIsSizeGuideOpen(false)}
-          >
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-            <div
-              className="relative z-10 max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius)] border border-border bg-background shadow-2xl"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <Dialog open={isSizeGuideOpen} onOpenChange={setIsSizeGuideOpen}>
+          <DialogPortal>
+            <DialogOverlay />
+            <DialogContent className="max-w-5xl">
+              <DialogHeader>
                 <div>
                   <p className="eyebrow-label text-brand">Precision Fit</p>
-                  <h2 className="font-heading text-[1.2rem] font-medium tracking-[-0.02em] uppercase sm:text-[1.4rem]">
+                  <DialogTitle className="text-[1.2rem] uppercase sm:text-[1.4rem]">
                     Size Guide
-                  </h2>
+                  </DialogTitle>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsSizeGuideOpen(false)}
-                  className="inline-flex items-center justify-center rounded-[var(--radius)] p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  aria-label="Close size guide"
-                >
+                <DialogClose aria-label="Close size guide">
                   <RiCloseLine className="size-5" />
-                </button>
-              </div>
+                </DialogClose>
+              </DialogHeader>
 
-              <div className="max-h-[calc(90vh-80px)] overflow-y-auto p-6">
+              <DialogBody>
                 <p className="mb-6 text-[0.85rem] leading-6 text-muted-foreground">
                   Our two-dimensional sizing system combines length and width
                   codes for a precise fit. Choose one from each dimension: the
@@ -786,10 +785,10 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                 )}
 
                 {sizeGuide && <SizeGuideContent guide={sizeGuide} dense />}
-              </div>
-            </div>
-          </div>
-        )}
+              </DialogBody>
+            </DialogContent>
+          </DialogPortal>
+        </Dialog>
       </PageReveal>
     </main>
   )
