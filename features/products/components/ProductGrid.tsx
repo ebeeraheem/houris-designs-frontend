@@ -42,7 +42,6 @@ export function ProductGrid({ products }: ProductGridProps) {
                 alt={product.title}
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                unoptimized
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent" />

@@ -19,6 +19,26 @@ const apiOrigin = getOrigin(process.env.NEXT_PUBLIC_API_BASE_URL)
 // Cloudflare R2), a different origin than the API, so it needs its own entry.
 const imageOrigin = getOrigin(process.env.NEXT_PUBLIC_IMAGE_BASE_URL)
 
+// next/image only optimizes remote images whose host is allowlisted here.
+function toRemotePattern(rawUrl) {
+  if (!rawUrl) {
+    return null
+  }
+  try {
+    const url = new URL(rawUrl)
+    return { protocol: url.protocol.replace(":", ""), hostname: url.hostname }
+  } catch {
+    return null
+  }
+}
+
+const remotePatterns = [
+  process.env.NEXT_PUBLIC_IMAGE_BASE_URL,
+  process.env.NEXT_PUBLIC_API_BASE_URL,
+]
+  .map(toRemotePattern)
+  .filter(Boolean)
+
 const scriptSrc = ["'self'", "'unsafe-inline'"]
 const connectSrc = ["'self'", apiOrigin].filter(Boolean)
 
@@ -61,6 +81,9 @@ if (isProduction) {
 
 const nextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns,
+  },
   async headers() {
     return [
       {

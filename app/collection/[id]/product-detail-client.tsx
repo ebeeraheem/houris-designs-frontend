@@ -440,7 +440,6 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                             alt={image.alt}
                             fill
                             sizes="64px"
-                            unoptimized
                             className="object-cover"
                           />
                         </div>
@@ -462,7 +461,6 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                               alt={images[mainImage].alt}
                               fill
                               sizes="(min-width: 1024px) 48vw, 100vw"
-                              unoptimized
                               className="object-cover"
                             />
                           ) : (
@@ -555,7 +553,6 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                                 alt=""
                                 fill
                                 sizes="16px"
-                                unoptimized
                                 className="object-cover"
                               />
                             )}

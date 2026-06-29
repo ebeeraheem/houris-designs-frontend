@@ -48,7 +48,6 @@ export function CartItem({
             alt={productTitle}
             fill
             sizes="112px"
-            unoptimized
             className="object-cover"
           />
         </div>
