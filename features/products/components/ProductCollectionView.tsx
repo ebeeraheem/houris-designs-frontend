@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useSyncExternalStore } from "react"
 import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
@@ -10,6 +10,13 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   Sheet,
   SheetBody,
@@ -39,6 +46,10 @@ import { ProductGrid } from "./ProductGrid"
 
 const layoutClassName =
   "grid gap-6 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)]"
+
+// Hydration-safe mounted flag: false on the server and the first client render,
+// true afterwards — without a setState-in-effect.
+const subscribeNoop = () => () => {}
 
 function Skeleton({
   className,
@@ -241,6 +252,14 @@ export function ProductCollectionView() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
+  // Render the loading state until mounted so the server and the first client
+  // render match — react-query's isLoading differs between SSR and the client,
+  // which would otherwise cause a hydration mismatch on the disabled controls.
+  const mounted = useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false
+  )
 
   const page = getPageFromSearchParams(searchParams)
   const filters = getFiltersFromSearchParams(searchParams)
@@ -259,10 +278,13 @@ export function ProductCollectionView() {
     sortBy: toApiSortBy(sort),
   })
 
+  const controlsDisabled = !mounted || isLoading
+
   const updateCollectionRoute = (
     nextFilters: ProductCollectionFiltersState,
     nextPage = 1,
-    nextSort: ProductSortValue = sort
+    nextSort: ProductSortValue = sort,
+    scrollToTop = false
   ) => {
     router.replace(
       buildCollectionHref(pathname, nextPage, nextFilters, nextSort),
@@ -270,6 +292,10 @@ export function ProductCollectionView() {
         scroll: false,
       }
     )
+
+    if (scrollToTop && typeof window !== "undefined") {
+      window.scrollTo({ top: 0 })
+    }
   }
 
   const handleSortChange = (nextSort: ProductSortValue) => {
@@ -284,21 +310,27 @@ export function ProductCollectionView() {
       >
         Sort
       </label>
-      <select
-        id="product-sort"
+      <Select
+        items={PRODUCT_SORT_OPTIONS}
         value={sort}
-        onChange={(event) =>
-          handleSortChange(event.target.value as ProductSortValue)
+        onValueChange={(nextValue) =>
+          handleSortChange(
+            (nextValue as ProductSortValue | null) ?? DEFAULT_PRODUCT_SORT
+          )
         }
         disabled={isFetching}
-        className="h-9 rounded-[var(--radius)] border border-border/80 bg-background px-3 text-[0.82rem] text-foreground outline-none transition focus:border-brand/45 disabled:opacity-60"
       >
-        {PRODUCT_SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger id="product-sort" className="h-9 w-[12rem] bg-card">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {PRODUCT_SORT_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   )
 
@@ -344,7 +376,7 @@ export function ProductCollectionView() {
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
         <SheetTrigger
           className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2")}
-          disabled={isLoading}
+          disabled={controlsDisabled}
         >
           <RiFilter3Line className="size-4" />
           Filters
@@ -384,7 +416,7 @@ export function ProductCollectionView() {
     </div>
   )
 
-  if (isLoading) {
+  if (!mounted || isLoading) {
     return (
       <div className={layoutClassName}>
         <div className="hidden lg:block">
@@ -470,7 +502,7 @@ export function ProductCollectionView() {
                 size="sm"
                 disabled={!data.hasPrev || isFetching}
                 onClick={() => {
-                  updateCollectionRoute(filters, Math.max(1, page - 1))
+                  updateCollectionRoute(filters, Math.max(1, page - 1), sort, true)
                 }}
               >
                 <RiArrowLeftSLine className="size-4" />
@@ -482,7 +514,7 @@ export function ProductCollectionView() {
                 size="sm"
                 disabled={!data.hasNext || isFetching}
                 onClick={() => {
-                  updateCollectionRoute(filters, page + 1)
+                  updateCollectionRoute(filters, page + 1, sort, true)
                 }}
               >
                 Next

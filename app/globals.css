@@ -166,7 +166,6 @@
   }
   html {
     @apply bg-background font-sans text-foreground;
-    scroll-behavior: smooth;
     text-rendering: optimizeLegibility;
   }
   body {
@@ -208,6 +207,7 @@
   input,
   select,
   textarea {
+    font-family: inherit;
     transition-duration: 180ms;
     transition-property:
       color, background-color, border-color, box-shadow, transform, opacity;
