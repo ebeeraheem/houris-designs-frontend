@@ -30,45 +30,54 @@ export function FeaturedCollection() {
       const shell = root.current
       if (!shell) return
 
+      // Resolve targets scoped to this section and guard on length: the product
+      // cards (which carry [data-reveal]) only render after the API responds, so
+      // the selectors match nothing on the first run.
+      const reveals = gsap.utils.toArray<HTMLElement>("[data-reveal]", shell)
+      const copy = gsap.utils.toArray<HTMLElement>("[data-copy]", shell)
+
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches
 
       if (reduceMotion) {
-        gsap.set("[data-reveal]", { clipPath: "inset(0% 0% 0% 0%)" })
-        gsap.set("[data-copy]", { autoAlpha: 1, y: 0 })
+        if (reveals.length) gsap.set(reveals, { clipPath: "inset(0% 0% 0% 0%)" })
+        if (copy.length) gsap.set(copy, { autoAlpha: 1, y: 0 })
         return
       }
 
-      gsap.set("[data-reveal]", { clipPath: "inset(0% 0% 100% 0%)" })
-      gsap.set("[data-copy]", { autoAlpha: 0, y: 20 })
+      if (reveals.length) {
+        gsap.set(reveals, { clipPath: "inset(0% 0% 100% 0%)" })
+        ScrollTrigger.batch(reveals, {
+          onEnter: (elements) => {
+            gsap.to(elements, {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1.1,
+              stagger: 0.12,
+              ease: "power4.out",
+            })
+          },
+          start: "top 88%",
+          once: true,
+        })
+      }
 
-      ScrollTrigger.batch("[data-reveal]", {
-        onEnter: (elements) => {
-          gsap.to(elements, {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.1,
-            stagger: 0.12,
-            ease: "power4.out",
-          })
-        },
-        start: "top 88%",
-        once: true,
-      })
-
-      ScrollTrigger.batch("[data-copy]", {
-        onEnter: (elements) => {
-          gsap.to(elements, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.06,
-            ease: "power3.out",
-          })
-        },
-        start: "top 88%",
-        once: true,
-      })
+      if (copy.length) {
+        gsap.set(copy, { autoAlpha: 0, y: 20 })
+        ScrollTrigger.batch(copy, {
+          onEnter: (elements) => {
+            gsap.to(elements, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.06,
+              ease: "power3.out",
+            })
+          },
+          start: "top 88%",
+          once: true,
+        })
+      }
     },
     { scope: root }
   )

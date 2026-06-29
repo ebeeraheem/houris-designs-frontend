@@ -3,10 +3,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { SmoothScroll } from "./smooth-scroll"
 import { SiteToaster } from "./ui/site-toaster"
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -20,10 +21,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SmoothScroll>
-        {children}
-        <SiteToaster />
-      </SmoothScroll>
+      {children}
+      <SiteToaster />
     </QueryClientProvider>
   )
 }

@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server"
 // the access_token cookie expires after 15 minutes, so its absence != logged out.
 const REFRESH_TOKEN_COOKIE = "refresh_token"
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // Only enforce in production. In local dev the auth cookies live on the API
   // origin (a different host), so the frontend never receives them and gating
   // here would falsely redirect every protected route.

@@ -3,7 +3,7 @@
 ## Project overview
 - Houris Designs is a customer-facing made-to-measure fashion ecommerce frontend. Current routes cover the landing page, about page, product collection and product detail pages, size guide, authentication, account management, cart, checkout, and order history/detail flows.
 - This repository uses the Next.js App Router only. Routes live under `app/`; no `pages/` directory was found.
-- Main technologies visible in the repo: Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Base UI, Remix Icon, TanStack React Query, Axios, React Hook Form, Zod, GSAP, Lenis, next-themes, react-hot-toast, ESLint, Prettier, and `prettier-plugin-tailwindcss`.
+- Main technologies visible in the repo: Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Base UI, Remix Icon, TanStack React Query, Axios, React Hook Form, Zod, GSAP, next-themes, react-hot-toast, ESLint, Prettier, and `prettier-plugin-tailwindcss`.
 - The app is organized around feature modules in `features/`. Feature folders commonly include adapters, repositories, services, transformers, schemas, types, constants, React Query hooks under `usecases/`, and presentational components.
 
 ## Setup commands

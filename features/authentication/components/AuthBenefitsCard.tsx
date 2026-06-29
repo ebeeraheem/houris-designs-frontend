@@ -1,4 +1,3 @@
-import type { ComponentType } from "react"
 import type { RemixiconComponentType } from "@remixicon/react"
 
 interface Benefit {
@@ -12,7 +11,10 @@ interface AuthBenefitsCardProps {
   benefits: Benefit[]
 }
 
-export function AuthBenefitsCard({ title, benefits }: AuthBenefitsCardProps) {
+export function AuthBenefitsCard({
+  title,
+  benefits,
+}: Readonly<AuthBenefitsCardProps>) {
   return (
     <div className="mt-4 rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-3 sm:mt-6 sm:p-4">
       <p className="eyebrow-label text-brand">{title}</p>
