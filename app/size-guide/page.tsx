@@ -22,8 +22,8 @@ export default function SizeGuidePage() {
             <div className="mb-10 flex items-start gap-4 sm:gap-5">
               <BackIconLink
                 data-page-intro
-                href="/collection"
-                label="Back to collection"
+                href="/couture"
+                label="Back to couture"
                 className="mt-1 shrink-0"
               />
 

@@ -32,6 +32,15 @@ function normalizeCartResponse(
 export const toCartItem = (api: ApiCartItem): CartItem => {
   const legacySize = parseLegacyBaseSize(api.baseSize)
 
+  const quantity = toNumber(api.quantity)
+  const lineSubtotal = toNumber(api.lineSubtotal)
+  // The API doesn't always return a usable unit price; fall back to deriving it
+  // from the (reliable) line subtotal and quantity so the cart/checkout never
+  // show ₦0 per unit.
+  const apiUnitPrice = toNumber(api.unitPrice)
+  const unitPrice =
+    apiUnitPrice > 0 ? apiUnitPrice : quantity > 0 ? lineSubtotal / quantity : 0
+
   return {
     id: getCartItemId(api),
     productId: api.productId,
@@ -39,14 +48,14 @@ export const toCartItem = (api: ApiCartItem): CartItem => {
     primaryImageUrl:
       resolveApiAssetUrl(api.primaryImageUrl) ??
       "/images/editorial/boutique-rack.jpg",
-    unitPrice: toNumber(api.unitPrice),
+    unitPrice,
     swatchId: api.swatchId ?? null,
     colourLabel: api.colourLabel ?? api.colour ?? "Selected swatch",
     sizeLengthCode: api.sizeLengthCode ?? legacySize.sizeLengthCode,
     sizeWidthCode:
       toOptionalNumber(api.sizeWidthCode) ?? legacySize.sizeWidthCode,
-    quantity: toNumber(api.quantity),
-    lineSubtotal: toNumber(api.lineSubtotal),
+    quantity,
+    lineSubtotal,
   }
 }
 

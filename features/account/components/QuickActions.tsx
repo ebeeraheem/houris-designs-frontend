@@ -19,9 +19,9 @@ const quickActions = [
     icon: RiLock2Line,
   },
   {
-    href: "/collection",
+    href: "/couture",
     label: "Continue Shopping",
-    description: "Return to the collection and explore new silhouettes.",
+    description: "Return to Couture and explore new silhouettes.",
     icon: RiArrowRightUpLine,
   },
 ]

@@ -13,7 +13,7 @@ import { cn } from "@/utils/cn"
 export const metadata: Metadata = {
   title: "Houris Designs | Made-to-Measure Fashion",
   description:
-    "Houris Designs creates made-to-measure fashion with precision fit. Every garment is crafted specifically for you using our two-dimensional sizing system.",
+    "Houris Designs creates made-to-measure fashion using a two-dimensional sizing system for a considered fit.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

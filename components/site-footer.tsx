@@ -3,9 +3,9 @@ import Image from "next/image"
 
 const footerNavigation = {
   collection: [
-    { label: "All Products", href: "/collection" },
+    { label: "All Products", href: "/couture" },
     { label: "Size Guide", href: "/size-guide" },
-    { label: "New Arrivals", href: "/collection?sort=newest" },
+    { label: "New Arrivals", href: "/couture?sort=newest" },
   ],
   company: [
     { label: "About", href: "/about" },
@@ -35,13 +35,12 @@ export function SiteFooter() {
               Houris design
             </Link>
             <p className="mt-4 max-w-[20rem] text-sm leading-7 text-muted-foreground">
-              Made-to-measure clothing, crafted for you. Every garment sewn to
-              your unique specifications.
+              Made-to-measure clothing, crafted with care.
             </p>
           </div>
 
           <div className="lg:col-span-2 lg:col-start-6">
-            <h3 className="eyebrow-label text-foreground/60">Collection</h3>
+            <h3 className="eyebrow-label text-foreground/60">Couture</h3>
             <ul className="mt-4 space-y-2.5">
               {footerNavigation.collection.map((item) => (
                 <li key={item.label}>

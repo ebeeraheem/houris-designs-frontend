@@ -297,6 +297,21 @@
       inset 0 1px 0 rgb(255 255 255 / 0.56);
   }
 
+  .houris-toast--success {
+    @apply border-success/16;
+    background:
+      linear-gradient(
+        140deg,
+        color-mix(in oklab, var(--success) 16%, transparent),
+        transparent 42%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--card) 96%, white 4%),
+        color-mix(in oklab, var(--surface) 92%, white 8%)
+      );
+  }
+
   .houris-toast--error {
     @apply border-destructive/16;
     background:
@@ -317,7 +332,11 @@
     box-shadow: 0 0 20px color-mix(in oklab, var(--brand) 36%, transparent);
   }
 
-  .houris-toast__edge--success,
+  .houris-toast__edge--success {
+    @apply bg-success;
+    box-shadow: 0 0 20px color-mix(in oklab, var(--success) 36%, transparent);
+  }
+
   .houris-toast__edge--loading {
     @apply bg-brand;
   }
@@ -334,7 +353,7 @@
   }
 
   .houris-toast__icon--success {
-    @apply border-brand/22 bg-brand/12 text-brand;
+    @apply border-success/22 bg-success/12 text-success;
   }
 
   .houris-toast__icon--error {
@@ -357,7 +376,10 @@
     @apply inline-flex items-center rounded-[var(--radius)] border border-brand/16 bg-brand/8 px-2.5 py-1 text-[0.58rem] font-semibold tracking-[0.24em] text-brand uppercase;
   }
 
-  .houris-toast__pill--success,
+  .houris-toast__pill--success {
+    @apply border-success/20 bg-success/10 text-success;
+  }
+
   .houris-toast__pill--loading {
     @apply border-brand/20 bg-brand/10 text-brand;
   }
@@ -386,8 +408,8 @@
   .houris-toast__progress--success {
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--brand) 86%, white 14%),
-      color-mix(in oklab, var(--brand) 56%, transparent)
+      color-mix(in oklab, var(--success) 86%, white 14%),
+      color-mix(in oklab, var(--success) 56%, transparent)
     );
   }
 

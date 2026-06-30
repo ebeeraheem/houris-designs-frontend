@@ -100,11 +100,11 @@ export function FeaturedCollection() {
               stagger={0.03}
               yOffset={80}
             >
-              The Collection
+              Couture
             </TextReveal>
           </div>
           <Link
-            href="/collection"
+            href="/couture"
             data-copy
             className="hidden h-12 items-center rounded-[var(--radius)] bg-foreground px-6 text-[0.68rem] font-semibold tracking-[0.22em] text-background uppercase transition hover:bg-brand sm:inline-flex"
           >
@@ -158,7 +158,7 @@ export function FeaturedCollection() {
 
                   <div className="space-y-1.5 pt-4">
                     <p data-copy className="eyebrow-label text-brand">
-                      Houris Collection
+                      Houris Couture
                     </p>
                     <h3
                       data-copy
@@ -183,8 +183,8 @@ export function FeaturedCollection() {
               icon={
                 <EmptyCollectionIcon className="size-7" aria-hidden="true" />
               }
-              title="Collection unavailable"
-              description="The live collection is unavailable right now. Please check back in a moment."
+              title="Couture unavailable"
+              description="Couture is unavailable right now. Please check back in a moment."
             />
           </div>
         ) : null}

@@ -82,9 +82,8 @@ export function StorySection() {
               </p>
               <p>
                 Guided by the slogan &quot;The Beautiful People,&quot; our
-                collections move gracefully between bold and modest design,
-                giving every woman room to choose the style that honors her
-                identity.
+                couture moves gracefully between bold and modest design, giving
+                every woman room to choose the style that honors her identity.
               </p>
             </div>
           </div>

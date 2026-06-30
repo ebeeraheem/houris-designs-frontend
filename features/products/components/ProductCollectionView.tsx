@@ -436,9 +436,7 @@ export function ProductCollectionView() {
         <div className="flex min-w-0 flex-col gap-6">
           {mobileFiltersBar}
           <div className="surface-panel p-6 sm:p-8">
-            <h2 className="section-heading">
-              We couldn&apos;t load the collection
-            </h2>
+            <h2 className="section-heading">We couldn&apos;t load Couture</h2>
             <p className="mt-3 max-w-[34rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
               Please try again to fetch the latest products from the API.
             </p>
@@ -491,7 +489,7 @@ export function ProductCollectionView() {
               </div>
               <p className="mt-4 max-w-[36rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
                 {data.total === 0
-                  ? "No pieces match this edit right now. Try widening your filters to see more of the collection."
+                  ? "No pieces match this edit right now. Try widening your filters to see more pieces."
                   : `Showing ${startRecord}-${endRecord} of ${data.total} pieces.`}
               </p>
             </div>

@@ -81,10 +81,9 @@ export function BrandEthos() {
             data-ethos-copy
             className="mt-6 max-w-[26rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
           >
-            Every garment is crafted specifically for you. We don&apos;t stock
-            shelves — we craft silhouettes. From fabric selection to final
-            stitch, each piece is created only after you order, ensuring a fit
-            that&apos;s uniquely yours.
+            We don&apos;t stock shelves — we craft silhouettes. From fabric
+            selection to final stitch, each piece is created only after you
+            order.
           </p>
           <p
             data-ethos-copy

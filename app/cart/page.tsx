@@ -32,12 +32,15 @@ export default function CartPage() {
     quantity: number
   ) => {
     if (!item.id) {
-      toast.error("This cart item is missing an ID from the API.")
+      console.error("Cart item is missing an ID from the API.", item)
       return
     }
 
     if (!item.swatchId || !item.sizeLengthCode || item.sizeWidthCode === null) {
-      toast.error("This cart item is missing size or swatch data from the API.")
+      console.error(
+        "Cart item is missing size or swatch data from the API.",
+        item
+      )
       return
     }
 
@@ -58,13 +61,12 @@ export default function CartPage() {
 
   const handleRemoveItem = async (itemId: string | null) => {
     if (!itemId) {
-      toast.error("This cart item is missing an ID from the API.")
+      console.error("Cart item is missing an ID from the API.")
       return
     }
 
     try {
       await removeCartItem.mutateAsync(itemId)
-      toast.success("Item removed from cart.")
     } catch {
       toast.error("We couldn't remove this cart item. Please try again.")
     }
@@ -73,7 +75,6 @@ export default function CartPage() {
   const handleClearCart = async () => {
     try {
       await clearCart.mutateAsync()
-      toast.success("Cart cleared.")
     } catch {
       toast.error("We couldn't clear your cart. Please try again.")
     }
@@ -96,8 +97,8 @@ export default function CartPage() {
             <div className="mb-10 flex items-start gap-4 sm:mb-14 sm:gap-5">
               <BackIconLink
                 data-page-intro
-                href="/collection"
-                label="Back to collection"
+                href="/couture"
+                label="Back to couture"
                 className="mt-1 shrink-0"
               />
 
@@ -166,8 +167,8 @@ export default function CartPage() {
                 <EmptyState
                   icon={<EmptyCartIcon className="size-7" aria-hidden="true" />}
                   title="Your cart is empty"
-                  description="Add a few considered pieces from the collection and they will appear here."
-                  actionHref="/collection"
+                  description="Add a few considered pieces and they will appear here."
+                  actionHref="/couture"
                   actionLabel="Continue Shopping"
                 />
               </div>

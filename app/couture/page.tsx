@@ -91,7 +91,7 @@ export default function CollectionPage() {
 
               <div className="max-w-[42rem]">
                 <h1 className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
-                  The Collection
+                  Couture
                 </h1>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
                   Discover statement garments, occasion silhouettes, and

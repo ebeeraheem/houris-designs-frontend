@@ -29,10 +29,10 @@ export function EditorialHero() {
                   the beautiful people
                 </p>
                 <Link
-                  href="/collection"
+                  href="/couture"
                   className="group/link inline-flex items-center gap-3 text-[0.7rem] font-medium tracking-[0.22em] text-white uppercase transition-colors duration-200 hover:text-brand"
                 >
-                  Explore collection
+                  Explore Couture
                   <span className="inline-flex size-8 items-center justify-center rounded-[var(--radius)] border border-white/30 transition-all duration-200 group-hover/link:border-brand group-hover/link:bg-brand group-hover/link:text-brand-foreground">
                     <svg
                       width="12"

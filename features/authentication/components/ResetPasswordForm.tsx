@@ -7,8 +7,9 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
+import { PasswordInput } from "@/components/ui/password-input"
 import { getAuthErrorMessage } from "../auth-error"
-import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { isSuccessfulAuthStatus } from "../auth.constants"
 import { resetPasswordSchema, type ResetPasswordPayload } from "../auth.schema"
 import { useResetPassword } from "../usecases/useResetPassword"
 
@@ -41,14 +42,10 @@ export function ResetPasswordForm({
     try {
       const response = await resetPassword.mutateAsync(payload)
 
-      if (response.status !== AUTH_SUCCESS_STATUS) {
+      if (!isSuccessfulAuthStatus(response.status)) {
         toast.error("We couldn't reset your password. Please try again.")
         return
       }
-
-      toast.success(
-        "Password reset successful! You can now sign in with your new password."
-      )
 
       startTransition(() => {
         router.push("/signin")
@@ -112,12 +109,10 @@ export function ResetPasswordForm({
         <label htmlFor="newPassword" className="field-label mb-1.5 block">
           New Password
         </label>
-        <input
+        <PasswordInput
           id="newPassword"
           {...register("newPassword")}
-          type="password"
           autoComplete="new-password"
-          className="field-input"
           placeholder="Create a new password"
           disabled={resetPassword.isPending}
         />

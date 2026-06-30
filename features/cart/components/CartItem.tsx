@@ -12,6 +12,7 @@ interface CartItemProps {
   sizeLengthCode: string | null
   sizeWidthCode: number | null
   quantity: number
+  unitPrice: number
   lineSubtotal: number
   primaryImageUrl: string
   isUpdating?: boolean
@@ -28,6 +29,7 @@ export function CartItem({
   sizeLengthCode,
   sizeWidthCode,
   quantity,
+  unitPrice,
   lineSubtotal,
   primaryImageUrl,
   isUpdating = false,
@@ -35,7 +37,7 @@ export function CartItem({
   onDecreaseQuantity,
   onIncreaseQuantity,
   onRemove,
-}: CartItemProps) {
+}: Readonly<CartItemProps>) {
   const isActionPending = isUpdating || isRemoving
   const hasItemId = Boolean(id)
 
@@ -60,6 +62,9 @@ export function CartItem({
           </h3>
           <p className="mt-1 text-[0.72rem] text-muted-foreground">
             Size: {formatSizeCode(sizeLengthCode, sizeWidthCode)}
+          </p>
+          <p className="mt-1 text-[0.72rem] text-muted-foreground">
+            {formatCurrency(unitPrice)} each
           </p>
         </div>
         <div className="mt-3 flex items-center justify-between">

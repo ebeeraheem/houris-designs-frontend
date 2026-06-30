@@ -77,7 +77,7 @@ export function OrderHistoryView() {
           icon={<EmptyOrdersIcon className="size-7" aria-hidden="true" />}
           title="No orders yet"
           description="Once you place your first piece, your order history and progress will appear here."
-          actionHref="/collection"
+          actionHref="/couture"
           actionLabel="Continue Shopping"
         />
       </div>

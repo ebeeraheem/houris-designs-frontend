@@ -217,7 +217,7 @@ export function CheckoutPageContent() {
                       }
                       title="Your cart is empty"
                       description="Add a few considered pieces before moving into the payment flow."
-                      actionHref="/collection"
+                      actionHref="/couture"
                       actionLabel="Continue Shopping"
                     />
                   </div>
@@ -236,6 +236,7 @@ export function CheckoutPageContent() {
                         item.sizeWidthCode
                       ),
                       quantity: item.quantity,
+                      unitPrice: item.unitPrice,
                       lineSubtotal: item.lineSubtotal,
                     }))}
                     savedAddress={savedAddress ?? null}

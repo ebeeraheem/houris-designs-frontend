@@ -18,7 +18,7 @@ export function ProductGrid({ products }: ProductGridProps) {
         <EmptyState
           icon={<EmptyCollectionIcon className="size-7" aria-hidden="true" />}
           title="No pieces found"
-          description="Try widening your search or resetting the filters to bring more of the collection back into view."
+          description="Try widening your search or resetting the filters to bring more pieces back into view."
         />
       </div>
     )
@@ -53,7 +53,7 @@ export function ProductGrid({ products }: ProductGridProps) {
             </div>
           </div>
           <div className="space-y-1.5 pt-4">
-            <p className="eyebrow-label text-brand">Houris Collection</p>
+            <p className="eyebrow-label text-brand">Houris Couture</p>
             <h3 className="font-heading text-[1.1rem] font-medium tracking-[-0.03em] uppercase">
               {product.title}
             </h3>

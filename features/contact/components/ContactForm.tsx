@@ -1,9 +1,10 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
+import { RiCheckboxCircleLine } from "@remixicon/react"
 
 import { Button } from "@/components/ui/button"
 import { getContactErrorMessage } from "../contact-error"
@@ -16,6 +17,7 @@ const MIN_SUBMIT_DELAY_MS = 3000
 export function ContactForm() {
   const formLoadedAtMs = useRef<number | null>(null)
   const submitContact = useSubmitContact()
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const {
     register,
@@ -48,9 +50,9 @@ export function ContactForm() {
 
   const handleFormSubmit = async (payload: ContactPayload) => {
     if (payload.companyWebsite?.trim()) {
-      toast.success("Thank you. Your message has been received.")
       reset()
       refreshLoadedAt()
+      setIsSubmitted(true)
       return
     }
 
@@ -71,12 +73,36 @@ export function ContactForm() {
         return
       }
 
-      toast.success("Thank you. Your message has been received.")
       reset()
       refreshLoadedAt()
+      setIsSubmitted(true)
     } catch (error) {
       toast.error(getContactErrorMessage(error))
     }
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="surface-card p-6 text-center sm:p-8">
+        <div className="mx-auto inline-flex rounded-[var(--radius)] bg-success/12 p-3 text-success">
+          <RiCheckboxCircleLine className="size-6" />
+        </div>
+        <h2 className="mt-4 font-heading text-[1.4rem] font-medium tracking-[-0.04em]">
+          Message received
+        </h2>
+        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          Thank you for reaching out. We&apos;ll be in touch soon.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-5"
+          onClick={() => setIsSubmitted(false)}
+        >
+          Send another message
+        </Button>
+      </div>
+    )
   }
 
   return (

@@ -8,7 +8,7 @@ import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
 import { getAuthErrorMessage } from "../auth-error"
-import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { isSuccessfulAuthStatus } from "../auth.constants"
 import {
   forgotPasswordSchema,
   type ForgotPasswordPayload,
@@ -34,7 +34,7 @@ export function ForgotPasswordForm() {
     try {
       const response = await forgotPassword.mutateAsync(payload)
 
-      if (response.status !== AUTH_SUCCESS_STATUS) {
+      if (!isSuccessfulAuthStatus(response.status)) {
         toast.error("We couldn't send the reset link. Please try again.")
         return
       }

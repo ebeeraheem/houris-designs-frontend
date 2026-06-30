@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button"
+import { PasswordInput } from "@/components/ui/password-input"
 import { RiShieldCheckLine } from "@remixicon/react"
 import { useChangePassword } from "../usecases/useChangePassword"
 import {
@@ -45,7 +46,6 @@ export function ChangePasswordForm() {
   const onSubmit = async (data: ChangePasswordPayload) => {
     try {
       await changePassword.mutateAsync(data)
-      toast.success("Password updated successfully.")
       reset()
       router.push("/account")
     } catch {
@@ -67,11 +67,10 @@ export function ChangePasswordForm() {
         >
           Current Password
         </label>
-        <input
+        <PasswordInput
           id="currentPassword"
-          type="password"
           autoComplete="current-password"
-          className="field-input bg-card"
+          className="bg-card"
           placeholder="Enter current password"
           disabled={isSubmitting}
           {...register("currentPassword")}
@@ -91,11 +90,10 @@ export function ChangePasswordForm() {
           >
             New Password
           </label>
-          <input
+          <PasswordInput
             id="newPassword"
-            type="password"
             autoComplete="new-password"
-            className="field-input bg-card"
+            className="bg-card"
             placeholder="Create new password"
             disabled={isSubmitting}
             {...register("newPassword")}
@@ -114,11 +112,10 @@ export function ChangePasswordForm() {
           >
             Confirm New Password
           </label>
-          <input
+          <PasswordInput
             id="confirmNewPassword"
-            type="password"
             autoComplete="new-password"
-            className="field-input bg-card"
+            className="bg-card"
             placeholder="Confirm new password"
             disabled={isSubmitting}
             {...register("confirmNewPassword")}

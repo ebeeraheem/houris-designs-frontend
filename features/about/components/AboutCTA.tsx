@@ -17,10 +17,10 @@ export function AboutCTA() {
         </p>
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
-            href="/collection"
+            href="/couture"
             className={cn(buttonVariants({ size: "lg" }), "min-w-[180px]")}
           >
-            Shop Collection
+            Shop Couture
           </Link>
           <Link
             href="/size-guide"

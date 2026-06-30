@@ -34,7 +34,7 @@ import {
 import { cn } from "@/utils/cn"
 
 const baseNavigation = [
-  { label: "Collection", href: PRODUCT_ROUTES.LIST },
+  { label: "Couture", href: PRODUCT_ROUTES.LIST },
   { label: "Size Guide", href: "/size-guide" },
   { label: "Cart", href: "/cart" },
 ] as const
@@ -190,8 +190,8 @@ export function SiteHeader() {
                       <p className="eyebrow-label text-brand">Navigate</p>
                       <SheetTitle className="sr-only">Menu</SheetTitle>
                       <SheetDescription className="mt-3 max-w-[18rem] text-[0.82rem] leading-6">
-                        Explore the collection, manage your account, or move
-                        into a faster client flow from one cleaner side sheet.
+                        Explore Couture, manage your account, or move into a
+                        faster client flow from one cleaner side sheet.
                       </SheetDescription>
                     </div>
 
@@ -233,7 +233,7 @@ export function SiteHeader() {
                             </p>
                           </div>
                           <p className="mt-1 text-[0.74rem] leading-5 text-muted-foreground">
-                            {item.label === "Collection" &&
+                            {item.label === "Couture" &&
                               "Browse the latest silhouettes and tailored pieces."}
                             {item.label === "Size Guide" &&
                               "Review the two-dimensional size system."}
@@ -307,10 +307,10 @@ export function SiteHeader() {
                     <p className="eyebrow-label text-brand">Brand Note</p>
                     <p className="mt-3 text-[0.8rem] leading-6 text-muted-foreground">
                       {profile
-                        ? `${profile.fullName}, your collection, account, and checkout flow are ready.`
+                        ? `${profile.fullName}, your Couture, account, and checkout flow are ready.`
                         : isAuthenticated
-                          ? "Your collection, account, and checkout flow are ready."
-                          : "Houris Designs brings collection browsing, account access, and checkout touchpoints into one more refined mobile flow."}
+                          ? "Your Couture, account, and checkout flow are ready."
+                          : "Houris Designs brings Couture browsing, account access, and checkout touchpoints into one more refined mobile flow."}
                     </p>
                   </div>
                 </SheetBody>

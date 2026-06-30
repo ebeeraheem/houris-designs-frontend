@@ -50,7 +50,9 @@ export function SiteToaster() {
       gutter={12}
       containerStyle={{ top: 18, right: 18 }}
       toastOptions={{
-        duration: 5000,
+        duration: 4000,
+        success: { duration: 2500 },
+        error: { duration: 4500 },
       }}
     >
       {(toast) => (
@@ -122,6 +124,11 @@ export function SiteToaster() {
 
               {toast.type !== "loading" ? (
                 <div
+                  style={
+                    toast.duration
+                      ? { animationDuration: `${toast.duration}ms` }
+                      : undefined
+                  }
                   className={cn(
                     "houris-toast__progress",
                     toast.visible && "houris-toast__progress--active",

@@ -97,14 +97,14 @@ export function ProfileDetails({ profile }: ProfileDetailsProps) {
         await requestEmailChange.mutateAsync({ newEmail: trimmedEmail })
       }
 
-      if (nameChanged && emailChanged) {
+      // Only the email change needs a toast (it requires the user to act); a
+      // name-only update is already reflected in the profile view on close.
+      if (emailChanged) {
         toast.success(
-          "Profile updated. Check your email to confirm the new address."
+          nameChanged
+            ? "Profile updated. Check your email to confirm the new address."
+            : "Check your email to confirm the new address."
         )
-      } else if (nameChanged) {
-        toast.success("Profile updated.")
-      } else {
-        toast.success("Check your email to confirm the new address.")
       }
 
       setErrors({})

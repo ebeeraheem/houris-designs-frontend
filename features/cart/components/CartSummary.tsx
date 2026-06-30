@@ -62,7 +62,7 @@ export function CartSummary({
           </Button>
         ) : null}
         <Link
-          href="/collection"
+          href="/couture"
           className="block text-center text-[0.72rem] font-medium tracking-[0.14em] text-muted-foreground uppercase hover:text-foreground"
         >
           Continue Shopping

@@ -272,7 +272,7 @@ export function CheckoutVerificationView({
             Return to Checkout
           </Button>
         ) : null}
-        <Button variant="outline" render={<Link href="/collection" />}>
+        <Button variant="outline" render={<Link href="/couture" />}>
           Continue Shopping
           <RiArrowRightUpLine className="size-4" />
         </Button>

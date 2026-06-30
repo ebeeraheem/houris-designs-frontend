@@ -1,10 +1,16 @@
-import { useQuery, type QueryClient } from "@tanstack/react-query"
+import { useEffect, useRef } from "react"
+import {
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query"
 import { isAxiosError } from "axios"
 
 import { fetchProfileQuiet } from "@/features/account/account.adapter"
 import { toProfile } from "@/features/account/account.transformer"
 import type { Profile } from "@/features/account/account.types"
 import { AUTH_QUERY_KEY } from "../auth.constants"
+import { authService } from "../auth.service"
 
 export const authProfileQueryKey = [AUTH_QUERY_KEY, "profile"] as const
 
@@ -81,6 +87,37 @@ export function useAuthProfile() {
     staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
   })
+}
+
+/**
+ * Runs once at app root. The profile probe skips token refresh for speed, so a
+ * returning user whose access token expired resolves as "logged out" initially.
+ * This re-validates them in the background: if a single refresh succeeds, it
+ * refetches the profile (header flips signed-out → signed-in). For a genuinely
+ * logged-out user the refresh fails and nothing else happens — the one-shot ref
+ * guard prevents any refetch loop.
+ */
+export function useSessionBootstrap() {
+  const queryClient = useQueryClient()
+  const { data: profile, isLoading } = useAuthProfile()
+  const attempted = useRef(false)
+
+  useEffect(() => {
+    if (isLoading || profile || attempted.current) {
+      return
+    }
+
+    attempted.current = true
+
+    authService
+      .refresh()
+      .then(() => {
+        void queryClient.invalidateQueries({ queryKey: authProfileQueryKey })
+      })
+      .catch(() => {
+        // No valid session to refresh — stay logged out.
+      })
+  }, [isLoading, profile, queryClient])
 }
 
 export function useAuthSession() {

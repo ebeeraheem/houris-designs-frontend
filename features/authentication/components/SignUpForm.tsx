@@ -7,9 +7,10 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
+import { PasswordInput } from "@/components/ui/password-input"
 import { PRODUCT_ROUTES } from "@/features/products"
 import { getAuthErrorMessage } from "../auth-error"
-import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { isSuccessfulAuthStatus } from "../auth.constants"
 import { registerSchema, type RegisterPayload } from "../auth.schema"
 import { useRegister } from "../usecases/useRegister"
 
@@ -34,14 +35,10 @@ export function SignUpForm() {
     try {
       const response = await registerAccount.mutateAsync(payload)
 
-      if (response.status !== AUTH_SUCCESS_STATUS) {
+      if (!isSuccessfulAuthStatus(response.status)) {
         toast.error("We couldn't create your account. Please try again.")
         return
       }
-
-      toast.success(
-        "Your account has been created. Redirecting to the collection."
-      )
 
       startTransition(() => {
         router.replace(PRODUCT_ROUTES.LIST)
@@ -106,12 +103,11 @@ export function SignUpForm() {
         <label htmlFor="password" className="field-label mb-2 block sm:mb-3">
           Password
         </label>
-        <input
+        <PasswordInput
           id="password"
           {...register("password")}
-          type="password"
           autoComplete="new-password"
-          className="field-input bg-card"
+          className="bg-card"
           placeholder="Create a password"
           disabled={registerAccount.isPending}
         />

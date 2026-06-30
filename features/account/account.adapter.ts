@@ -30,8 +30,13 @@ export const fetchProfile = async (
   return extractApiData(response.data)
 }
 
+// The initial session probe must be a single fast request: skip the interceptor's
+// token-refresh round-trip so a logged-out user resolves immediately. A background
+// refresh (see useSessionBootstrap) re-validates returning users with an expired
+// access token without blocking first paint.
 const quietProfileConfig: ApiClientRequestConfig = {
   skipAuthRedirect: true,
+  skipAuthRefresh: true,
 }
 
 export const fetchProfileQuiet = async (): Promise<ApiProfile> => {

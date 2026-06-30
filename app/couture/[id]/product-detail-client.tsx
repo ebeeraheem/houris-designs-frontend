@@ -391,7 +391,6 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
         sizeWidthCode: selectedWidthCode,
         quantity: 1,
       })
-      toast.success("Added to cart.")
     } catch {
       toast.error("We couldn't add this piece to cart. Please try again.")
     }
@@ -401,7 +400,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
     <main className="relative isolate min-h-svh overflow-hidden bg-background">
       <PageReveal className="page-shell">
         <div data-page-intro className="border-b border-border/50 py-4">
-          <BackIconLink href={PRODUCT_ROUTES.LIST} label="Back to collection" />
+          <BackIconLink href={PRODUCT_ROUTES.LIST} label="Back to couture" />
         </div>
 
         {isLoading && <ProductDetailSkeleton />}
@@ -504,7 +503,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                           className="absolute top-4 left-4"
                         >
                           <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
-                            {selectedColour?.label ?? "Houris Collection"}
+                            {selectedColour?.label ?? "Houris Couture"}
                           </span>
                         </div>
                         <div
@@ -525,7 +524,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
 
               <section className="lg:col-span-5 lg:py-4">
                 <div className="sticky top-24">
-                  <p className="eyebrow-label text-brand">Houris Collection</p>
+                  <p className="eyebrow-label text-brand">Houris Couture</p>
                   <h1 className="mt-2 font-heading text-[1.8rem] leading-[0.95] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
                     {product.title}
                   </h1>

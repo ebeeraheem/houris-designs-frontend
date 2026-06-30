@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 
-import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { isSuccessfulAuthStatus } from "../auth.constants"
 import { useLogout } from "./useLogout"
 
 interface UseLogoutActionOptions {
@@ -19,13 +19,12 @@ export function useLogoutAction(options?: UseLogoutActionOptions) {
     try {
       const response = await logout.mutateAsync()
 
-      if (response.status !== AUTH_SUCCESS_STATUS) {
+      if (!isSuccessfulAuthStatus(response.status)) {
         toast.error("We couldn't sign you out. Please try again.")
         return false
       }
 
       options?.onSuccess?.()
-      toast.success("You have been signed out.")
       router.replace(options?.redirectTo ?? "/")
       router.refresh()
 

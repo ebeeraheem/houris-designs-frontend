@@ -7,9 +7,10 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
+import { PasswordInput } from "@/components/ui/password-input"
 import { PRODUCT_ROUTES } from "@/features/products"
 import { getAuthErrorMessage } from "../auth-error"
-import { AUTH_SUCCESS_STATUS } from "../auth.constants"
+import { isSuccessfulAuthStatus } from "../auth.constants"
 import { loginSchema, type LoginPayload } from "../auth.schema"
 import { useLogin } from "../usecases/useLogin"
 
@@ -37,12 +38,10 @@ export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
     try {
       const response = await login.mutateAsync(payload)
 
-      if (response.status !== AUTH_SUCCESS_STATUS) {
+      if (!isSuccessfulAuthStatus(response.status)) {
         toast.error("We couldn't sign you in. Please try again.")
         return
       }
-
-      toast.success("Sign-in successful.")
 
       startTransition(() => {
         router.replace(returnUrl ?? PRODUCT_ROUTES.LIST)
@@ -84,12 +83,11 @@ export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
         <label htmlFor="password" className="field-label mb-2 block sm:mb-3">
           Password
         </label>
-        <input
+        <PasswordInput
           id="password"
           {...register("password")}
-          type="password"
           autoComplete="current-password"
-          className="field-input bg-card"
+          className="bg-card"
           placeholder="Enter your password"
           disabled={login.isPending}
         />

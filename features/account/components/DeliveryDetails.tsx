@@ -119,7 +119,6 @@ export function DeliveryDetails() {
 
     try {
       await updateAddress.mutateAsync(parsed.data)
-      toast.success(storedAddress ? "Address updated." : "Address saved.")
       setErrors({})
       setIsEditing(false)
     } catch {
