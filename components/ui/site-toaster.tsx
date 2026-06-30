@@ -97,11 +97,9 @@ export function SiteToaster() {
                   <span
                     className={cn(
                       "houris-toast__pill",
-                      toast.type === "success" &&
-                        "houris-toast__pill--success",
+                      toast.type === "success" && "houris-toast__pill--success",
                       toast.type === "error" && "houris-toast__pill--error",
-                      toast.type === "loading" &&
-                        "houris-toast__pill--loading"
+                      toast.type === "loading" && "houris-toast__pill--loading"
                     )}
                   >
                     {getToastLabel(toast.type)}

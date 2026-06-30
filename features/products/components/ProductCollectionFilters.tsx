@@ -121,7 +121,9 @@ export function ProductCollectionFilters({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-end">
           <span className="status-pill border-brand/20 bg-brand/10 text-brand">
-            {activeFilterCount === 0 ? "All pieces" : `${activeFilterCount} active`}
+            {activeFilterCount === 0
+              ? "All pieces"
+              : `${activeFilterCount} active`}
           </span>
         </div>
 
@@ -207,7 +209,9 @@ export function ProductCollectionFilters({
             <Select
               value={pageSize}
               onValueChange={(nextValue) => {
-                setPageSize(nextValue ? String(nextValue) : String(PRODUCTS_PER_PAGE))
+                setPageSize(
+                  nextValue ? String(nextValue) : String(PRODUCTS_PER_PAGE)
+                )
               }}
               disabled={disabled}
             >
@@ -230,12 +234,7 @@ export function ProductCollectionFilters({
       </div>
 
       <div className="grid gap-3">
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full"
-          disabled={disabled}
-        >
+        <Button type="submit" size="lg" className="w-full" disabled={disabled}>
           <RiFilter3Line className="size-4" />
           Apply Filters
         </Button>

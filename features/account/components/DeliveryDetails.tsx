@@ -180,7 +180,9 @@ export function DeliveryDetails() {
                 id="country"
                 type="text"
                 value={formState.country}
-                onChange={(event) => handleChange("country", event.target.value)}
+                onChange={(event) =>
+                  handleChange("country", event.target.value)
+                }
                 className="field-input mt-2"
                 placeholder="Nigeria"
               />

@@ -154,7 +154,7 @@ export function CheckoutForm({
     <>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        className="grid gap-6 lg:justify-between lg:grid-cols-[minmax(0,56rem)_24rem] xl:grid-cols-[minmax(0,58rem)_26rem] xl:gap-8"
+        className="grid gap-6 lg:grid-cols-[minmax(0,56rem)_24rem] lg:justify-between xl:grid-cols-[minmax(0,58rem)_26rem] xl:gap-8"
       >
         <div className="min-w-0 space-y-6">
           <section
@@ -166,8 +166,8 @@ export function CheckoutForm({
               Review details and continue to payment.
             </h1>
             <p className="mt-4 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-              Confirm your shipping address, review the pieces in your cart,
-              and move into the secure payment step.
+              Confirm your shipping address, review the pieces in your cart, and
+              move into the secure payment step.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <div className="status-pill border-brand/20 bg-brand/10 text-brand">
@@ -409,8 +409,7 @@ export function CheckoutForm({
         >
           <p className="eyebrow-label text-brand">Order Summary</p>
           <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
-            {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready for
-            payment.
+            {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready for payment.
           </p>
 
           <div className="mt-5 space-y-3">

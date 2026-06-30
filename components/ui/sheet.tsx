@@ -27,18 +27,16 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = "SheetOverlay"
 
 const sheetVariants = cva(
-  "fixed z-81 flex flex-col overflow-hidden border bg-background shadow-lift outline-none transition-transform duration-300 ease-out data-[ending-style]:duration-200",
+  "fixed z-81 flex flex-col overflow-hidden border bg-background shadow-lift transition-transform duration-300 ease-out outline-none data-[ending-style]:duration-200",
   {
     variants: {
       side: {
         right:
-          "inset-y-0 right-0 h-full w-3/4 border-l data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full sm:max-w-sm",
-        left:
-          "inset-y-0 left-0 h-full w-3/4 border-r data-[starting-style]:-translate-x-full data-[ending-style]:-translate-x-full sm:max-w-sm",
-        top:
-          "inset-x-0 top-0 h-auto border-b data-[starting-style]:-translate-y-full data-[ending-style]:-translate-y-full",
+          "inset-y-0 right-0 h-full w-3/4 border-l data-[ending-style]:translate-x-full data-[starting-style]:translate-x-full sm:max-w-sm",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[ending-style]:-translate-x-full data-[starting-style]:-translate-x-full sm:max-w-sm",
+        top: "inset-x-0 top-0 h-auto border-b data-[ending-style]:-translate-y-full data-[starting-style]:-translate-y-full",
         bottom:
-          "inset-x-0 bottom-0 h-auto border-t data-[starting-style]:translate-y-full data-[ending-style]:translate-y-full",
+          "inset-x-0 bottom-0 h-auto border-t data-[ending-style]:translate-y-full data-[starting-style]:translate-y-full",
       },
     },
     defaultVariants: {
@@ -105,10 +103,7 @@ function SheetClose({
   )
 }
 
-function SheetHeader({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -120,10 +115,7 @@ function SheetHeader({
   )
 }
 
-function SheetFooter({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
@@ -135,13 +127,13 @@ function SheetFooter({
   )
 }
 
-function SheetBody({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5", className)}
+      className={cn(
+        "flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5",
+        className
+      )}
       {...props}
     />
   )

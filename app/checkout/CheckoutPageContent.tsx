@@ -108,7 +108,9 @@ export function CheckoutPageContent() {
       window.location.assign(result.paymentUrl)
     } catch (error) {
       if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE)
+        window.sessionStorage.removeItem(
+          CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE
+        )
       }
 
       toast.error(
@@ -210,7 +212,9 @@ export function CheckoutPageContent() {
                 ) : items.length === 0 ? (
                   <div className="surface-card p-8 text-center sm:p-10">
                     <EmptyState
-                      icon={<EmptyCartIcon className="size-7" aria-hidden="true" />}
+                      icon={
+                        <EmptyCartIcon className="size-7" aria-hidden="true" />
+                      }
                       title="Your cart is empty"
                       description="Add a few considered pieces before moving into the payment flow."
                       actionHref="/collection"

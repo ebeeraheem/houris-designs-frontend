@@ -7,8 +7,7 @@ export function useAddCartItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: AddCartItemPayload) =>
-      cartService.addToCart(payload),
+    mutationFn: (payload: AddCartItemPayload) => cartService.addToCart(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] })
     },

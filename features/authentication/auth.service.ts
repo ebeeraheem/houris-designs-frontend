@@ -37,9 +37,7 @@ export const authService = {
     return postForgotPassword(payload)
   },
 
-  resetPassword: (
-    payload: ResetPasswordPayload
-  ): Promise<ApiAuthResponse> => {
+  resetPassword: (payload: ResetPasswordPayload): Promise<ApiAuthResponse> => {
     return postResetPassword(payload)
   },
 }

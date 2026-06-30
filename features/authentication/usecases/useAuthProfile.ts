@@ -41,10 +41,7 @@ export async function fetchAuthProfile(): Promise<Profile | null> {
     const profile = toProfile(raw)
 
     if (process.env.NODE_ENV === "development") {
-      console.log("[Auth Profile] ✓ Profile fetched successfully:", {
-        id: profile.id,
-        email: profile.email,
-      })
+      console.log("[Auth Profile] ✓ Profile fetched successfully")
     }
 
     return profile

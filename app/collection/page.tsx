@@ -15,7 +15,10 @@ function CollectionSkeleton() {
               <div className="h-8 w-24 animate-pulse rounded-full bg-secondary/60" />
             </div>
             {Array.from({ length: 3 }).map((_, i) => (
-              <section key={i} className="rounded-[var(--radius)] border border-border/75 bg-background/72 p-4 backdrop-blur-sm">
+              <section
+                key={i}
+                className="rounded-[var(--radius)] border border-border/75 bg-background/72 p-4 backdrop-blur-sm"
+              >
                 <div className="h-3 w-24 animate-pulse rounded-full bg-secondary/60" />
                 <div className="mt-3 h-4 w-40 animate-pulse rounded-full bg-secondary/60" />
                 <div className="mt-4 h-11 w-full animate-pulse rounded-full bg-secondary/60" />
@@ -28,7 +31,7 @@ function CollectionSkeleton() {
           </div>
         </div>
       </aside>
-      <div className="min-w-0 flex flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6">
         <div className="h-9 w-28 animate-pulse rounded-full bg-secondary/60" />
         <div className="surface-panel p-5 sm:p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">

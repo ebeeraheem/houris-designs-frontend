@@ -169,7 +169,12 @@ export function ChangePasswordForm() {
         >
           Cancel
         </Link>
-        <Button type="submit" size="lg" className="flex-1" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          size="lg"
+          className="flex-1"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Updating..." : "Update Password"}
         </Button>
       </div>

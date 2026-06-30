@@ -9,10 +9,7 @@ import {
 import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
-import {
-  changeEmailSchema,
-  updateProfileSchema,
-} from "../account.schema"
+import { changeEmailSchema, updateProfileSchema } from "../account.schema"
 import type { Profile } from "../account.types"
 import { useRequestEmailChange } from "../usecases/useRequestEmailChange"
 import { useUpdateProfile } from "../usecases/useUpdateProfile"
@@ -114,7 +111,9 @@ export function ProfileDetails({ profile }: ProfileDetailsProps) {
       setIsEditing(false)
     } catch {
       if (didUpdateName && emailChanged) {
-        toast.success("Your name was updated. We couldn't start the email change yet.")
+        toast.success(
+          "Your name was updated. We couldn't start the email change yet."
+        )
         setIsEditing(false)
         return
       }
@@ -219,7 +218,11 @@ export function ProfileDetails({ profile }: ProfileDetailsProps) {
 
       {isEditing ? (
         <div className="mt-6 flex flex-wrap gap-3">
-          <Button type="button" onClick={() => void handleSave()} disabled={isSubmitting}>
+          <Button
+            type="button"
+            onClick={() => void handleSave()}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
           <Button

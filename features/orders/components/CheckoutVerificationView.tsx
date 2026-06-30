@@ -13,10 +13,7 @@ import {
 } from "@remixicon/react"
 
 import { Button } from "@/components/ui/button"
-import {
-  CHECKOUT_ROUTES,
-  CHECKOUT_STORAGE_KEYS,
-} from "../checkout.constants"
+import { CHECKOUT_ROUTES, CHECKOUT_STORAGE_KEYS } from "../checkout.constants"
 import { getCheckoutErrorMessage } from "../checkout.error"
 import { ORDER_ROUTES } from "../order.constants"
 import type { CheckoutVerificationResult } from "../checkout.types"
@@ -83,12 +80,14 @@ export function CheckoutVerificationView({
       ""
     )
   })
-  const resolvedReference =
-    defaultReference?.trim() || storedReference
+  const resolvedReference = defaultReference?.trim() || storedReference
   const attemptedReferenceRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!resolvedReference || attemptedReferenceRef.current === resolvedReference) {
+    if (
+      !resolvedReference ||
+      attemptedReferenceRef.current === resolvedReference
+    ) {
       return
     }
 
@@ -146,10 +145,7 @@ export function CheckoutVerificationView({
           <Button render={<Link href={CHECKOUT_ROUTES.PAGE} />}>
             Return to Checkout
           </Button>
-          <Button
-            variant="outline"
-            render={<Link href="/account/orders" />}
-          >
+          <Button variant="outline" render={<Link href="/account/orders" />}>
             View Order History
           </Button>
         </div>
@@ -199,10 +195,7 @@ export function CheckoutVerificationView({
             <RiRefreshLine className="size-4" />
             Retry Verification
           </Button>
-          <Button
-            variant="outline"
-            render={<Link href="/account/orders" />}
-          >
+          <Button variant="outline" render={<Link href="/account/orders" />}>
             View Order History
           </Button>
         </div>
@@ -221,7 +214,9 @@ export function CheckoutVerificationView({
 
   return (
     <section data-page-section className="surface-card p-6 sm:p-8">
-      <div className={`inline-flex rounded-[var(--radius)] p-3 ${summary.accentClass}`}>
+      <div
+        className={`inline-flex rounded-[var(--radius)] p-3 ${summary.accentClass}`}
+      >
         <SummaryIcon className="size-5" />
       </div>
       <p className="eyebrow-label mt-5 text-brand">Checkout Verification</p>
@@ -258,10 +253,10 @@ export function CheckoutVerificationView({
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         {isTerminalStatus(result.status) ? (
-          <Button
-            render={<Link href={ORDER_ROUTES.LIST} />}
-          >
-            {result.status === "NEW" ? "Open Order History" : "View Order History"}
+          <Button render={<Link href={ORDER_ROUTES.LIST} />}>
+            {result.status === "NEW"
+              ? "Open Order History"
+              : "View Order History"}
           </Button>
         ) : (
           <Button type="button" onClick={handleRetry}>
@@ -277,10 +272,7 @@ export function CheckoutVerificationView({
             Return to Checkout
           </Button>
         ) : null}
-        <Button
-          variant="outline"
-          render={<Link href="/collection" />}
-        >
+        <Button variant="outline" render={<Link href="/collection" />}>
           Continue Shopping
           <RiArrowRightUpLine className="size-4" />
         </Button>

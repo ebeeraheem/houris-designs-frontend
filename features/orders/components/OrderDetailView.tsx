@@ -253,7 +253,8 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
                     ? `, ${order.shippingAddress.addressLine2}`
                     : ""}
                   <br />
-                  {order.shippingAddress.city}, {order.shippingAddress.stateRegion}
+                  {order.shippingAddress.city},{" "}
+                  {order.shippingAddress.stateRegion}
                   <br />
                   {order.shippingAddress.country}{" "}
                   {order.shippingAddress.postalCode}

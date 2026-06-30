@@ -69,7 +69,7 @@ export default function SignUpPage() {
                 className="mt-1 shrink-0"
               />
 
-              <div className="min-w-0 flex-1 grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] xl:gap-8">
+              <div className="grid min-w-0 flex-1 gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] xl:gap-8">
                 <section
                   data-page-intro
                   className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"

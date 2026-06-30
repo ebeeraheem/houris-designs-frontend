@@ -36,59 +36,59 @@ export default function ChangePasswordPage() {
                 className="mt-1 shrink-0"
               />
 
-              <div className="min-w-0 flex-1 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] xl:gap-8">
-              <section
-                data-page-intro
-                className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"
-              >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-40 bg-linear-to-br from-brand/16 via-brand/5 to-transparent"
-                />
+              <div className="grid min-w-0 flex-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] xl:gap-8">
+                <section
+                  data-page-intro
+                  className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-x-0 top-0 h-40 bg-linear-to-br from-brand/16 via-brand/5 to-transparent"
+                  />
 
-                <div className="relative">
-                  <p className="eyebrow-label text-brand">Security Atelier</p>
-                  <h1 className="mt-4 max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
-                    Change your password in a calmer, sharper flow.
-                  </h1>
-                  <p className="mt-4 max-w-136 text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                    Refresh the password tied to your account to keep orders,
-                    addresses, and saved preferences protected without losing
-                    the premium feel of the experience.
-                  </p>
+                  <div className="relative">
+                    <p className="eyebrow-label text-brand">Security Atelier</p>
+                    <h1 className="mt-4 max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
+                      Change your password in a calmer, sharper flow.
+                    </h1>
+                    <p className="mt-4 max-w-136 text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
+                      Refresh the password tied to your account to keep orders,
+                      addresses, and saved preferences protected without losing
+                      the premium feel of the experience.
+                    </p>
 
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <div className="status-pill border-brand/20 bg-brand/10 text-brand">
-                      Encrypted update
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <div className="status-pill border-brand/20 bg-brand/10 text-brand">
+                        Encrypted update
+                      </div>
+                      <div className="status-pill border-border bg-background/80 text-foreground/78">
+                        Takes under a minute
+                      </div>
                     </div>
-                    <div className="status-pill border-border bg-background/80 text-foreground/78">
-                      Takes under a minute
-                    </div>
+
+                    <ChangePasswordForm />
+                  </div>
+                </section>
+
+                <aside className="grid content-start gap-6 self-start">
+                  <div data-page-media>
+                    <EditorialHero
+                      imageSrc="/images/editorial/blue-coat.jpg"
+                      imageAlt="Model in a powder blue tailored coat standing in front of dramatic architecture."
+                      badge="Private Account Protection"
+                      title="A small update,<br />a stronger account."
+                      description="Refresh your credentials regularly to keep the details behind every order feeling personal and protected."
+                    />
                   </div>
 
-                  <ChangePasswordForm />
-                </div>
-              </section>
-
-              <aside className="grid content-start gap-6 self-start">
-                <div data-page-media>
-                  <EditorialHero
-                    imageSrc="/images/editorial/blue-coat.jpg"
-                    imageAlt="Model in a powder blue tailored coat standing in front of dramatic architecture."
-                    badge="Private Account Protection"
-                    title="A small update,<br />a stronger account."
-                    description="Refresh your credentials regularly to keep the details behind every order feeling personal and protected."
-                  />
-                </div>
-
-                <div data-page-section>
-                  <AuthCheckList
-                    title="Why It Matters"
-                    items={securityChecks}
-                  />
-                </div>
-              </aside>
-            </div>
+                  <div data-page-section>
+                    <AuthCheckList
+                      title="Why It Matters"
+                      items={securityChecks}
+                    />
+                  </div>
+                </aside>
+              </div>
             </div>
           </PageReveal>
         </div>

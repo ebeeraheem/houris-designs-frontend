@@ -51,11 +51,7 @@ const layoutClassName =
 // true afterwards — without a setState-in-effect.
 const subscribeNoop = () => () => {}
 
-function Skeleton({
-  className,
-}: {
-  className: string
-}) {
+function Skeleton({ className }: { className: string }) {
   return (
     <div
       aria-hidden="true"
@@ -111,7 +107,7 @@ function ProductCollectionSidebarSkeleton() {
 
 function ProductCollectionGridSkeleton() {
   return (
-    <div className="min-w-0 flex flex-col gap-6">
+    <div className="flex min-w-0 flex-col gap-6">
       <div className="surface-panel p-5 sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex-1">
@@ -162,7 +158,9 @@ function toOptionalNumber(value: string | null) {
   return parsedValue
 }
 
-function getPageFromSearchParams(searchParams: { get: (key: string) => string | null }) {
+function getPageFromSearchParams(searchParams: {
+  get: (key: string) => string | null
+}) {
   const pageValue = Number(searchParams.get("page"))
 
   if (!Number.isFinite(pageValue) || pageValue < 1) {
@@ -365,9 +363,7 @@ export function ProductCollectionView() {
 
   const desktopSidebar = (
     <aside className="relative hidden overflow-hidden rounded-[var(--radius)] border border-border/45 bg-surface shadow-panel lg:sticky lg:top-6 lg:block lg:self-start">
-      <div className="relative p-4 sm:p-5">
-        {renderFilters("desktop")}
-      </div>
+      <div className="relative p-4 sm:p-5">{renderFilters("desktop")}</div>
     </aside>
   )
 
@@ -375,7 +371,10 @@ export function ProductCollectionView() {
     <div className="flex items-center justify-between gap-3 lg:hidden">
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
         <SheetTrigger
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2")}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "sm" }),
+            "gap-2"
+          )}
           disabled={controlsDisabled}
         >
           <RiFilter3Line className="size-4" />
@@ -386,7 +385,7 @@ export function ProductCollectionView() {
           <SheetOverlay className="lg:hidden" />
           <SheetContent
             side="right"
-            className="top-[8dvh] bottom-auto h-[84dvh] w-[min(calc(100vw-0.75rem),24rem)] max-w-none rounded-l-[var(--radius)] border border-border/45 border-r-0 bg-surface p-0 lg:hidden"
+            className="top-[8dvh] bottom-auto h-[84dvh] w-[min(calc(100vw-0.75rem),24rem)] max-w-none rounded-l-[var(--radius)] border border-r-0 border-border/45 bg-surface p-0 lg:hidden"
           >
             <div className="relative flex h-full flex-col overflow-hidden">
               <SheetHeader className="relative">
@@ -422,7 +421,7 @@ export function ProductCollectionView() {
         <div className="hidden lg:block">
           <ProductCollectionSidebarSkeleton />
         </div>
-        <div className="min-w-0 flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           {mobileFiltersBar}
           <ProductCollectionGridSkeleton />
         </div>
@@ -434,10 +433,12 @@ export function ProductCollectionView() {
     return (
       <div className={layoutClassName}>
         {desktopSidebar}
-        <div className="min-w-0 flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
           {mobileFiltersBar}
           <div className="surface-panel p-6 sm:p-8">
-            <h2 className="section-heading">We couldn&apos;t load the collection</h2>
+            <h2 className="section-heading">
+              We couldn&apos;t load the collection
+            </h2>
             <p className="mt-3 max-w-[34rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
               Please try again to fetch the latest products from the API.
             </p>
@@ -465,7 +466,7 @@ export function ProductCollectionView() {
     <div className={layoutClassName}>
       {desktopSidebar}
 
-      <div className="min-w-0 flex flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6">
         {mobileFiltersBar}
 
         {sortControl}
@@ -502,7 +503,12 @@ export function ProductCollectionView() {
                 size="sm"
                 disabled={!data.hasPrev || isFetching}
                 onClick={() => {
-                  updateCollectionRoute(filters, Math.max(1, page - 1), sort, true)
+                  updateCollectionRoute(
+                    filters,
+                    Math.max(1, page - 1),
+                    sort,
+                    true
+                  )
                 }}
               >
                 <RiArrowLeftSLine className="size-4" />

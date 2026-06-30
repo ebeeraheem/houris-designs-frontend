@@ -33,18 +33,16 @@ export function EmptyState({
       <p className="mt-3 text-sm leading-7 text-muted-foreground">
         {description}
       </p>
-      {action
-        ? action
-        : actionHref && actionLabel
-          ? (
-            <Link
-              href={actionHref}
-              className="mt-5 inline-block text-[0.78rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline"
-            >
-              {actionLabel}
-            </Link>
-          )
-          : null}
+      {action ? (
+        action
+      ) : actionHref && actionLabel ? (
+        <Link
+          href={actionHref}
+          className="mt-5 inline-block text-[0.78rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline"
+        >
+          {actionLabel}
+        </Link>
+      ) : null}
     </div>
   )
 }

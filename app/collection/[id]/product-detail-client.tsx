@@ -244,7 +244,14 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
       const topBadge = mediaTopBadgeRef.current
       const bottomBadge = mediaBottomBadgeRef.current
 
-      if (!shell || !card || !imageLayer || !glow || !topBadge || !bottomBadge) {
+      if (
+        !shell ||
+        !card ||
+        !imageLayer ||
+        !glow ||
+        !topBadge ||
+        !bottomBadge
+      ) {
         return
       }
 
@@ -394,10 +401,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
     <main className="relative isolate min-h-svh overflow-hidden bg-background">
       <PageReveal className="page-shell">
         <div data-page-intro className="border-b border-border/50 py-4">
-          <BackIconLink
-            href={PRODUCT_ROUTES.LIST}
-            label="Back to collection"
-          />
+          <BackIconLink href={PRODUCT_ROUTES.LIST} label="Back to collection" />
         </div>
 
         {isLoading && <ProductDetailSkeleton />}
@@ -457,13 +461,19 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                     ))}
                   </div>
 
-                  <div className="order-1 lg:order-2" style={{ perspective: "1800px" }}>
+                  <div
+                    className="order-1 lg:order-2"
+                    style={{ perspective: "1800px" }}
+                  >
                     <div ref={mediaTiltShellRef}>
                       <div
                         ref={mediaTiltCardRef}
                         className="image-shell relative aspect-[4/5] overflow-hidden shadow-panel"
                       >
-                        <div ref={mediaImageLayerRef} className="absolute inset-0">
+                        <div
+                          ref={mediaImageLayerRef}
+                          className="absolute inset-0"
+                        >
                           {images[mainImage] ? (
                             <Image
                               key={images[mainImage].src}
@@ -489,7 +499,10 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                           className="pointer-events-none absolute top-0 left-0 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.32)_0%,rgba(255,255,255,0.16)_28%,transparent_72%)] blur-2xl"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-foreground/14 via-transparent to-transparent" />
-                        <div ref={mediaTopBadgeRef} className="absolute top-4 left-4">
+                        <div
+                          ref={mediaTopBadgeRef}
+                          className="absolute top-4 left-4"
+                        >
                           <span className="eyebrow-label bg-background/80 px-2 py-1 backdrop-blur-sm">
                             {selectedColour?.label ?? "Houris Collection"}
                           </span>
@@ -539,7 +552,12 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                       {product.availableColours.length === 0 && (
                         <div className="w-full rounded-[var(--radius)] border border-dashed border-border/55 bg-secondary/30 p-6">
                           <EmptyState
-                            icon={<EmptyOptionsIcon className="size-7" aria-hidden="true" />}
+                            icon={
+                              <EmptyOptionsIcon
+                                className="size-7"
+                                aria-hidden="true"
+                              />
+                            }
                             title="No colours available"
                             description="This product was returned without any colour options yet."
                           />
@@ -694,15 +712,15 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                             ? "Add to Cart"
                             : selectedColour && !hasValidSelectedSwatchId
                               ? "Unavailable Swatch"
-                            : "Select Length and Width"}
+                              : "Select Length and Width"}
                     </Button>
                     {!isSelectionComplete && (
                       <p className="text-center text-[0.68rem] text-muted-foreground">
                         {selectedColour && !hasValidSelectedSwatchId
                           ? "This selected colour cannot be added yet because the API did not return a valid swatch ID."
                           : hasSizeGuideError
-                          ? "Reconnect to the size guide to choose length and width codes."
-                          : "Choose a colour, one length code, and one width code to continue."}
+                            ? "Reconnect to the size guide to choose length and width codes."
+                            : "Choose a colour, one length code, and one width code to continue."}
                       </p>
                     )}
                   </div>

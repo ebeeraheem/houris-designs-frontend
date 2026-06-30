@@ -2,12 +2,7 @@ import { describe, expect, it, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
-import {
-  Dialog,
-  DialogContent,
-  DialogPortal,
-  DialogTitle,
-} from "./dialog"
+import { Dialog, DialogContent, DialogPortal, DialogTitle } from "./dialog"
 
 describe("Dialog", () => {
   it("renders an accessible dialog and closes on Escape", async () => {

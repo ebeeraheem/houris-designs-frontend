@@ -62,7 +62,11 @@ apiClient.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    if (originalRequest && !shouldSkipRefresh && !originalRequest._retryAfterRefresh) {
+    if (
+      originalRequest &&
+      !shouldSkipRefresh &&
+      !originalRequest._retryAfterRefresh
+    ) {
       originalRequest._retryAfterRefresh = true
 
       try {

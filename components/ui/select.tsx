@@ -49,7 +49,7 @@ function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            "min-w-[max(var(--anchor-width),10rem)] max-h-[min(18rem,var(--available-height))] origin-[var(--transform-origin)] overflow-hidden rounded-[var(--radius)] border border-border bg-popover text-popover-foreground shadow-lift outline-none animate-in fade-in-0 zoom-in-95",
+            "max-h-[min(18rem,var(--available-height))] min-w-[max(var(--anchor-width),10rem)] origin-[var(--transform-origin)] animate-in overflow-hidden rounded-[var(--radius)] border border-border bg-popover text-popover-foreground shadow-lift fade-in-0 outline-none zoom-in-95",
             className
           )}
           {...props}
@@ -75,7 +75,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "flex cursor-default items-center justify-between gap-3 rounded-[var(--radius)] px-3 py-2.5 text-sm outline-none select-none transition-colors data-[highlighted]:bg-secondary data-[highlighted]:text-foreground data-[selected]:bg-brand/8 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "flex cursor-default items-center justify-between gap-3 rounded-[var(--radius)] px-3 py-2.5 text-sm transition-colors outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-secondary data-[highlighted]:text-foreground data-[selected]:bg-brand/8",
         className
       )}
       {...props}

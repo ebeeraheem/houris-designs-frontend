@@ -159,7 +159,10 @@ export default function CartPage() {
                 </Button>
               </div>
             ) : items.length === 0 ? (
-              <div data-page-section className="surface-card p-8 text-center sm:p-10">
+              <div
+                data-page-section
+                className="surface-card p-8 text-center sm:p-10"
+              >
                 <EmptyState
                   icon={<EmptyCartIcon className="size-7" aria-hidden="true" />}
                   title="Your cart is empty"

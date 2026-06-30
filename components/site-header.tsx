@@ -99,7 +99,8 @@ export function SiteHeader() {
                   href={item.href}
                   className={cn(
                     "nav-link",
-                    isCartNavigationItem(item) && "inline-flex items-center gap-1.5"
+                    isCartNavigationItem(item) &&
+                      "inline-flex items-center gap-1.5"
                   )}
                 >
                   {isCartNavigationItem(item) ? (
@@ -189,8 +190,8 @@ export function SiteHeader() {
                       <p className="eyebrow-label text-brand">Navigate</p>
                       <SheetTitle className="sr-only">Menu</SheetTitle>
                       <SheetDescription className="mt-3 max-w-[18rem] text-[0.82rem] leading-6">
-                        Explore the collection, manage your account, or move into
-                        a faster client flow from one cleaner side sheet.
+                        Explore the collection, manage your account, or move
+                        into a faster client flow from one cleaner side sheet.
                       </SheetDescription>
                     </div>
 
@@ -198,7 +199,10 @@ export function SiteHeader() {
                       <div className="rounded-[var(--radius)] bg-brand/10 p-2 text-brand">
                         <RiSparkling2Line className="size-4" />
                       </div>
-                      <SheetClose aria-label="Close mobile menu" className="size-10">
+                      <SheetClose
+                        aria-label="Close mobile menu"
+                        className="size-10"
+                      >
                         <RiCloseLine className="size-4" />
                       </SheetClose>
                     </div>

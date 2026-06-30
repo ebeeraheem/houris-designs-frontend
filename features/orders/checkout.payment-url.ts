@@ -18,5 +18,7 @@ export function isAllowedPaymentUrl(url: string): boolean {
 
   const host = parsed.hostname.toLowerCase()
 
-  return host === ALLOWED_PAYMENT_HOST || host.endsWith(`.${ALLOWED_PAYMENT_HOST}`)
+  return (
+    host === ALLOWED_PAYMENT_HOST || host.endsWith(`.${ALLOWED_PAYMENT_HOST}`)
+  )
 }

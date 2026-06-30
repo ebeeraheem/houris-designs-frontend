@@ -1,9 +1,6 @@
 import apiClient from "@/services/api/client"
 import { extractApiData } from "@/services/api/extract-api-data"
-import type {
-  ApiOrderDetail,
-  ApiOrdersListResponse,
-} from "./order.types"
+import type { ApiOrderDetail, ApiOrdersListResponse } from "./order.types"
 
 const ENDPOINTS = {
   LIST: "/api/orders",
@@ -28,9 +25,9 @@ export const fetchOrders = async (
 }
 
 export const fetchOrderById = async (id: string): Promise<ApiOrderDetail> => {
-  const response = await apiClient.get<ApiOrderDetail | { data: ApiOrderDetail }>(
-    ENDPOINTS.DETAIL(id)
-  )
+  const response = await apiClient.get<
+    ApiOrderDetail | { data: ApiOrderDetail }
+  >(ENDPOINTS.DETAIL(id))
 
   return extractApiData(response.data)
 }

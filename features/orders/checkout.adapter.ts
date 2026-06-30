@@ -7,7 +7,8 @@ import type {
 
 const ENDPOINTS = {
   CHECKOUT: "/api/checkout",
-  VERIFY: (reference: string) => `/api/checkout/verify/${encodeURIComponent(reference)}`,
+  VERIFY: (reference: string) =>
+    `/api/checkout/verify/${encodeURIComponent(reference)}`,
 } as const
 
 export interface CheckoutRequestPayload {

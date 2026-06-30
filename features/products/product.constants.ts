@@ -1,5 +1,4 @@
 export const PRODUCTS_QUERY_KEY = "products"
-export const PRODUCT_DETAIL_QUERY_KEY = "product-detail"
 
 export const PRODUCT_ROUTES = {
   LIST: "/collection",

@@ -356,15 +356,15 @@ depth against compromised or malformed responses.
 
 ## Checks Run
 
-| Check | Result |
-| --- | --- |
-| `npm run build` | Passed |
-| `npm run typecheck` | Passed |
-| `npm run lint` | Passed with 2 warnings |
+| Check                                  | Result                  |
+| -------------------------------------- | ----------------------- |
+| `npm run build`                        | Passed                  |
+| `npm run typecheck`                    | Passed                  |
+| `npm run lint`                         | Passed with 2 warnings  |
 | `npx prettier --check "**/*.{ts,tsx}"` | Failed across 169 files |
-| `npm audit --omit=dev` | 19 vulnerabilities |
-| Runtime route verification | Completed |
-| Browser verification | Completed |
+| `npm audit --omit=dev`                 | 19 vulnerabilities      |
+| Runtime route verification             | Completed               |
+| Browser verification                   | Completed               |
 
 The initial sandboxed build failed because `.next/trace` was locked with an
 `EPERM` error. Running the production build outside the sandbox succeeded, so

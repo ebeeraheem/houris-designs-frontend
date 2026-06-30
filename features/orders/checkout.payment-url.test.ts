@@ -4,7 +4,9 @@ import { isAllowedPaymentUrl } from "./checkout.payment-url"
 
 describe("isAllowedPaymentUrl", () => {
   it("allows https paystack hosts", () => {
-    expect(isAllowedPaymentUrl("https://checkout.paystack.com/abc123")).toBe(true)
+    expect(isAllowedPaymentUrl("https://checkout.paystack.com/abc123")).toBe(
+      true
+    )
     expect(isAllowedPaymentUrl("https://paystack.com/pay")).toBe(true)
   })
 

@@ -3,8 +3,10 @@ import { RiArrowLeftLine } from "@remixicon/react"
 
 import { cn } from "@/utils/cn"
 
-interface BackIconLinkProps
-  extends Omit<React.ComponentProps<typeof Link>, "href" | "children"> {
+interface BackIconLinkProps extends Omit<
+  React.ComponentProps<typeof Link>,
+  "href" | "children"
+> {
   href: React.ComponentProps<typeof Link>["href"]
   label: string
 }

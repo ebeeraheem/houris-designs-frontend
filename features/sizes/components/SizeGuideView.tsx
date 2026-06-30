@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useGetSizeGuide } from "../usecases/useGetSizeGuide"
 import { SizeGuideContent } from "./SizeGuideContent"
 
-function Skeleton({
-  className,
-}: {
-  className: string
-}) {
+function Skeleton({ className }: { className: string }) {
   return (
     <div
       aria-hidden="true"

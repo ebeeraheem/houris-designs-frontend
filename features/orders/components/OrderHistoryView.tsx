@@ -42,13 +42,9 @@ function OrderHistorySkeleton() {
 
 export function OrderHistoryView() {
   const [page, setPage] = useState(1)
-  const {
-    data,
-    isLoading,
-    isError,
-    isFetching,
-    refetch,
-  } = useGetOrders({ pageNumber: page })
+  const { data, isLoading, isError, isFetching, refetch } = useGetOrders({
+    pageNumber: page,
+  })
 
   if (isLoading && !data) {
     return <OrderHistorySkeleton />

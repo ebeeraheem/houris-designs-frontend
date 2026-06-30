@@ -28,18 +28,15 @@ export default async function CheckoutSuccessPage({
         <div className="page-shell">
           <PageReveal>
             <div className="mx-auto max-w-[56rem]">
-              <section
-                data-page-intro
-                className="surface-card p-6 sm:p-8"
-              >
+              <section data-page-intro className="surface-card p-6 sm:p-8">
                 <p className="eyebrow-label text-brand">Checkout Return</p>
                 <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem]">
                   Finalizing your payment status.
                 </h1>
                 <p className="mt-4 max-w-[42rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                  Paystack has redirected you back. We&apos;re using the returned
-                  reference to confirm the latest order outcome before you move
-                  on.
+                  Paystack has redirected you back. We&apos;re using the
+                  returned reference to confirm the latest order outcome before
+                  you move on.
                 </p>
               </section>
 

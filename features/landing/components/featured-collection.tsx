@@ -41,7 +41,8 @@ export function FeaturedCollection() {
       ).matches
 
       if (reduceMotion) {
-        if (reveals.length) gsap.set(reveals, { clipPath: "inset(0% 0% 0% 0%)" })
+        if (reveals.length)
+          gsap.set(reveals, { clipPath: "inset(0% 0% 0% 0%)" })
         if (copy.length) gsap.set(copy, { autoAlpha: 1, y: 0 })
         return
       }
@@ -179,7 +180,9 @@ export function FeaturedCollection() {
         {!isLoading && products.length === 0 ? (
           <div className="mt-8 rounded-[var(--radius)] border border-border/70 bg-background/78 px-5 py-8 sm:px-8">
             <EmptyState
-              icon={<EmptyCollectionIcon className="size-7" aria-hidden="true" />}
+              icon={
+                <EmptyCollectionIcon className="size-7" aria-hidden="true" />
+              }
               title="Collection unavailable"
               description="The live collection is unavailable right now. Please check back in a moment."
             />
