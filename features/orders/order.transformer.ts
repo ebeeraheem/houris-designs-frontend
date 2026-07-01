@@ -73,6 +73,7 @@ function toOrderHistoryItem(api: ApiOrderHistoryItem): OrderHistoryItem {
     orderReference: api.orderReference ?? api.id,
     productTitles: api.productTitles ?? [],
     total: toNumber(api.total),
+    currency: api.currency ?? "USD",
     status: normalizeOrderStatus(api.status),
     datePlaced: api.datePlaced ?? api.createdAt ?? null,
   }
@@ -143,6 +144,7 @@ export const toOrder = (api: ApiOrderDetail): Order => {
     shippingAddress: toShippingAddress(api.shippingAddress ?? api.address),
     status: currentStatus,
     total: toNumber(api.total),
+    currency: api.currency ?? "USD",
     datePlaced: placedAt,
     updatedAt: api.updatedAt ?? null,
     statusHistory:

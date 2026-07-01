@@ -14,6 +14,7 @@ export interface ApiOrderHistoryItem {
   orderReference?: string | null
   productTitles?: string[] | null
   total: number | string
+  currency?: string | null
   status?: string | null
   datePlaced?: string | null
   createdAt?: string | null
@@ -71,6 +72,7 @@ export interface ApiOrderDetail {
   address?: ApiShippingAddress | null
   status?: string | null
   total: number | string
+  currency?: string | null
   datePlaced?: string | null
   createdAt?: string | null
   updatedAt?: string | null
@@ -82,6 +84,7 @@ export interface OrderHistoryItem {
   orderReference: string
   productTitles: string[]
   total: number
+  currency: string
   status: OrderStatus
   datePlaced: string | null
 }
@@ -133,6 +136,7 @@ export interface Order {
   shippingAddress: ShippingAddress | null
   status: OrderStatus
   total: number
+  currency: string
   datePlaced: string | null
   updatedAt: string | null
   statusHistory: OrderStatusHistoryEntry[]

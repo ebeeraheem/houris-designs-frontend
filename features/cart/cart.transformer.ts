@@ -36,7 +36,7 @@ export const toCartItem = (api: ApiCartItem): CartItem => {
   const lineSubtotal = toNumber(api.lineSubtotal)
   // The API doesn't always return a usable unit price; fall back to deriving it
   // from the (reliable) line subtotal and quantity so the cart/checkout never
-  // show ₦0 per unit.
+  // show a zero unit price.
   const apiUnitPrice = toNumber(api.unitPrice)
   const unitPrice =
     apiUnitPrice > 0 ? apiUnitPrice : quantity > 0 ? lineSubtotal / quantity : 0

@@ -135,7 +135,7 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
           <div className="status-pill gap-2 border-brand/20 bg-brand/10 text-brand">
             <span>Total</span>
             <span className="font-heading text-[1.02rem] tracking-[-0.05em] normal-case sm:text-[1.1rem]">
-              {formatCurrency(order.total)}
+              {formatCurrency(order.total, order.currency)}
             </span>
           </div>
           <div className="status-pill border-border bg-background/80 text-foreground/78">
@@ -181,10 +181,10 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
                     </div>
                     <div className="text-left sm:text-right">
                       <p className="font-heading text-[1.18rem] font-medium tracking-[-0.05em] sm:text-[1.28rem]">
-                        {formatCurrency(item.lineSubtotal)}
+                        {formatCurrency(item.lineSubtotal, order.currency)}
                       </p>
                       <p className="mt-1 text-[0.9rem] text-muted-foreground">
-                        {formatCurrency(item.unitPrice)} each
+                        {formatCurrency(item.unitPrice, order.currency)} each
                       </p>
                     </div>
                   </div>
