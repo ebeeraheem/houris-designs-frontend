@@ -24,7 +24,7 @@ const values = [
     icon: RiRulerLine,
     title: "Inclusive",
     description:
-      "Our length-and-width sizing system helps more women choose a fit that respects their actual proportions.",
+      "Our designs move between bold statements and modest elegance, so every woman can dress true to herself without compromise.",
   },
   {
     icon: RiSparklingLine,

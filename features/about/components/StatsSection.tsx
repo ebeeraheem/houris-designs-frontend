@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const stats = [
   { value: "2018", label: "Founded in Kano" },
-  { value: "2", label: "Fit Dimensions" },
+  { value: "80", label: "Size Combinations" },
   { value: "100%", label: "Made to Order" },
   { value: "Global", label: "Shipping Reach" },
 ]

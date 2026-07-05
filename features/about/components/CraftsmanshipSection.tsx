@@ -109,15 +109,15 @@ export function CraftsmanshipSection() {
             <div className="mt-8 flex flex-wrap gap-4">
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                Length Codes
+                Sustainable
               </div>
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                Width Codes
+                Inclusive
               </div>
               <div className="flex items-center gap-2 text-[0.72rem] tracking-[0.12em] text-muted-foreground uppercase">
                 <span className="size-2 rounded-full bg-brand/60" />
-                Made to Order
+                Powerful
               </div>
             </div>
           </div>
