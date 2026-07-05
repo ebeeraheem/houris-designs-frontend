@@ -15,6 +15,7 @@ const ENDPOINTS = {
   REFRESH: "/api/auth/refresh",
   FORGOT_PASSWORD: "/api/auth/forgot-password",
   RESET_PASSWORD: "/api/auth/reset-password",
+  VERIFY_EMAIL: "/api/auth/verify-email",
 } as const
 
 const authRequestConfig: ApiClientRequestConfig = {
@@ -70,6 +71,16 @@ export const postForgotPassword = async (
     payload,
     authRequestConfig
   )
+  return { status: response.status }
+}
+
+export const getVerifyEmail = async (
+  code: string
+): Promise<ApiAuthResponse> => {
+  const response = await apiClient.get(ENDPOINTS.VERIFY_EMAIL, {
+    ...authRequestConfig,
+    params: { code },
+  })
   return { status: response.status }
 }
 

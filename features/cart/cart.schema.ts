@@ -6,6 +6,12 @@ export const addCartItemSchema = z.object({
   sizeLengthCode: z.string().min(1, "Length code is required"),
   sizeWidthCode: z.number().int().min(1, "Width code is required"),
   quantity: z.number().int().min(1).default(1),
+  // Display-only fields for the guest (localStorage) cart, captured from the
+  // product page at add time. The server ignores them.
+  productTitle: z.string().optional(),
+  primaryImageUrl: z.string().optional(),
+  unitPrice: z.number().optional(),
+  colourLabel: z.string().optional(),
 })
 
 export const updateCartItemSchema = z.object({

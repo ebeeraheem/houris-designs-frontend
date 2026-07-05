@@ -62,12 +62,11 @@ export function SiteHeader() {
   })
   const isAuthenticated = Boolean(session?.isAuthenticated)
   const profile = session?.profile ?? null
-  const { data: cart } = useGetCart({
-    enabled: !isAuthLoading && isAuthenticated,
-  })
-  const cartCount = isAuthenticated
-    ? (cart?.items ?? []).reduce((sum, item) => sum + item.quantity, 0)
-    : 0
+  const { data: cart } = useGetCart()
+  const cartCount = (cart?.items ?? []).reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  )
 
   const navigation = baseNavigation
 

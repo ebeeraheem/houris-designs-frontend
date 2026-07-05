@@ -27,5 +27,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/account/:path*", "/cart", "/checkout/:path*"],
+  // Cart and checkout are intentionally NOT gated: guests keep a client-side
+  // cart and check out (with inline account creation) without signing in first.
+  matcher: ["/account/:path*"],
 }

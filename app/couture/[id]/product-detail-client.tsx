@@ -390,6 +390,11 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
         sizeLengthCode: selectedLengthCode,
         sizeWidthCode: selectedWidthCode,
         quantity: 1,
+        // Display fields for the guest (localStorage) cart; ignored by the server.
+        productTitle: product.title,
+        primaryImageUrl: product.primaryImageUrl,
+        unitPrice: product.price,
+        colourLabel: selectedColour.label,
       })
     } catch {
       toast.error("We couldn't add this piece to cart. Please try again.")

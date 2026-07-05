@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
+import { isAxiosError } from "axios"
 import toast from "react-hot-toast"
 
 import { EmptyCartIcon } from "@/components/icons"
@@ -12,16 +14,29 @@ import { Button } from "@/components/ui/button"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { useGetAddress } from "@/features/account/usecases/useGetAddress"
-import { useAuthSession } from "@/features/authentication/usecases/useAuthProfile"
+import {
+  syncAuthProfile,
+  useAuthSession,
+} from "@/features/authentication/usecases/useAuthProfile"
 import { useGetCart } from "@/features/cart"
+import { CART_QUERY_KEY } from "@/features/cart/cart.constants"
+import {
+  clearGuestCartStorage,
+  readGuestCartItems,
+} from "@/features/cart/guest/guestCart.storage"
+import { syncGuestCartToServer } from "@/features/cart/guest/syncGuestCart"
 import {
   CHECKOUT_ROUTES,
   CHECKOUT_STORAGE_KEYS,
 } from "@/features/orders/checkout.constants"
 import { getCheckoutErrorMessage } from "@/features/orders/checkout.error"
 import { isAllowedPaymentUrl } from "@/features/orders/checkout.payment-url"
+import type { CheckoutResult } from "@/features/orders/checkout.types"
 import { CheckoutForm } from "@/features/orders/components/CheckoutForm"
+import { GuestCheckoutForm } from "@/features/orders/components/GuestCheckoutForm"
+import type { GuestCheckoutPayload } from "@/features/orders/guestCheckout.schema"
 import { useCheckout } from "@/features/orders/usecases/useCheckout"
+import { useGuestCheckout } from "@/features/orders/usecases/useGuestCheckout"
 import { formatSizeCode } from "@/utils/size-codes"
 
 export function CheckoutPageContent() {
@@ -42,10 +57,24 @@ export function CheckoutPageContent() {
   })
   const savedAddress = addressQuery.data
   const checkout = useCheckout()
+  const guestCheckout = useGuestCheckout()
+  const queryClient = useQueryClient()
+  const [conflictEmail, setConflictEmail] = useState<string | null>(null)
 
   const items = cart?.items ?? []
   const total = cart?.total ?? 0
   const totalPieces = items.reduce((sum, item) => sum + item.quantity, 0)
+  const summaryItems = items.map((item) => ({
+    id:
+      item.id ??
+      `${item.productId}-${item.colourLabel}-${item.sizeLengthCode ?? "none"}-${item.sizeWidthCode ?? "none"}`,
+    productTitle: item.productTitle,
+    colourLabel: item.colourLabel,
+    sizeLabel: formatSizeCode(item.sizeLengthCode, item.sizeWidthCode),
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    lineSubtotal: item.lineSubtotal,
+  }))
 
   // CheckoutForm seeds its "use saved address" toggle and form defaults from the
   // savedAddress prop at mount, so it must not mount until that value is known.
@@ -69,48 +98,94 @@ export function CheckoutPageContent() {
     router.replace(destination)
   }, [returnedReference, router, searchParams])
 
+  const clearPendingReference = () => {
+    if (typeof window !== "undefined") {
+      window.sessionStorage.removeItem(CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE)
+    }
+  }
+
+  // Shared guardrails for handing the customer off to the Paystack-hosted page.
+  const beginPaymentRedirect = (result: CheckoutResult) => {
+    const pendingReference = result.reference || result.orderReference
+
+    if (!result.paymentUrl) {
+      clearPendingReference()
+      toast.error("Checkout started, but no payment link was returned.")
+      return
+    }
+
+    if (!isAllowedPaymentUrl(result.paymentUrl)) {
+      clearPendingReference()
+      toast.error(
+        "We couldn't start a secure payment session. Please try again."
+      )
+      return
+    }
+
+    if (typeof window !== "undefined" && pendingReference) {
+      window.sessionStorage.setItem(
+        CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE,
+        pendingReference
+      )
+    }
+
+    window.location.assign(result.paymentUrl)
+  }
+
   const handleCheckout = async (
     payload: Parameters<typeof checkout.mutateAsync>[0]
   ) => {
     try {
       const result = await checkout.mutateAsync(payload)
-      const pendingReference = result.reference || result.orderReference
-
-      if (!result.paymentUrl) {
-        if (typeof window !== "undefined") {
-          window.sessionStorage.removeItem(
-            CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE
-          )
-        }
-        toast.error("Checkout started, but no payment link was returned.")
-        return
-      }
-
-      if (!isAllowedPaymentUrl(result.paymentUrl)) {
-        if (typeof window !== "undefined") {
-          window.sessionStorage.removeItem(
-            CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE
-          )
-        }
-        toast.error(
-          "We couldn't start a secure payment session. Please try again."
-        )
-        return
-      }
-
-      if (typeof window !== "undefined" && pendingReference) {
-        window.sessionStorage.setItem(
-          CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE,
-          pendingReference
-        )
-      }
-
-      window.location.assign(result.paymentUrl)
+      beginPaymentRedirect(result)
     } catch (error) {
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(
-          CHECKOUT_STORAGE_KEYS.PENDING_REFERENCE
+      clearPendingReference()
+      toast.error(
+        getCheckoutErrorMessage(
+          error,
+          "We couldn't start checkout. Please try again."
         )
+      )
+    }
+  }
+
+  const handleGuestCheckout = async (payload: GuestCheckoutPayload) => {
+    const guestItems = readGuestCartItems().map((item) => ({
+      productId: item.productId,
+      swatchId: item.swatchId,
+      sizeLengthCode: item.sizeLengthCode,
+      sizeWidthCode: item.sizeWidthCode,
+      quantity: item.quantity,
+    }))
+
+    try {
+      const result = await guestCheckout.mutateAsync({
+        payload,
+        items: guestItems,
+      })
+
+      // Account created, session cookies set, items now live in the server
+      // cart — the local guest copy is done.
+      clearGuestCartStorage()
+      await syncAuthProfile(queryClient)
+      beginPaymentRedirect(result)
+    } catch (error) {
+      clearPendingReference()
+
+      if (isAxiosError(error) && error.response?.status === 409) {
+        // Email already registered — flip to the inline sign-in step.
+        setConflictEmail(payload.email)
+        return
+      }
+
+      // The account may exist even though checkout failed (cookies are set
+      // before cart seeding). If so, the valid items are already in the server
+      // cart: drop the local copy so quantities don't double, and let the page
+      // re-render into the authenticated flow.
+      const profile = await syncAuthProfile(queryClient)
+      if (profile) {
+        clearGuestCartStorage()
+        await queryClient.invalidateQueries({ queryKey: [CART_QUERY_KEY] })
       }
 
       toast.error(
@@ -120,6 +195,13 @@ export function CheckoutPageContent() {
         )
       )
     }
+  }
+
+  const handleConflictSignedIn = async () => {
+    // useLogin already refreshed the auth profile; carry the guest cart into
+    // the server cart, then let the page re-render as the authenticated flow.
+    await syncGuestCartToServer(queryClient)
+    setConflictEmail(null)
   }
 
   return (
@@ -221,26 +303,23 @@ export function CheckoutPageContent() {
                       actionLabel="Continue Shopping"
                     />
                   </div>
-                ) : (
+                ) : isAuthenticated ? (
                   <CheckoutForm
                     cartTotal={total}
                     cartItemsCount={totalPieces}
-                    cartItems={items.map((item) => ({
-                      id:
-                        item.id ??
-                        `${item.productId}-${item.colourLabel}-${item.sizeLengthCode ?? "none"}-${item.sizeWidthCode ?? "none"}`,
-                      productTitle: item.productTitle,
-                      colourLabel: item.colourLabel,
-                      sizeLabel: formatSizeCode(
-                        item.sizeLengthCode,
-                        item.sizeWidthCode
-                      ),
-                      quantity: item.quantity,
-                      unitPrice: item.unitPrice,
-                      lineSubtotal: item.lineSubtotal,
-                    }))}
+                    cartItems={summaryItems}
                     savedAddress={savedAddress ?? null}
                     onSubmit={handleCheckout}
+                  />
+                ) : (
+                  <GuestCheckoutForm
+                    cartTotal={total}
+                    cartItemsCount={totalPieces}
+                    cartItems={summaryItems}
+                    onSubmit={handleGuestCheckout}
+                    conflictEmail={conflictEmail}
+                    onSignedIn={handleConflictSignedIn}
+                    onUseDifferentEmail={() => setConflictEmail(null)}
                   />
                 )}
               </div>

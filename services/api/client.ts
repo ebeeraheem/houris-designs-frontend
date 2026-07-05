@@ -28,7 +28,10 @@ const refreshRequestConfig: ApiClientRequestConfig = {
 
 function redirectToSignIn() {
   if (typeof window !== "undefined") {
-    window.location.href = "/signin"
+    const returnUrl = encodeURIComponent(
+      window.location.pathname + window.location.search
+    )
+    window.location.href = `/signin?returnUrl=${returnUrl}`
   }
 }
 

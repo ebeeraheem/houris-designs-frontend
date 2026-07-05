@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { startTransition } from "react"
 import { useForm } from "react-hook-form"
@@ -8,6 +9,7 @@ import toast from "react-hot-toast"
 
 import { Button } from "@/components/ui/button"
 import { PasswordInput } from "@/components/ui/password-input"
+import { syncGuestCartToServer } from "@/features/cart/guest/syncGuestCart"
 import { PRODUCT_ROUTES } from "@/features/products"
 import { getAuthErrorMessage } from "../auth-error"
 import { isSuccessfulAuthStatus } from "../auth.constants"
@@ -20,6 +22,7 @@ interface SignInFormProps {
 
 export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const login = useLogin()
 
   const {
@@ -42,6 +45,9 @@ export function SignInForm({ returnUrl }: Readonly<SignInFormProps>) {
         toast.error("We couldn't sign you in. Please try again.")
         return
       }
+
+      // Carry any guest cart items into the customer's server cart.
+      await syncGuestCartToServer(queryClient)
 
       startTransition(() => {
         router.replace(returnUrl ?? PRODUCT_ROUTES.LIST)
