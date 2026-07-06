@@ -21,16 +21,9 @@ export default function OrdersPage() {
               className="mt-1 shrink-0"
             />
 
-            <div className="max-w-[38rem]">
-              <p className="eyebrow-label text-brand">Your History</p>
-              <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
-                Order History
-              </h1>
-              <p className="mt-4 max-w-[38rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                Review recent pieces, track current progress, and open any order
-                for a fuller breakdown.
-              </p>
-            </div>
+            <h1 className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
+              Order History
+            </h1>
           </div>
 
           <OrderHistoryView />

@@ -25,10 +25,6 @@ export function AccountOverview({ profile }: AccountOverviewProps) {
             </p>
           </div>
         </div>
-
-        <div className="status-pill border-brand/20 bg-brand/10 text-brand">
-          Verified account
-        </div>
       </div>
     </div>
   )

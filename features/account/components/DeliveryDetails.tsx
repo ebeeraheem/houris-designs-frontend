@@ -129,12 +129,9 @@ export function DeliveryDetails() {
   return (
     <section className="surface-card p-6 sm:p-8">
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="eyebrow-label text-brand">Delivery Details</p>
-          <h2 className="mt-3 font-heading text-[1.55rem] leading-none tracking-[-0.05em]">
-            Shipping address
-          </h2>
-        </div>
+        <h2 className="font-heading text-[1.55rem] leading-none tracking-[-0.05em]">
+          Shipping Address
+        </h2>
         {!isLoading && !isError ? (
           <button
             type="button"
@@ -328,44 +325,34 @@ export function DeliveryDetails() {
           </Button>
         </div>
       ) : storedAddress ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
-          <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
-            <div className="flex items-center gap-2 text-brand">
-              <RiMapPinLine className="size-4" />
-              <p className="text-[0.72rem] font-medium tracking-[0.16em] uppercase">
-                Primary Address
-              </p>
-            </div>
-            <p className="mt-4 font-heading text-[1.05rem] font-medium tracking-[-0.03em]">
+        <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-secondary/55 p-5">
+          <div className="flex items-center gap-2 text-brand">
+            <RiMapPinLine className="size-4" />
+            <p className="font-heading text-[1.05rem] font-medium tracking-[-0.03em] text-foreground">
               {storedAddress.recipientName}
             </p>
-            <p className="mt-3 text-[0.82rem] leading-7 text-muted-foreground">
-              {storedAddress.addressLine1}
-              {storedAddress.addressLine2 ? (
-                <>
-                  <br />
-                  {storedAddress.addressLine2}
-                </>
-              ) : null}
-              <br />
-              {storedAddress.city}, {storedAddress.stateRegion}{" "}
-              {storedAddress.postalCode}
-              <br />
-              {storedAddress.country}
-            </p>
           </div>
-
-          <div className="rounded-[var(--radius)] border border-border/70 bg-background px-5 py-4 text-[0.78rem] leading-6 text-muted-foreground md:max-w-[14rem]">
-            Delivery windows and order updates will follow the address saved
-            here.
-          </div>
+          <p className="mt-3 text-[0.82rem] leading-7 text-muted-foreground">
+            {storedAddress.addressLine1}
+            {storedAddress.addressLine2 ? (
+              <>
+                <br />
+                {storedAddress.addressLine2}
+              </>
+            ) : null}
+            <br />
+            {storedAddress.city}, {storedAddress.stateRegion}{" "}
+            {storedAddress.postalCode}
+            <br />
+            {storedAddress.country}
+          </p>
         </div>
       ) : (
         <div className="mt-6 rounded-[var(--radius)] border border-dashed border-border/55 bg-secondary/35 p-6 sm:p-8">
           <EmptyState
             icon={<EmptyAddressIcon className="size-7" aria-hidden="true" />}
             title="No saved address yet"
-            description="Add one here so checkout feels quicker and more seamless next time."
+            description="Add one for faster checkout."
           />
         </div>
       )}

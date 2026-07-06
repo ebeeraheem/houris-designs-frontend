@@ -118,9 +118,7 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
               {order.orderReference}
             </h1>
             <p className="mt-3 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-              Placed on {formatOrderDate(order.datePlaced)} with{" "}
-              {order.items.length} piece{order.items.length === 1 ? "" : "s"} in
-              this order.
+              Placed {formatOrderDate(order.datePlaced)}
             </p>
           </div>
 
@@ -154,8 +152,8 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
             <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-background/70 p-6 sm:p-8">
               <EmptyState
                 icon={<EmptyOrdersIcon className="size-7" aria-hidden="true" />}
-                title="No line items returned"
-                description="This order was returned without any pieces attached to it."
+                title="No items"
+                description="This order has no items."
               />
             </div>
           ) : (
@@ -200,12 +198,7 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
               <div className="rounded-[var(--radius)] bg-brand/12 p-2 text-brand">
                 <RiTimeLine className="size-4" />
               </div>
-              <div>
-                <p className="eyebrow-label text-brand">Timeline</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Recent order status changes.
-                </p>
-              </div>
+              <p className="eyebrow-label text-brand">Timeline</p>
             </div>
 
             <div className="mt-6 space-y-4">
@@ -235,12 +228,7 @@ export function OrderDetailView({ orderId }: OrderDetailViewProps) {
                 <div className="rounded-[var(--radius)] bg-brand/12 p-2 text-brand">
                   <RiMapPin2Line className="size-4" />
                 </div>
-                <div>
-                  <p className="eyebrow-label text-brand">Delivery Address</p>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Saved shipping details for this order.
-                  </p>
-                </div>
+                <p className="eyebrow-label text-brand">Delivery Address</p>
               </div>
 
               <div className="mt-6 rounded-[var(--radius)] border border-border/70 bg-background/70 p-4">

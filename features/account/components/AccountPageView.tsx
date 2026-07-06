@@ -104,15 +104,9 @@ export function AccountPageView() {
             className="surface-card relative overflow-hidden p-4 sm:p-6 lg:p-8"
           >
             <div className="relative">
-              <p className="eyebrow-label text-brand">Your Account</p>
-              <h1 className="mt-4 max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
-                A more personal account overview.
+              <h1 className="max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
+                Your Account
               </h1>
-              <p className="mt-4 max-w-[36rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                Keep your profile, delivery details, and made-to-order activity
-                in one refined place designed to feel as considered as the
-                pieces you shop.
-              </p>
 
               {profileQuery.isLoading && !profile ? (
                 <OverviewSkeleton />

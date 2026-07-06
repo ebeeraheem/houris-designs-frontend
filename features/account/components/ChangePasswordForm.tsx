@@ -7,28 +7,11 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button"
 import { PasswordInput } from "@/components/ui/password-input"
-import { RiShieldCheckLine } from "@remixicon/react"
 import { useChangePassword } from "../usecases/useChangePassword"
 import {
   changePasswordSchema,
   type ChangePasswordPayload,
 } from "../account.schema"
-
-const passwordPrinciples = [
-  {
-    title: "Make it longer",
-    description:
-      "Use at least 8 characters, or go even longer for a safer key.",
-  },
-  {
-    title: "Mix the details",
-    description: "Blend upper and lower case letters with numbers or symbols.",
-  },
-  {
-    title: "Keep it unique",
-    description: "Choose a password you do not reuse for any other account.",
-  },
-]
 
 export function ChangePasswordForm() {
   const router = useRouter()
@@ -82,7 +65,7 @@ export function ChangePasswordForm() {
         ) : null}
       </div>
 
-      <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-5">
         <div className="rounded-[var(--radius)] border border-border/70 bg-background/85 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] sm:p-4">
           <label
             htmlFor="newPassword"
@@ -125,37 +108,6 @@ export function ChangePasswordForm() {
               {errors.confirmNewPassword.message}
             </p>
           ) : null}
-        </div>
-      </div>
-
-      <div className="rounded-[var(--radius)] border border-border/70 bg-secondary/70 p-3 sm:p-4">
-        <div className="flex items-start gap-3">
-          <div className="mt-0.5 rounded-full bg-brand/12 p-2 text-brand">
-            <RiShieldCheckLine className="size-4" />
-          </div>
-          <div>
-            <p className="eyebrow-label text-brand">Password Checklist</p>
-            <p className="mt-2 max-w-[34rem] text-[0.8rem] leading-6 text-muted-foreground">
-              Make the next password stronger and easier to keep unique with a
-              few simple principles.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-3 sm:gap-3">
-          {passwordPrinciples.map(({ title, description }) => (
-            <div
-              key={title}
-              className="rounded-[var(--radius)] border border-border/70 bg-background/75 p-3"
-            >
-              <p className="text-[0.74rem] font-medium tracking-[0.14em] text-foreground uppercase">
-                {title}
-              </p>
-              <p className="mt-2 text-[0.78rem] leading-6 text-muted-foreground">
-                {description}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
 

@@ -76,7 +76,7 @@ export function OrderHistoryView() {
         <EmptyState
           icon={<EmptyOrdersIcon className="size-7" aria-hidden="true" />}
           title="No orders yet"
-          description="Once you place your first piece, your order history and progress will appear here."
+          description="Your orders will appear here."
           actionHref="/couture"
           actionLabel="Continue Shopping"
         />
@@ -109,11 +109,8 @@ export function OrderHistoryView() {
 
       <div
         data-page-section
-        className="flex flex-col gap-4 border-t border-border/50 pt-4 sm:flex-row sm:items-center sm:justify-between"
+        className="flex flex-col gap-4 border-t border-border/50 pt-4 sm:flex-row sm:items-center sm:justify-end"
       >
-        <p className="text-sm text-muted-foreground">
-          Orders are sorted newest first.
-        </p>
         <div className="flex items-center gap-3">
           <Button
             type="button"

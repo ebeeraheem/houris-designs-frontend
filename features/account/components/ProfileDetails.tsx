@@ -125,12 +125,9 @@ export function ProfileDetails({ profile }: ProfileDetailsProps) {
   return (
     <section className="surface-card p-4 sm:p-6">
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="eyebrow-label text-brand">Profile Details</p>
-          <h2 className="mt-3 font-heading text-[1.55rem] leading-none tracking-[-0.05em]">
-            Personal information
-          </h2>
-        </div>
+        <h2 className="font-heading text-[1.55rem] leading-none tracking-[-0.05em]">
+          Profile
+        </h2>
         <button
           type="button"
           className="text-[0.72rem] font-medium tracking-[0.14em] text-brand uppercase hover:underline disabled:opacity-50"
@@ -198,8 +195,7 @@ export function ProfileDetails({ profile }: ProfileDetailsProps) {
               <div className="mt-3 flex items-start gap-2 text-muted-foreground">
                 <RiShieldKeyholeLine className="mt-0.5 size-4 shrink-0 text-brand" />
                 <p className="text-[0.78rem] leading-6">
-                  Changing your email sends a confirmation link before the new
-                  address becomes active.
+                  We&apos;ll email a confirmation link to the new address.
                 </p>
               </div>
               {errors.email ? (
