@@ -12,13 +12,11 @@ export default function ForgotPasswordPage() {
       <main className="min-h-svh px-3 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <PageReveal className="mx-auto max-w-[28rem]">
           <div data-page-intro className="mb-8 text-center">
-            <p className="eyebrow-label text-brand">Reset Password</p>
-            <h1 className="mt-3 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
+            <h1 className="font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.05em] uppercase sm:text-[2.2rem]">
               Forgot Password
             </h1>
             <p className="mt-3 text-[0.78rem] leading-6 text-muted-foreground">
-              Enter your email and we&apos;ll send you a link to reset your
-              password.
+              We&apos;ll email you a reset link.
             </p>
           </div>
 

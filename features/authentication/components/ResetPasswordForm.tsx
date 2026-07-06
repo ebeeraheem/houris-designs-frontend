@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { startTransition } from "react"
@@ -14,14 +15,10 @@ import { resetPasswordSchema, type ResetPasswordPayload } from "../auth.schema"
 import { useResetPassword } from "../usecases/useResetPassword"
 
 interface ResetPasswordFormProps {
-  defaultEmail?: string
-  defaultToken?: string
+  code?: string
 }
 
-export function ResetPasswordForm({
-  defaultEmail,
-  defaultToken,
-}: ResetPasswordFormProps) {
+export function ResetPasswordForm({ code }: ResetPasswordFormProps) {
   const router = useRouter()
   const resetPassword = useResetPassword()
 
@@ -32,11 +29,23 @@ export function ResetPasswordForm({
   } = useForm<ResetPasswordPayload>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: defaultEmail ?? "",
-      token: defaultToken ?? "",
+      code: code ?? "",
       newPassword: "",
+      confirmPassword: "",
     },
   })
+
+  if (!code) {
+    return (
+      <p className="text-center text-[0.85rem] leading-6">
+        This reset link is invalid or has expired.{" "}
+        <Link href="/forgot-password" className="text-brand hover:underline">
+          Request a new one
+        </Link>
+        .
+      </p>
+    )
+  }
 
   const handleFormSubmit = async (payload: ResetPasswordPayload) => {
     try {
@@ -46,6 +55,8 @@ export function ResetPasswordForm({
         toast.error("We couldn't reset your password. Please try again.")
         return
       }
+
+      toast.success("Password reset. Sign in with your new password.")
 
       startTransition(() => {
         router.push("/signin")
@@ -66,44 +77,7 @@ export function ResetPasswordForm({
       onSubmit={handleSubmit(handleFormSubmit)}
       className="space-y-4 sm:space-y-5"
     >
-      <div>
-        <label htmlFor="email" className="field-label mb-1.5 block">
-          Email
-        </label>
-        <input
-          id="email"
-          {...register("email")}
-          type="email"
-          autoComplete="email"
-          className="field-input"
-          placeholder="you@example.com"
-          disabled={resetPassword.isPending}
-        />
-        {errors.email && (
-          <p className="mt-2 text-xs text-destructive">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="token" className="field-label mb-1.5 block">
-          Reset Token
-        </label>
-        <input
-          id="token"
-          {...register("token")}
-          type="text"
-          className="field-input"
-          placeholder="Paste your reset token"
-          disabled={resetPassword.isPending}
-        />
-        {errors.token && (
-          <p className="mt-2 text-xs text-destructive">
-            {errors.token.message}
-          </p>
-        )}
-      </div>
+      <input type="hidden" {...register("code")} />
 
       <div>
         <label htmlFor="newPassword" className="field-label mb-1.5 block">
@@ -113,12 +87,30 @@ export function ResetPasswordForm({
           id="newPassword"
           {...register("newPassword")}
           autoComplete="new-password"
-          placeholder="Create a new password"
+          placeholder="At least 8 characters"
           disabled={resetPassword.isPending}
         />
         {errors.newPassword && (
           <p className="mt-2 text-xs text-destructive">
             {errors.newPassword.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="confirmPassword" className="field-label mb-1.5 block">
+          Confirm Password
+        </label>
+        <PasswordInput
+          id="confirmPassword"
+          {...register("confirmPassword")}
+          autoComplete="new-password"
+          placeholder="Re-enter your new password"
+          disabled={resetPassword.isPending}
+        />
+        {errors.confirmPassword && (
+          <p className="mt-2 text-xs text-destructive">
+            {errors.confirmPassword.message}
           </p>
         )}
       </div>

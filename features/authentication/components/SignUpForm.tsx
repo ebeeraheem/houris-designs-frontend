@@ -114,13 +114,9 @@ export function SignUpForm() {
           {...register("password")}
           autoComplete="new-password"
           className="bg-card"
-          placeholder="Create a password"
+          placeholder="At least 8 characters"
           disabled={registerAccount.isPending}
         />
-        <p className="mt-2 text-[0.72rem] leading-6 text-muted-foreground">
-          Choose at least 8 characters so the account matches the live password
-          rules.
-        </p>
         {errors.password && (
           <p className="mt-2 text-xs text-destructive">
             {errors.password.message}

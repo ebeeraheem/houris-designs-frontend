@@ -15,11 +15,16 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
 })
 
-export const resetPasswordSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  token: z.string().min(1, "Token is required"),
-  newPassword: z.string().min(8, "Password must be at least 8 characters"),
-})
+export const resetPasswordSchema = z
+  .object({
+    code: z.string().min(1, "Reset code is missing"),
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Confirm your new password"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  })
 
 export type RegisterPayload = z.infer<typeof registerSchema>
 export type LoginPayload = z.infer<typeof loginSchema>

@@ -89,7 +89,8 @@ export const postResetPassword = async (
 ): Promise<ApiAuthResponse> => {
   const response = await apiClient.post(
     ENDPOINTS.RESET_PASSWORD,
-    payload,
+    // confirmPassword is client-side validation only.
+    { code: payload.code, newPassword: payload.newPassword },
     authRequestConfig
   )
   return { status: response.status }
