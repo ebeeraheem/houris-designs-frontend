@@ -102,12 +102,12 @@ export default function CartPage() {
                 className="mt-1 shrink-0"
               />
 
-              <div data-page-intro>
-                <p className="eyebrow-label text-brand">Your Selection</p>
-                <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
-                  Shopping Cart
-                </h1>
-              </div>
+              <h1
+                data-page-intro
+                className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]"
+              >
+                Shopping Cart
+              </h1>
             </div>
 
             {isLoading ? (

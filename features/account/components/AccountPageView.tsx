@@ -105,7 +105,7 @@ export function AccountPageView() {
           >
             <div className="relative">
               <h1 className="max-w-[12ch] font-heading text-[2.35rem] leading-[0.88] font-medium tracking-[-0.08em] uppercase sm:text-[3.2rem]">
-                Your Account
+                My Account
               </h1>
 
               {profileQuery.isLoading && !profile ? (

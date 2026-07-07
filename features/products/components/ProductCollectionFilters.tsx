@@ -128,12 +128,7 @@ export function ProductCollectionFilters({
         </div>
 
         <section className="rounded-[var(--radius)] border border-border/55 bg-background/72 p-4 backdrop-blur-sm">
-          <div>
-            <p className="field-label">Search Piece</p>
-            <p className="mt-2 text-[0.82rem] leading-6 text-muted-foreground">
-              Narrow the edit by product name.
-            </p>
-          </div>
+          <p className="field-label">Search</p>
 
           <div className="relative mt-4">
             <RiSearch2Line className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -150,12 +145,7 @@ export function ProductCollectionFilters({
         </section>
 
         <section className="rounded-[var(--radius)] border border-border/55 bg-background/72 p-4 backdrop-blur-sm">
-          <div>
-            <p className="field-label">Price Window</p>
-            <p className="mt-2 text-[0.82rem] leading-6 text-muted-foreground">
-              Set a minimum and maximum spend for the pieces you want to see.
-            </p>
-          </div>
+          <p className="field-label">Price</p>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div>
@@ -198,12 +188,7 @@ export function ProductCollectionFilters({
         </section>
 
         <section className="rounded-[var(--radius)] border border-border/55 bg-background/72 p-4 backdrop-blur-sm">
-          <div>
-            <p className="field-label">Page Density</p>
-            <p className="mt-2 text-[0.82rem] leading-6 text-muted-foreground">
-              Control how open or compact the product grid feels.
-            </p>
-          </div>
+          <p className="field-label">Per Page</p>
 
           <div className="mt-4">
             <Select

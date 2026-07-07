@@ -89,14 +89,11 @@ export function GuestCheckoutForm({
           data-page-intro
           className="surface-card min-w-0 p-5 sm:p-7 lg:p-8"
         >
-          <p className="eyebrow-label text-brand">Checkout</p>
-          <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3rem]">
-            Review details and continue to payment.
+          <h1 className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3rem]">
+            Checkout
           </h1>
           <p className="mt-4 max-w-[40rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-            Tell us who the order is for, add the delivery address, and move
-            into the secure payment step. Your account is created along the way
-            — no separate sign-up needed.
+            Your account is created along the way — no separate sign-up needed.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <div className="status-pill border-brand/20 bg-brand/10 text-brand">
@@ -112,14 +109,9 @@ export function GuestCheckoutForm({
         </section>
 
         <section data-page-section className="surface-card p-5 sm:p-6">
-          <p className="eyebrow-label text-brand">Your Details</p>
-          <h2 className="mt-3 font-heading text-[1.45rem] leading-none tracking-[-0.04em] sm:text-[1.7rem]">
-            Account details
+          <h2 className="font-heading text-[1.45rem] leading-none tracking-[-0.04em] sm:text-[1.7rem]">
+            Account Details
           </h2>
-          <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
-            We use these to create your account, track your made-to-measure
-            order, and send updates.
-          </p>
 
           {conflictEmail ? (
             <CheckoutSignIn
@@ -200,13 +192,9 @@ export function GuestCheckoutForm({
         </section>
 
         <section data-page-section className="surface-card p-5 sm:p-6">
-          <p className="eyebrow-label text-brand">Shipping</p>
-          <h2 className="mt-3 font-heading text-[1.45rem] leading-none tracking-[-0.04em] sm:text-[1.7rem]">
-            Delivery details
+          <h2 className="font-heading text-[1.45rem] leading-none tracking-[-0.04em] sm:text-[1.7rem]">
+            Delivery Details
           </h2>
-          <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
-            Enter the delivery address for this order.
-          </p>
 
           <div className="mt-6 grid gap-5">
             <div>
@@ -356,9 +344,6 @@ export function GuestCheckoutForm({
         className="surface-card h-fit self-start p-5 sm:p-6 lg:sticky lg:top-24"
       >
         <p className="eyebrow-label text-brand">Order Summary</p>
-        <p className="mt-3 text-[0.84rem] leading-6 text-muted-foreground">
-          {totalPieces} piece{totalPieces === 1 ? "" : "s"} ready for payment.
-        </p>
 
         <div className="mt-5 space-y-3">
           {cartItems.map((item) => (

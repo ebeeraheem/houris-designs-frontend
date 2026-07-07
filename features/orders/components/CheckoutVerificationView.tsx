@@ -33,32 +33,28 @@ function getVerificationSummary(result: CheckoutVerificationResult) {
     case "NEW":
       return {
         title: "Payment confirmed.",
-        description:
-          "Your payment was verified successfully and the order is now queued as new. Redirecting you back into the site now.",
+        description: "Your order is in. Taking you to your orders…",
         icon: RiCheckboxCircleLine,
         accentClass: "bg-success/12 text-success",
       }
     case "PAYMENT_FAILED":
       return {
         title: "Payment was not completed.",
-        description:
-          "The order did not move forward. Your cart should remain available so you can try checkout again.",
+        description: "Your cart is unchanged — you can try again.",
         icon: RiCloseCircleLine,
         accentClass: "bg-destructive/12 text-destructive",
       }
     case "PENDING_PAYMENT":
       return {
         title: "Payment is still pending.",
-        description:
-          "We reached the verification endpoint, but the order has not resolved yet. You can retry in a moment.",
+        description: "Retry in a moment.",
         icon: RiTimeLine,
         accentClass: "bg-warning/12 text-warning",
       }
     default:
       return {
-        title: "Verification needs another look.",
-        description:
-          "We completed the check, but the order status was not conclusive yet. Retry once more or review your order history.",
+        title: "Status not confirmed yet.",
+        description: "Retry, or check your order history.",
         icon: RiTimeLine,
         accentClass: "bg-secondary text-foreground/80",
       }
@@ -132,15 +128,9 @@ export function CheckoutVerificationView({
   if (!resolvedReference) {
     return (
       <section data-page-section className="surface-card p-6 sm:p-8">
-        <p className="eyebrow-label text-brand">Checkout Verification</p>
-        <h1 className="mt-3 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
-          We couldn&apos;t find a payment reference.
+        <h1 className="font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
+          No payment reference found.
         </h1>
-        <p className="mt-4 max-w-[38rem] text-sm leading-7 text-muted-foreground">
-          Return to checkout and start the payment step again. If you already
-          completed payment, you can also review the latest status from your
-          account orders.
-        </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Button render={<Link href={CHECKOUT_ROUTES.PAGE} />}>
             Return to Checkout
@@ -159,14 +149,9 @@ export function CheckoutVerificationView({
         <div className="inline-flex rounded-[var(--radius)] bg-brand/12 p-3 text-brand">
           <RiLoader4Line className="size-5 animate-spin" />
         </div>
-        <p className="eyebrow-label mt-5 text-brand">Checkout Verification</p>
-        <h1 className="mt-3 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
-          Confirming your payment status.
+        <h1 className="mt-5 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
+          Confirming your payment…
         </h1>
-        <p className="mt-4 max-w-[38rem] text-sm leading-7 text-muted-foreground">
-          We&apos;re checking the Paystack return against your order reference
-          before we update the cart and order history.
-        </p>
         <div className="mt-6 inline-flex rounded-[var(--radius)] border border-border/70 bg-secondary/45 px-4 py-3 text-[0.78rem] tracking-[0.14em] text-foreground/80 uppercase">
           Reference {resolvedReference}
         </div>
@@ -180,15 +165,11 @@ export function CheckoutVerificationView({
         <div className="inline-flex rounded-[var(--radius)] bg-destructive/12 p-3 text-destructive">
           <RiCloseCircleLine className="size-5" />
         </div>
-        <p className="eyebrow-label mt-5 text-brand">Checkout Verification</p>
-        <h1 className="mt-3 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
+        <h1 className="mt-5 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
           We couldn&apos;t verify the payment yet.
         </h1>
         <p className="mt-4 max-w-[38rem] text-sm leading-7 text-muted-foreground">
-          {getCheckoutErrorMessage(
-            verifyCheckout.error,
-            "The verification request failed before we could confirm the latest order status."
-          )}
+          {getCheckoutErrorMessage(verifyCheckout.error, "Please retry.")}
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Button type="button" onClick={handleRetry}>
@@ -219,8 +200,7 @@ export function CheckoutVerificationView({
       >
         <SummaryIcon className="size-5" />
       </div>
-      <p className="eyebrow-label mt-5 text-brand">Checkout Verification</p>
-      <h1 className="mt-3 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
+      <h1 className="mt-5 font-heading text-[1.8rem] leading-[0.92] font-medium tracking-[-0.06em] uppercase sm:text-[2.2rem]">
         {summary.title}
       </h1>
       <p className="mt-4 max-w-[40rem] text-sm leading-7 text-muted-foreground">

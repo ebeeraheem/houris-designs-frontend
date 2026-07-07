@@ -28,14 +28,12 @@ export default function SizeGuidePage() {
               />
 
               <div data-page-intro className="max-w-[42rem]">
-                <p className="eyebrow-label text-brand">Precision Fit</p>
-                <h1 className="mt-3 font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
+                <h1 className="font-heading text-[2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[2.6rem] lg:text-[3.2rem]">
                   Size Guide
                 </h1>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-                  Our two-dimensional sizing system combines length and width
-                  codes for a precise fit. Choose one from each dimension — the
-                  result is your size (e.g., E16 = Length E + Width 16).
+                  Pick one length code and one width code — together they are
+                  your size (e.g., E16).
                 </p>
               </div>
             </div>

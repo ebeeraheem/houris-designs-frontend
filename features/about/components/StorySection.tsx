@@ -69,21 +69,11 @@ export function StorySection() {
             </h2>
             <div className="mt-8 space-y-5 text-[0.95rem] leading-7 text-muted-foreground">
               <p>
-                Founded in May 2018 by Creative Director Salma Suleiman
-                Mohammed, Houris Designs is a contemporary fashion house shaped
-                by the cultural richness of Kano and a belief in clothing as a
-                form of self-expression.
-              </p>
-              <p>
-                Salma is a self-taught designer with years of hands-on
-                experience in fashion. Her work reflects authenticity,
-                precision, and a commitment to helping women feel confident,
-                respected, and beautifully themselves.
-              </p>
-              <p>
-                Guided by the slogan &quot;The Beautiful People,&quot; our
-                couture moves gracefully between bold and modest design, giving
-                every woman room to choose the style that honors her identity.
+                Founded in 2018 by Creative Director Salma Suleiman Mohammed,
+                Houris Designs is a Kano fashion house guided by one slogan —
+                &quot;The Beautiful People.&quot; Our couture moves between bold
+                and modest design, so every woman can choose the style that
+                honors her identity.
               </p>
             </div>
           </div>

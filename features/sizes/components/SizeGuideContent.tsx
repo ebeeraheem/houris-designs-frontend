@@ -9,8 +9,7 @@ interface SizeGuideContentProps {
 const measurementTips = [
   {
     title: "Full Length",
-    description:
-      "Measure from the highest point of the shoulder to the desired hem length.",
+    description: "Measure from the highest point of the shoulder to your feet.",
   },
   {
     title: "Full Sleeve",

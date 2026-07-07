@@ -58,9 +58,8 @@ export function AboutHero() {
                 Designs
               </h1>
               <p className="hero-subtitle mt-5 max-w-[30rem] text-[0.95rem] leading-7 text-white/78 sm:text-[1.02rem]">
-                Rooted in the historic city of Kano, Nigeria, Houris Designs
-                creates made-to-order fashion for women who dress with
-                confidence, self-love, and individuality.
+                Made-to-order fashion from Kano, Nigeria — for women who dress
+                with confidence.
               </p>
             </div>
           </div>

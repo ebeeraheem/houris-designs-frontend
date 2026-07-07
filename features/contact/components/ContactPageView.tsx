@@ -25,14 +25,9 @@ export function ContactPageView() {
   return (
     <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
       <section className="surface-panel p-6 sm:p-8 lg:p-10">
-        <p className="eyebrow-label text-brand">Contact Us</p>
-        <h1 className="mt-4 font-heading text-[2.2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[3rem] lg:text-[3.8rem]">
-          We would love to hear from you
+        <h1 className="font-heading text-[2.2rem] leading-[0.92] font-medium tracking-[-0.07em] uppercase sm:text-[3rem] lg:text-[3.8rem]">
+          Contact Us
         </h1>
-        <p className="mt-5 max-w-[36rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]">
-          For order support, sizing questions, collaborations, or general
-          enquiries, send us a message and our team will respond by email.
-        </p>
 
         <div className="mt-10 space-y-4">
           {contactDetails.map((item) => (
@@ -67,11 +62,7 @@ export function ContactPageView() {
 
       <section className="surface-card p-6 sm:p-8 lg:p-10">
         <div className="mb-8">
-          <p className="eyebrow-label text-brand">Send a Message</p>
-          <h2 className="section-heading mt-3">How can we help?</h2>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            Share the details we need, and our team will follow up by email.
-          </p>
+          <h2 className="section-heading">How can we help?</h2>
         </div>
         <ContactForm />
       </section>

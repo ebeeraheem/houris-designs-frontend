@@ -378,7 +378,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
       toast.error(
         hasValidSelectedSwatchId
           ? "Choose a colour, length, and width before adding to cart."
-          : "This colour is missing a valid swatch ID from the API."
+          : "This colour is currently unavailable."
       )
       return
     }
@@ -418,7 +418,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                 Product not found.
               </h1>
               <p className="mt-3 max-w-[34rem] text-sm leading-7 text-muted-foreground">
-                We couldn&apos;t load this published product from the API.
+                We couldn&apos;t load this product.
               </p>
               <Button
                 type="button"
@@ -694,7 +694,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                           </p>
                         </div>
                         <p className="max-w-[14rem] text-right text-[0.72rem] leading-5 text-muted-foreground">
-                          Choose one length and one width code for this piece.
+                          Pick one length and one width code.
                         </p>
                       </div>
                     </div>
@@ -715,16 +715,16 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                           : isSelectionComplete
                             ? "Add to Cart"
                             : selectedColour && !hasValidSelectedSwatchId
-                              ? "Unavailable Swatch"
+                              ? "Colour Unavailable"
                               : "Select Length and Width"}
                     </Button>
                     {!isSelectionComplete && (
                       <p className="text-center text-[0.68rem] text-muted-foreground">
                         {selectedColour && !hasValidSelectedSwatchId
-                          ? "This selected colour cannot be added yet because the API did not return a valid swatch ID."
+                          ? "This colour is currently unavailable."
                           : hasSizeGuideError
-                            ? "Reconnect to the size guide to choose length and width codes."
-                            : "Choose a colour, one length code, and one width code to continue."}
+                            ? "Size guide unavailable — retry below."
+                            : "Choose a colour, length, and width to continue."}
                       </p>
                     )}
                   </div>
@@ -773,15 +773,14 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
 
               <DialogBody>
                 <p className="mb-6 text-[0.85rem] leading-6 text-muted-foreground">
-                  Our two-dimensional sizing system combines length and width
-                  codes for a precise fit. Choose one from each dimension: the
-                  result is your size.
+                  Pick one length code and one width code — together they are
+                  your size (e.g., E16).
                 </p>
                 {isSizeGuideLoading && (
                   <div className="surface-card p-5">
                     <p className="eyebrow-label text-brand">Precision Fit</p>
                     <p className="mt-3 text-[0.82rem] leading-6 text-muted-foreground">
-                      Loading the live size guide...
+                      Loading size guide…
                     </p>
                   </div>
                 )}
@@ -790,8 +789,7 @@ export function ProductDetailClient({ productId }: ProductDetailClientProps) {
                   <div className="surface-card p-5">
                     <p className="eyebrow-label text-brand">Precision Fit</p>
                     <p className="mt-3 text-[0.82rem] leading-6 text-muted-foreground">
-                      We couldn&apos;t load the live size guide. Try again to
-                      fetch the latest measurement codes.
+                      We couldn&apos;t load the size guide.
                     </p>
                     <Button
                       type="button"

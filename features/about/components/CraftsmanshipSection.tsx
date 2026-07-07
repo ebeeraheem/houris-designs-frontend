@@ -88,22 +88,9 @@ export function CraftsmanshipSection() {
             </h2>
             <div className="mt-6 space-y-4 text-[0.9rem] leading-7 text-muted-foreground">
               <p>
-                Every Houris Designs piece begins with a choice: the woman, the
-                style, the colour, and the size combination that feels true to
-                her. We produce strictly on demand, so each order is treated
-                with focus from payment through completion.
-              </p>
-              <p>
-                Our signature two-dimensional sizing system combines length and
-                width codes to help customers find a fit without unnecessary
-                compromise. It is a practical innovation built around real
-                bodies and real confidence.
-              </p>
-              <p>
-                The result is fashion that balances cultural elegance with
-                modern expression: bold when it wants to be, modest when it
-                needs to be, and always made to help the wearer feel at home in
-                herself.
+                Every piece is produced strictly on demand. You choose the
+                style, colour, and size — our length-and-width sizing gives 80
+                combinations, so the fit is yours, not a compromise.
               </p>
             </div>
             <div className="mt-8 flex flex-wrap gap-4">

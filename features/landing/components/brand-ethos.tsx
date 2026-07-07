@@ -81,16 +81,8 @@ export function BrandEthos() {
             data-ethos-copy
             className="mt-6 max-w-[26rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
           >
-            We don&apos;t stock shelves — we craft silhouettes. From fabric
-            selection to final stitch, each piece is created only after you
-            order.
-          </p>
-          <p
-            data-ethos-copy
-            className="mt-4 max-w-[26rem] text-sm leading-7 text-muted-foreground sm:text-[0.95rem]"
-          >
-            This is clothing as it should be: considered, precise, and personal.
-            No compromise on fit, no waste on excess.
+            Every piece is made only after you order — cut to your measure, no
+            waste on excess.
           </p>
           <div data-ethos-copy className="mt-8">
             <MagneticButton className="magnetic inline-block" strength={0.15}>

@@ -56,15 +56,6 @@ export function EditorialHero() {
           </div>
         </div>
       </section>
-
-      <div className="border-t border-foreground/8 px-6 py-4 sm:px-12 lg:px-16">
-        <div className="mx-auto flex max-w-7xl items-end justify-between gap-6 text-[0.68rem] font-medium tracking-[0.26em] text-foreground/40 uppercase">
-          <span>Complimentary shipping worldwide</span>
-          <span className="hidden sm:inline">
-            Sustainably made in limited runs
-          </span>
-        </div>
-      </div>
     </main>
   )
 }

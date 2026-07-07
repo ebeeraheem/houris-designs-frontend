@@ -18,7 +18,7 @@ export function ProductGrid({ products }: ProductGridProps) {
         <EmptyState
           icon={<EmptyCollectionIcon className="size-7" aria-hidden="true" />}
           title="No pieces found"
-          description="Try widening your search or resetting the filters to bring more pieces back into view."
+          description="Try widening or resetting the filters."
         />
       </div>
     )
