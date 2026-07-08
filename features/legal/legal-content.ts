@@ -17,7 +17,7 @@ export const termsDocument: LegalDocument = {
   title: "Terms & Conditions",
   description:
     "The terms that govern access to the Houris Designs website, made-to-order purchases, payments, production, delivery, and customer responsibilities.",
-  lastUpdated: "June 18, 2026",
+  lastUpdated: "July 8, 2026",
   sections: [
     {
       title: "1. Introduction",
@@ -35,9 +35,9 @@ export const termsDocument: LegalDocument = {
       ],
     },
     {
-      title: "3. Use of the Website",
+      title: "3. Eligibility and Use of the Website",
       paragraphs: [
-        "Visitors, including minors, may browse the website. A customer who places an order must have legal capacity to enter into a binding transaction, or must do so with the involvement and consent of a parent, guardian, or responsible adult.",
+        "This website and our services are available only to persons aged 18 years or older. By accessing or using the website, creating an account, or placing an order, you confirm that you are at least 18 years old and have the legal capacity to enter into a binding transaction. If you are under 18, you may not use this website or our services.",
         "You agree not to misuse the website, attempt fraud, interfere with the website's operation, copy or exploit website content for commercial purposes without permission, or provide false information when creating an account or placing an order.",
       ],
     },
@@ -126,7 +126,7 @@ export const privacyDocument: LegalDocument = {
   title: "Privacy Policy",
   description:
     "How Houris Designs collects, uses, shares, protects, and retains personal information for accounts, orders, contact messages, payment references, and delivery.",
-  lastUpdated: "June 18, 2026",
+  lastUpdated: "July 8, 2026",
   sections: [
     {
       title: "1. Introduction",
@@ -216,10 +216,10 @@ export const privacyDocument: LegalDocument = {
       ],
     },
     {
-      title: "11. Children and Minors",
+      title: "11. Age Restriction",
       paragraphs: [
-        "Minors may browse the website, but purchases must be made by a person with legal capacity or with the involvement and consent of a parent, guardian, or responsible adult.",
-        "We do not knowingly collect personal information from children for purposes unrelated to account, order, customer support, or service operations.",
+        "This website and our services are intended solely for persons aged 18 years or older. We do not knowingly collect personal information from anyone under 18.",
+        "If we become aware that personal information has been collected from a person under 18, we will delete it. If you believe a person under 18 has provided us with personal information, contact info@hourisdesigns.com.",
       ],
     },
     {
