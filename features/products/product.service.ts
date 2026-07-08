@@ -16,7 +16,7 @@ export const productService = {
     return productRepository.getAll(buildSearchParams(params))
   },
 
-  getProductById: (id: string): Promise<Product> => {
-    return productRepository.getById(id)
+  getProductBySlug: (slug: string): Promise<Product> => {
+    return productRepository.getBySlug(slug)
   },
 }

@@ -7,6 +7,7 @@ export interface ApiProductColour {
 
 export interface ApiProduct {
   id: string
+  slug: string
   title: string
   price: number
   description: string | null
@@ -21,6 +22,7 @@ export interface ApiProduct {
 
 export interface ApiProductListItem {
   id: string
+  slug: string
   title: string
   price: number
   primaryImageUrl: string
@@ -47,6 +49,8 @@ export interface ProductColour {
 
 export interface Product {
   id: string
+  /** Current canonical slug — compare against the route param to redirect. */
+  slug: string
   title: string
   price: number
   description: string | null
@@ -60,6 +64,7 @@ export interface Product {
 
 export interface ProductListItem {
   id: string
+  slug: string
   title: string
   price: number
   primaryImageUrl: string

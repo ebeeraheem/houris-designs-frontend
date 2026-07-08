@@ -1,11 +1,11 @@
 import type { Product, ProductListResponse } from "./product.types"
 import type { GetProductsParams } from "./product.adapter"
-import { fetchProducts, fetchProductById } from "./product.adapter"
+import { fetchProducts, fetchProductBySlug } from "./product.adapter"
 import { toProduct, toProductList } from "./product.transformer"
 
 export interface IProductRepository {
   getAll(params?: GetProductsParams): Promise<ProductListResponse>
-  getById(id: string): Promise<Product>
+  getBySlug(slug: string): Promise<Product>
 }
 
 export const productRepository: IProductRepository = {
@@ -14,8 +14,8 @@ export const productRepository: IProductRepository = {
     return toProductList(raw)
   },
 
-  getById: async (id) => {
-    const raw = await fetchProductById(id)
+  getBySlug: async (slug) => {
+    const raw = await fetchProductBySlug(slug)
     return toProduct(raw)
   },
 }

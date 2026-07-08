@@ -1,7 +1,9 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import {
@@ -28,13 +30,17 @@ import {
 } from "@/components/ui/dialog"
 import { EmptyState } from "@/components/ui/empty-state"
 import { useAddCartItem } from "@/features/cart"
-import { PRODUCT_ROUTES, useGetProductById } from "@/features/products"
+import {
+  PRODUCT_ROUTES,
+  PRODUCTS_QUERY_KEY,
+  useGetProductBySlug,
+} from "@/features/products"
 import { SizeGuideContent, useGetSizeGuide } from "@/features/sizes"
 import { formatCurrency } from "@/utils/format-currency"
 import { formatSizeCode } from "@/utils/size-codes"
 
 interface ProductDetailClientProps {
-  productId: string
+  slug: string
 }
 
 gsap.registerPlugin(useGSAP)
@@ -165,13 +171,28 @@ function ProductDetailSkeleton() {
   )
 }
 
-export function ProductDetailClient({ productId }: ProductDetailClientProps) {
+export function ProductDetailClient({ slug }: ProductDetailClientProps) {
+  const router = useRouter()
+  const queryClient = useQueryClient()
   const {
     data: product,
     isLoading,
     isError,
     refetch,
-  } = useGetProductById(productId)
+  } = useGetProductBySlug(slug)
+
+  // Historical or case-variant slugs resolve to the product; rewrite the URL
+  // to the canonical slug. Seeding the cache under the canonical key avoids a
+  // refetch/skeleton flash when the route param changes.
+  useEffect(() => {
+    if (product && product.slug !== slug) {
+      queryClient.setQueryData(
+        [PRODUCTS_QUERY_KEY, "detail", product.slug],
+        product
+      )
+      router.replace(PRODUCT_ROUTES.DETAIL(product.slug), { scroll: false })
+    }
+  }, [product, slug, router, queryClient])
   const {
     data: sizeGuide,
     isLoading: isSizeGuideLoading,

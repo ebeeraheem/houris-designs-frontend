@@ -2,7 +2,7 @@ export const PRODUCTS_QUERY_KEY = "products"
 
 export const PRODUCT_ROUTES = {
   LIST: "/couture",
-  DETAIL: (id: string) => `/couture/${id}`,
+  DETAIL: (slug: string) => `/couture/${slug}`,
   CREATE: "/admin/products/create",
   EDIT: (id: string) => `/admin/products/${id}/edit`,
 } as const

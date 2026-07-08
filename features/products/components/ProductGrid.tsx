@@ -29,7 +29,7 @@ export function ProductGrid({ products }: ProductGridProps) {
       {products.map((product) => (
         <Link
           key={product.id}
-          href={PRODUCT_ROUTES.DETAIL(product.id)}
+          href={PRODUCT_ROUTES.DETAIL(product.slug)}
           className="group block lg:col-span-4"
         >
           <div className="image-shell">

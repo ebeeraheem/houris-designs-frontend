@@ -132,7 +132,7 @@ export function FeaturedCollection() {
             : products.map((product) => (
                 <Link
                   key={product.id}
-                  href={PRODUCT_ROUTES.DETAIL(product.id)}
+                  href={PRODUCT_ROUTES.DETAIL(product.slug)}
                   className="group block cursor-pointer"
                 >
                   <div data-reveal className="image-shell">
